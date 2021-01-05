@@ -6,7 +6,7 @@
 // 		super('numtoletter', {
 // 			aliases: ['num-to-letter', 'letter-to-num', 'ntl', 'ltn', 'num-to-text', 'text-to-num', 'ntt', 'ttn'],
 //             typing: true,
-//             category: 'Text',
+//             category: 'Math',
 //             args: [
 //                 {
 //                     id: 'text',

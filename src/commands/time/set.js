@@ -7,6 +7,7 @@ const moment = require('moment-timezone');
 module.exports = class SetTimeCommand extends Command {
     constructor() {
         super('set', {
+            category: 'Time',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],

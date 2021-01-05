@@ -6,6 +6,7 @@ const mysql = require("mysql2/promise");
 module.exports = class FormatCommand extends Command {
     constructor() {
         super('format', {
+            category: 'Time',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],

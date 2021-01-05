@@ -6,7 +6,7 @@ module.exports = class ShiftCommand extends Command {
 		super('shift', {
 			aliases: ['shift', 'caesar', 'ceasar', 'rot', 'rotate'],
             typing: true,
-            // category: 'Text',
+            // category: 'Math',
             args: [
                 {
                     id: 'number',

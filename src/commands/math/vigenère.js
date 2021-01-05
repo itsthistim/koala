@@ -7,7 +7,7 @@
 // 			aliases: ['vigenère', 'vig', 'vigenere'],
 // 			usage: 'vig <word> <text>',
 //             description: 'Rotates the text according to the word!',
-//             category: 'Text',
+//             category: 'Math',
 //             typing: true,
 //             args: [
 //                 {
