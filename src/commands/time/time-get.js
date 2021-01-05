@@ -74,27 +74,28 @@ module.exports = class GetCommand extends Command {
     async exec(msg, args) {
         msg.delete({timeout: 5000});
 
-        if (/*args.timeUser.id == undefined*/false) {
-            msg.channel.send(args.timeUser);
+        const [ userTime ] = await DB.query(`SELECT TimeZone FROM UserTime WHERE User = ?`, [ args.timeUser.id ]);
+        const [ userFormat ] = await DB.query(`SELECT Format FROM UserTime WHERE User = ?`, [ msg.author.id ]);
+        let embed = this.client.util.embed();
+
+        if (args.timeUser.id == undefined) {
+            msg.channel.send(moment().tz(args.timeUser).format(userFormat[0].Format));
+            
+            embed.setColor(global.gcolors[0]);
+            embed.setAuthor(`${args.timeUser.username}'s time`, args.timeUser.avatarURL( {dynamic: true} ));
+            embed.setDescription(moment().tz(userTime[0].TimeZone).format('hh:mm:ss a'));
         }
         else {
-            const [ userTime ] = await DB.query(`SELECT TimeZone FROM UserTime WHERE User = ?`, [ args.timeUser.id ]);
-            const [ userFormat ] = await DB.query(`SELECT Format FROM UserTime WHERE User = ?`, [ msg.author.id ]);
-            console.log(userFormat)
-        
             if (userTime.length > 0) {
-
-                let foundEmbed = this.client.util.embed()
-                .setColor(global.gcolors[0])
-                .setAuthor(`${args.timeUser.username}'s time`, args.timeUser.avatarURL( {dynamic: true} ))
-                .setDescription(moment().tz(userTime[0].TimeZone).format('hh:mm:ss a'))
-                //.setDescription(moment().tz(userTime[0].TimeZone).format(userFormat[0].Format))
-
-                msg.util.send(foundEmbed);
+                embed.setColor(global.gcolors[0]);
+                embed.setAuthor(`${args.timeUser.username}'s time`, args.timeUser.avatarURL( {dynamic: true} ));
+                embed.setDescription(moment().tz(userTime[0].TimeZone).format(userFormat[0].Format));
             }
             else {
-                msg.channel.send("This user didn't set a timezone yet.");
+                embed.setDescription(`This user didn't set a timezone yet.`)
             }
+            
+            msg.util.send(embed);
         }
     }
 }

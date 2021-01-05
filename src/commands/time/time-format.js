@@ -43,10 +43,10 @@ module.exports = class FormatCommand extends Command {
         let newFormat;
         
         if (args.format == '12h') {
-            newFormat = 'dddd, MMMM Do YYYY, hh:mm:ss a';
+            newFormat = 'hh:mm a, Do MMM YYYY';
         }
         else if (args.format == '24h') {
-            newFormat = 'dddd, MMMM Do YYYY, HH:mm:ss';
+            newFormat = 'HH:mm, Do MMM YYYY';
         }
 
         DB.query(`UPDATE UserTime SET Format = ? WHERE User = ?`, [newFormat, msg.author.id])
