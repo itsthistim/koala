@@ -12,7 +12,6 @@ module.exports = class TimeCommand extends Command {
             cooldown: 5000,
             ratelimit: 1,
             ignoreCooldown: [],
-            ownerOnly: false,
             description: {
                 content: '`set` Set your timezone.\n`get` Get a users time.\n`clear` Remove your time from the database.\n`config-set` Set the time of a user.\n`config-clear` Remove a user time from the database.',
                 usage: ''
@@ -23,12 +22,12 @@ module.exports = class TimeCommand extends Command {
     *args() {
         const action = yield {
             type: [
-				['get', 'g'],
-				['set', 's'],
-				['format', 'f'],
-				['clear', 'c'],
-				['config-set', 'configset', 'c-set', 'cset', 'cs'],
-				['config-clear', 'configclear', 'c-clear', 'clear', 'cc']
+				['time-get', 'get', 'g'],
+				['time-set', 'set', 's'],
+				['time-format', 'format', 'f'],
+				['time-clear', 'clear', 'c'],
+				['time-config-set', 'config-set', 'configset', 'c-set', 'cset', 'cs'],
+				['time-config-clear', 'config-clear', 'configclear', 'c-clear', 'clear', 'cc']
 			],
             match: 'phrase',
             prompt: {

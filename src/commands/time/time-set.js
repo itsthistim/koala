@@ -15,7 +15,6 @@ module.exports = class SetTimeCommand extends Command {
             cooldown: 0,
             ratelimit: 1,
             ignoreCooldown: [],
-            ownerOnly: false,
             description: {
                 content: 'Sets your timezone.\nFor a list of valid timezones [click here](https://gist.github.com/Xavons/d8a416cd45b9e18e82d3b1682fcd92b1)',
                 usage: '<timezone>'
@@ -42,11 +41,11 @@ module.exports = class SetTimeCommand extends Command {
         const [ user ] = await DB.query(`SELECT User FROM UserTime WHERE User = ?`, [ msg.author.id ]);
 
         if (user.length == 0) {
-            DB.query(`INSERT INTO UserTime (User, TimeZone) VALUES (?,?)`, [msg.author.id, args.timezone])
+            DB.query(`INSERT INTO UserTime (User, TimeZone) VALUES (?,?)`, [msg.author.id, args.timezone.toLowerCase()])
             msg.channel.send("inserted")
         }
         else {
-            DB.query(`UPDATE UserTime SET TimeZone = ? WHERE User = ?`, [args.timezone, msg.author.id])
+            DB.query(`UPDATE UserTime SET TimeZone = ? WHERE User = ?`, [args.timezone.toLowerCase(), msg.author.id])
             msg.channel.send("updated")
         }
 

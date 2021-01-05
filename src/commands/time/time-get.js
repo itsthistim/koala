@@ -16,7 +16,6 @@ module.exports = class GetCommand extends Command {
             cooldown: 0,
             ratelimit: 1,
             ignoreCooldown: [],
-            ownerOnly: false,
             description: {
                 content: 'No description provided.',
                 usage: '<member>'

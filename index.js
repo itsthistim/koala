@@ -26,9 +26,8 @@ const listenersPath = join('./src/listeners/');
 const inhibitorsPath = join('./src/inhibitors/');
 //#endregion
 
-
 global.gprefixes = ['k!', '!k'];
-global.gcolors = ['#998888', ''];
+global.gcolors = ['#998888', '#43B581', '#F04747'];
 
 class Client extends AkairoClient {
 	constructor() {

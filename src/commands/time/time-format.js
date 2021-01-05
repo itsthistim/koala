@@ -7,14 +7,13 @@ module.exports = class FormatCommand extends Command {
     constructor() {
         super('time-format', {
             aliases: ['format'],
-            category: 'Time',
+            //category: 'Time',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
             ignoreCooldown: [],
-            ownerOnly: false,
             description: {
                 content: 'No description provided.',
                 usage: '<format>'
@@ -40,6 +39,7 @@ module.exports = class FormatCommand extends Command {
 }
 
     async exec(msg, args) {
+        
         let newFormat;
         
         if (args.format == '12h') {
@@ -50,6 +50,12 @@ module.exports = class FormatCommand extends Command {
         }
 
         DB.query(`UPDATE UserTime SET Format = ? WHERE User = ?`, [newFormat, msg.author.id])
-        msg.channel.send(`New format: ${newFormat}`);
+        
+        let e = this.client.util.embed()
+        .setColor(global.gcolors[1])
+        .setAuthor(`Updated format!`, this.client.user.avatarURL())
+        .setDescription(`${this.client.user.username} will now use the ${args.format} format for the time commands!`);
+        
+        msg.util.send(e);
     }
 }
