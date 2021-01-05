@@ -7,7 +7,8 @@ const mysql = require("mysql2/promise");
 
 module.exports = class GetCommand extends Command {
     constructor() {
-        super('get', {
+        super('time-get', {
+            aliases: ['get'],
             category: 'Time',
             userPermissions: [],
             clientPermissions: ["MANAGE_ROLES"],

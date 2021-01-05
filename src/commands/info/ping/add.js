@@ -1,13 +1,13 @@
 // t!set <timezone> => save timezone of user in db: user,timezone
-
 const { Argument, Command } = require('discord-akairo');
 const Logger = require('../../util/logger.js');
-const moment = require('moment-timezone');
+
 
 module.exports = class SetTimeCommand extends Command {
     constructor() {
-        super('set', {
-            category: 'Time',
+        super('prefix-add', {
+            aliases: ['add'],
+            category: 'Info',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
