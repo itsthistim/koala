@@ -8,14 +8,14 @@ module.exports = class BobRossCommand extends Command {
     constructor() {
         super('bob-ross', {
             aliases: ['bob-ross', 'ross'],
-            // category: 'Image',
+            category: 'Image',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
             ignoreCooldown: [],
-            ownerOnly: true,
+            ownerOnly: false,
             description: {
                 content: 'Will make Bob Ross pain your profile picture.',
                 usage: '<user>'
