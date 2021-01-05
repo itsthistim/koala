@@ -4,7 +4,7 @@ class InviteCommand extends Command {
 	constructor() {
 		super('invite', {
 			aliases: ['invite'],
-			category: 'Lookup',
+			category: 'Info',
 			clientPermissions: ['EMBED_LINKS'],
 			description: { content: 'Invite me to your server.' }
 		});

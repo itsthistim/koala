@@ -4,7 +4,7 @@ module.exports = class PrefixCommand extends Command {
     constructor() {
         super('prefix', {
             aliases: ['prefix'],
-            category: 'Lookup',
+            category: 'Info',
             typing: true
         });
     }
