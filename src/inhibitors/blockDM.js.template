@@ -1,0 +1,15 @@
+const { Inhibitor } = require('discord-akairo');
+
+module.exports = class BlacklistInhibitor extends Inhibitor {
+    constructor() {
+        super('blockDM', {
+            reason: 'blockDM',
+            type: 'all'
+        })
+    }
+
+    exec(message) {
+        const blockedChannels = [/*'dm', 'text'*/];        
+        return blockedChannels.includes(message.channel.type);
+    }
+}
