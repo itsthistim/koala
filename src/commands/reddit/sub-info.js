@@ -48,7 +48,7 @@ module.exports = class SubInfoCommand extends Command {
 
             embed.addField(`Info`, `🍰 Created: ${da}. ${mo} ${ye}\n🙊 Language: ${sub.lang}\n${sub.over18 ? '🔞 This subreddit is NSFW!' : ''}`, true);
             embed.addField(`Members`, `👋 Active users: ${sub.active_user_count}\n🌟 Subscribers: ${sub.subscribers}`, true);
-            embed.setColor('#FF4300');
+            embed.setColor(global.gcolors[0]);
             embed.setTimestamp();
             embed.setFooter(`Requested by ${msg.author.tag}`, msg.author.avatarURL({ dynamic: true }));
 

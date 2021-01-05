@@ -28,7 +28,7 @@ const inhibitorsPath = join('./src/inhibitors/');
 
 
 global.gprefixes = ['k!', '!k'];
-global.gcolors = ['#ebebeb', ''];
+global.gcolors = ['#92CDED', ''];
 
 class Client extends AkairoClient {
 	constructor() {
