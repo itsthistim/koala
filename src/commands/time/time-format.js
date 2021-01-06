@@ -6,8 +6,6 @@ const mysql = require("mysql2/promise");
 module.exports = class FormatCommand extends Command {
     constructor() {
         super('time-format', {
-            aliases: ['format'],
-            //category: 'Time',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
