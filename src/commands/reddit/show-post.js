@@ -9,6 +9,7 @@ module.exports = class ShowPostCommand extends Command {
             category: 'Reddit',
             typing: true,
             prefix: [global.gprefixes[0], global.gprefixes[1], '!'],
+            ownerOnly: true,
 			description: {
                 content: 'Shows the preview of a reddit post!',
                 usage: '<link_to_post>'
