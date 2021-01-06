@@ -70,8 +70,6 @@ module.exports = class GetCommand extends Command {
 }
 
     async exec(msg, args) {
-        msg.delete({timeout: 5000});
-
         const [ userTime ] = await DB.query(`SELECT TimeZone FROM UserTime WHERE User = ?`, [ args.timeUser.id ]);
         const [ userFormat ] = await DB.query(`SELECT Format FROM UserTime WHERE User = ?`, [ msg.author.id ]);
         let embed = this.client.util.embed();
