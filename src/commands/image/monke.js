@@ -4,7 +4,7 @@ const Logger = require('../../util/logger.js');
 module.exports = class MonkeCommand extends Command {
     constructor() {
         super('monke', {
-            aliases: ['monke'],
+            aliases: ['monke', 'monkey'],
             category: 'Image',
             userPermissions: [],
             clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'ATTACH_FILES'],
