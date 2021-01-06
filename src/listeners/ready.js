@@ -24,7 +24,7 @@ module.exports = class ReadyListener extends Listener {
         }, 150000);
 		//#endregion
 		//#region Status
-		let statuses = ['you!', `${this.handler.prefix[0]}help`];
+		let statuses = ['you!', `k!help`];
 
 		setInterval(() => {
 			let status = statuses[Math.floor(Math.random() * statuses.length)];
