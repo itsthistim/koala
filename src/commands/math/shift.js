@@ -1,12 +1,12 @@
 const { Command } = require('discord-akairo');
-const abc = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 module.exports = class ShiftCommand extends Command {
 	constructor() {
 		super('shift', {
 			aliases: ['shift', 'caesar', 'ceasar', 'rot', 'rotate'],
             typing: true,
-            // category: 'Math',
+            category: 'Cipher',
             args: [
                 {
                     id: 'number',
@@ -32,17 +32,17 @@ module.exports = class ShiftCommand extends Command {
             number = number * -1;
         }
 
-        number = number % abc.length;
+        number = number % alphabet.length;
         
         var textarr = text.split('');
         var result = "";
 
         for (var i = 0; i < text.length; i++) {
-            if (abc.indexOf(textarr[i].toLowerCase()) !== -1) {
+            if (alphabet.indexOf(textarr[i].toLowerCase()) !== -1) {
                 if (textarr[i].toLowerCase() !== textarr[i]) {
-                    result += decode ? abc[wrap(abc.indexOf(textarr[i].toLowerCase()) - number, abc.length) % abc.length].toUpperCase() : abc[(abc.indexOf(textarr[i].toLowerCase()) + number) % abc.length].toUpperCase();
+                    result += decode ? alphabet[wrap(alphabet.indexOf(textarr[i].toLowerCase()) - number, alphabet.length) % alphabet.length].toUpperCase() : alphabet[(alphabet.indexOf(textarr[i].toLowerCase()) + number) % alphabet.length].toUpperCase();
                 } else {
-                    result += decode ? abc[wrap(abc.indexOf(textarr[i]) - number, abc.length) % abc.length] : abc[(abc.indexOf(textarr[i]) + number) % abc.length];
+                    result += decode ? alphabet[wrap(alphabet.indexOf(textarr[i]) - number, alphabet.length) % alphabet.length] : alphabet[(alphabet.indexOf(textarr[i]) + number) % alphabet.length];
                 }
             } else {
                 result += textarr[i];
