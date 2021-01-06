@@ -17,7 +17,7 @@ module.exports = class BobRossCommand extends Command {
             ignoreCooldown: [],
             ownerOnly: false,
             description: {
-                content: 'Will make Bob Ross pain your profile picture.',
+                content: 'Will make Bob Ross paint a picture.',
                 usage: '<user>'
             },
         })
@@ -34,7 +34,7 @@ module.exports = class BobRossCommand extends Command {
                 optional: true
             }
         };
-        
+
         return { u };
     }
 
