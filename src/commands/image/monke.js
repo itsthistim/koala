@@ -21,6 +21,6 @@ module.exports = class MonkeCommand extends Command {
     }
 
     async exec(msg, args) {
-        msg.util.send('https://cdn.discordapp.com/attachments/502208815937224718/796371361492107285/fcfd49e044a51e6f4c76a6748b8fc2fc.png')
+        msg.util.send('https://media.discordapp.net/attachments/502208815937224718/796373812320403456/ab67616d0000b27382137f3ea7c9f2957d07e00b.png')
     }
 }
