@@ -5,8 +5,8 @@ const Logger = require('../../util/logger.js');
 
 module.exports = class TrumpTweetCommand extends Command {
     constructor() {
-        super('trump-tweet', {
-            aliases: ['trump-tweet', 't-tweet'],
+        super('trump-quote', {
+            aliases: ['trump-quote', 'trump-q', 'q-trump', 'trump-tweet', 'tweet-trump', 'trump-t', 't-trump'],
             category: 'Random',
             userPermissions: [],
             clientPermissions: [],
