@@ -3,8 +3,7 @@ const Logger = require('../../util/logger.js');
 
 module.exports = class AddPrefixCommand extends Command {
     constructor() {
-        super('add-prefix', {
-            category: 'Time',
+        super('prefix-list', {
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
@@ -18,21 +17,7 @@ module.exports = class AddPrefixCommand extends Command {
         })
     }
 
-*args() {
-    const prefix = yield {
-        type: Argument.validate('string', (m, p, str) => str.length <= 15),
-        match: 'phrase',
-        prompt: {
-            start: 'Please provide a prefix to add',
-            retry: 'Please provide a valid prefix. The prefix can\'t have more than 15 characters. Try again!',
-            optional: false
-        }
-    };
-    
-    return { timezone };
-}
-
-    async exec(msg, args) {
+    async exec(msg) {
         const [ prefixes ] = await DB.query(`SELECT Prefix FROM GuildPrefix WHERE Guild = ?`, [ msg.guild ]);
 
         let embed = this.client.util.embed()
@@ -52,5 +37,6 @@ module.exports = class AddPrefixCommand extends Command {
             embed.setDescription(`You can interact with me by either using <@${this.client.user.id}> instead of a prefix or by adding a prefix with \`${global.gprefixes[0]}prefix add <your prefix>\`!`);
         }
 
+        return msg.channel.send(embed);
     }
 }

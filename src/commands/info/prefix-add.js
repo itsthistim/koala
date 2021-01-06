@@ -6,8 +6,6 @@ const Logger = require('../../util/logger.js');
 module.exports = class SetTimeCommand extends Command {
     constructor() {
         super('prefix-add', {
-            aliases: ['add'],
-            category: 'Info',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
