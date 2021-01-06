@@ -51,8 +51,8 @@ module.exports = class GetCommand extends Command {
             else if (moment.tz.names().find(key => key.toUpperCase() === str.toUpperCase()) != undefined) {
                 return str;
             }
-            else if (this.client.util.resolveUser(str, this.client.users.cache) != undefined) {
-                return this.client.util.resolveUser(str, this.client.users.cache);
+            else if (this.client.util.resolveMember(str, message.guild.members.cache) != undefined) {
+                return this.client.util.resolveMember(str, message.guild.members.cache);
             }
             else {
                 return null;
@@ -61,7 +61,7 @@ module.exports = class GetCommand extends Command {
         match: 'phrase',
         prompt: {
             start: 'Please provide a user or timezone.',
-            retry: 'Please provide a valid user or timezone. Try again!',
+            retry: 'Please provide a valid member or timezone. Try again!',
             optional: false
         }
     };
@@ -70,7 +70,7 @@ module.exports = class GetCommand extends Command {
 }
 
     async exec(msg, args) {
-        const [ userTime ] = await DB.query(`SELECT TimeZone FROM UserTime WHERE User = ?`, [ args.timeUser.id ]);
+        const [ userTime ] = await DB.query(`SELECT TimeZone FROM UserTime WHERE User = ?`, [ args.timeUser.user.id ]);
         const [ userFormat ] = await DB.query(`SELECT Format FROM UserTime WHERE User = ?`, [ msg.author.id ]);
         let embed = this.client.util.embed();
 
@@ -78,13 +78,13 @@ module.exports = class GetCommand extends Command {
             msg.channel.send(moment().tz(args.timeUser).format(userFormat[0].Format));
             
             embed.setColor(global.gcolors[0]);
-            embed.setAuthor(`${args.timeUser.username}'s time`, args.timeUser.avatarURL( {dynamic: true} ));
+            embed.setAuthor(`Time for ${args.timeUser}`, args.timeUser.user.avatarURL( {dynamic: true} ));
             embed.setDescription(moment().tz(userTime[0].TimeZone).format('hh:mm:ss a'));
         }
         else {
             if (userTime.length > 0) {
                 embed.setColor(global.gcolors[0]);
-                embed.setAuthor(`${args.timeUser.username}'s time`, args.timeUser.avatarURL( {dynamic: true} ));
+                embed.setAuthor(`${args.timeUser.user.username}'s time`, args.timeUser.user.avatarURL( {dynamic: true} ));
                 embed.setDescription(moment().tz(userTime[0].TimeZone).format(userFormat[0].Format));
             }
             else {
