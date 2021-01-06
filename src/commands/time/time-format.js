@@ -10,8 +10,7 @@ module.exports = class FormatCommand extends Command {
             clientPermissions: [],
             ignorePermissions: [],
             cooldown: 0,
-            ratelimit: 1,
-            ignoreCooldown: [],
+            ratelimit: 1,    
             description: {
                 content: 'No description provided.',
                 usage: '<format>'

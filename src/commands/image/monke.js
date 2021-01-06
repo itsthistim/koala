@@ -9,9 +9,8 @@ module.exports = class MonkeCommand extends Command {
             userPermissions: [],
             clientPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'ATTACH_FILES'],
             ignorePermissions: [],
-            cooldown: 1,
+            cooldown: 1000,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                 content: 'Sends monke.',

@@ -26,7 +26,6 @@ module.exports = class UserInfoCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                content: 'Shows info about any user.',

@@ -10,7 +10,6 @@ module.exports = class PurgeCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: true,
             description: {
                 content: 'No description provided.',

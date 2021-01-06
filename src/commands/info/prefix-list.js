@@ -9,7 +9,6 @@ module.exports = class AddPrefixCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             description: {
                 content: '',
                 usage: '<timezone>'
@@ -40,7 +39,7 @@ module.exports = class AddPrefixCommand extends Command {
         }
         else {
             embed.setTitle("There is no prefix set!");
-            embed.setDescription(`You can interact with me by either using <@${this.client.user.id}> instead of a prefix or by adding a prefix with \`${global.gprefixes[0]}prefix add <your prefix>\`!`);
+            embed.setDescription(`You can interact with me by either using <@${this.client.user.id}> instead of a prefix or by adding a prefix with \`${this.handler.prefix[0]}prefix add <your prefix>\`!`);
         }
 
         return msg.channel.send(embed);

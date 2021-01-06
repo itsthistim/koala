@@ -12,7 +12,6 @@ module.exports = class PrefixCommand extends Command {
             cooldown: 5000,
             ratelimit: 1,
             ownerOnly: true,
-            ignoreCooldown: [],
             description: {
                 content: '',
                 usage: ''

@@ -11,7 +11,6 @@ module.exports = class DisconnectCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                 content: 'Disconnects a user from a voice channel.',

@@ -11,9 +11,8 @@ module.exports = class TestCommand extends Command {
 			userPermissions: [],
 			clientPermissions: ['MANAGE_WEBHOOKS', 'EMBED_LINKS'],
 			ignorePermissions: [],
-			cooldown: 0,
+			cooldown: 5000,
 			ratelimit: 1,
-			ignoreCooldown: [],
 			ownerOnly: false,
 			description: {
 			   content: 'Sends 5 memes at once! Can be very slow tho.',

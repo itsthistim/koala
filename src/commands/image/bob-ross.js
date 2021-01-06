@@ -12,9 +12,8 @@ module.exports = class BobRossCommand extends Command {
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
-            cooldown: 0,
+            cooldown: 2000,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                 content: 'Will make Bob Ross paint a picture.',

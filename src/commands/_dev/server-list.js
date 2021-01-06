@@ -13,7 +13,6 @@ module.exports = class ServerlistCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: true,
             description: {
                 content: 'Lists all servers that I am in.',

@@ -13,7 +13,6 @@ module.exports = class TrumpTweetCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                 content: 'Makes trump tweet something about anyone in the server.',

@@ -12,7 +12,6 @@ module.exports = class QuoteCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                content: 'Provides an inspirational quote for you.',

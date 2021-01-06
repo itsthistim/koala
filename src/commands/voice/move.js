@@ -11,7 +11,6 @@ module.exports = class MoveCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                 content: 'Moves a user to a voice channel.',

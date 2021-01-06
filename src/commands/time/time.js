@@ -11,7 +11,6 @@ module.exports = class TimeCommand extends Command {
             ignorePermissions: [],
             cooldown: 5000,
             ratelimit: 1,
-            ignoreCooldown: [],
             description: {
                 content: '`set` Set your timezone.\n`get` Get a users time.\n`clear` Remove your time from the database.\n`config-set` Set the time of a user.\n`config-clear` Remove a user time from the database.',
                 usage: ''

@@ -8,7 +8,6 @@ module.exports = class MemeCommand extends Command {
             aliases: ['meme'],
             category: 'Reddit',
             typing: true,
-            prefix: [global.gprefixes[0], global.gprefixes[1], '!'],
 			description: {
 				content: 'Sends a random meme from Reddit!'
 			}

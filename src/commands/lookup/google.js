@@ -27,7 +27,6 @@ module.exports = class GoogleCommand extends Command {
             ],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                content: 'This command will search the internet for whatever you want.\nIf you add the \`--lmgtfy\` flag to the command it will attach a handy tutorial on how to use the internet.',

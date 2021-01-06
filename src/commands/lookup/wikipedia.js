@@ -14,7 +14,6 @@ module.exports = class WikipediaCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             channel: 'guild',
             description: {
                 content: 'Searchs wikipedia for a anything.',

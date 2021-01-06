@@ -10,7 +10,6 @@ module.exports = class SetTimeCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             description: {
                 content: 'Sets your timezone.\nFor a list of valid timezones [click here](https://gist.github.com/Xavons/d8a416cd45b9e18e82d3b1682fcd92b1)',
                 usage: '<timezone>'

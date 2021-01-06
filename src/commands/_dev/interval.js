@@ -11,7 +11,6 @@ module.exports = class IntervalCommand extends Command {
             ignorePermissions: [],
             cooldown: 0,
             ratelimit: 1,
-            ignoreCooldown: [],
             ownerOnly: false,
             description: {
                 content: 'No description provided.',
