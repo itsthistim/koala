@@ -42,7 +42,7 @@ class Client extends AkairoClient {
 
 		this.commandHandler = new CommandHandler(this, {
 			directory: commandsPath,
-			prefix: ['k!', '!k'],
+			prefix: ['k!', 'r!', 'c!'],
 			allowMention: true,
 			aliasReplacement: /-/g,
 			automateCategories: false,
