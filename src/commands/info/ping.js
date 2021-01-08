@@ -4,7 +4,7 @@ module.exports = class PingCommand extends Command {
     constructor() {
         super('ping', {
             aliases: ['ping'],
-            category: 'Info',
+            category: 'Lookup',
             typing: true
         });
     }

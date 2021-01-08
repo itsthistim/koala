@@ -5,7 +5,7 @@ module.exports = class PrefixCommand extends Command {
     constructor() {
         super('prefix', {
             aliases: ['prefix'],
-            category: 'Info',
+            category: 'Lookup',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],

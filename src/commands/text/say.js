@@ -60,7 +60,8 @@ module.exports = class SayCommand extends Command {
             description: {
 				content: 'Makes me say anything.\n-channel can be used to set a destination for the message.\n-silent will delete the invocation message for you.\n-embed will put your text into a simple embed\n-tts requires me to have the \`Send TTS Messages\` permission.\n-owo will infuse the text in a cute way.',
 				usage: '<text> [-channel:<channel>] [-silent] [-embed] [-tts] [-owo]',
-				examples: ['Hey, how are you?', 'Thank you, I am feeling great! -tts', 'Great to hear that! -owo']
+                examples: ['Hey, how are you?', 'Thank you, I am feeling great! -tts', 'Great to hear that! -owo'],
+                field: ['Syntax' ,'<> = required, [] = optional']
 			}
         });
     }
@@ -118,14 +119,11 @@ module.exports = class SayCommand extends Command {
 
         let member = msg.guild.members.cache.get(msg.author.id);
 
-        if(!member.hasPermission('MANAGE_SERVER'))
-        {
-            const inviteRegex = /(https?:\/\/)?(www\.|canary\.|ptb\.)?discord(\.gg|(app)?\.com\/invite|\.me)\/([^ ]+)\/?/gi;
-            const botInvRegex = /(https?:\/\/)?(www\.|canary\.|ptb\.)?discord(app)?\.com\/(api\/)?oauth2\/authorize\?([^ ]+)\/?/gi;
-        
-            args.text = args.text.replace(inviteRegex, '⠀');
-            args.text = args.text.replace(botInvRegex, '⠀');
-        }
+        const inviteRegex = /(https?:\/\/)?(www\.|canary\.|ptb\.)?discord(\.gg|(app)?\.com\/invite|\.me)\/([^ ]+)\/?/gi;
+        const botInvRegex = /(https?:\/\/)?(www\.|canary\.|ptb\.)?discord(app)?\.com\/(api\/)?oauth2\/authorize\?([^ ]+)\/?/gi;
+    
+        args.text = args.text.replace(inviteRegex, '⠀');
+        args.text = args.text.replace(botInvRegex, '⠀');
 
         let destination;
         if(args.channel) {

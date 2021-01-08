@@ -4,7 +4,7 @@ module.exports = class HelpCommand extends Command {
 	constructor() {
 		super('help', {
 			aliases: ['help', 'halp', 'h'],
-			category: 'Info',
+			category: 'Lookup',
 			clientPermissions: ['EMBED_LINKS'],
 			args: [
 				{

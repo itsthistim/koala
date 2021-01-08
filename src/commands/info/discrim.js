@@ -5,7 +5,7 @@ module.exports = class DiscrimCommand extends Command {
     constructor() {
         super('discrim', {
             aliases: ['discrim', 'discriminator'],
-            category: 'Info',
+            category: 'Lookup',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
