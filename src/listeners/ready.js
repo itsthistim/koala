@@ -1,4 +1,4 @@
-	const { Listener } = require('discord-akairo');
+const { Listener } = require('discord-akairo');
 
 module.exports = class ReadyListener extends Listener {
 	constructor() {
@@ -12,16 +12,16 @@ module.exports = class ReadyListener extends Listener {
 		this.client.logger.info(`${this.client.user.tag} is ready to serve ${this.client.users.cache.size} users in ${this.client.guilds.cache.size} servers.`, 'ready');
 
 		//#region DB
-		setInterval(async () => {
-            let [ data ] = await DB.query(`SELECT * FROM KeepAlive`);
-            if (data.length === 0) {
-                await DB.query(`INSERT INTO KeepAlive VALUES(?)`, [ '.' ]);
-                await DB.query('DELETE FROM KeepAlive');
-            } else {
-                await DB.query('DELETE FROM KeepAlive');
-                console.log('[DEBUG] No items were deleted (Table was already empty)');
-            }
-        }, 150000);
+		// setInterval(async () => {
+        //     let [ data ] = await DB.query(`SELECT * FROM KeepAlive`);
+        //     if (data.length === 0) {
+        //         await DB.query(`INSERT INTO KeepAlive VALUES(?)`, [ '.' ]);
+        //         await DB.query(`UPDATE KeepAlive SET values = ','`);
+        //     } else {
+        //         await DB.query('DELETE FROM KeepAlive');
+        //         console.log('[DEBUG] No items were deleted (Table was already empty)');
+        //     }
+        // }, 150000);
 		//#endregion
 		//#region Status
 		let statuses = ['you!', `k!help`];
