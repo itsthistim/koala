@@ -40,8 +40,8 @@ module.exports = class HackCommand extends Command {
 async exec(msg, { m }) {
         msg.delete({ timeout: 5000 })
         
-        if (this.playing.has(msg.guild.id)) return;
-        this.playing.add(msg.guild.id);
+        if (this.running.has(msg.guild.id)) return console.log('Only one game may be occurring per channel.');
+        this.running.add(msg.guild.id);
 
         let mostCommonWords = [
             'lmao',
