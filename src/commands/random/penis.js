@@ -38,6 +38,6 @@ module.exports = class PenisCommand extends Command {
     async exec(msg, { m }) {
         const random = MersenneTwister19937.seed(m.user.id);
         const score = integer(2, 30)(random);
-        return msg.util.send(`${m.user.username}'s ${msg.channel.nsfw ? "penis" : "pp"} size is ${score}.`)
+        return msg.util.send(`${m.user.username}'s ${msg.channel.nsfw ? "penis" : "pp"} size is ${score}cm.`)
     }
 }
