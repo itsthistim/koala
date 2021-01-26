@@ -24,6 +24,7 @@
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.6",
     "owoify-js": "^1.0.7",
+    "random-js": "^2.1.0",
     "relevant-urban": "^2.0.0"
   }
 }
