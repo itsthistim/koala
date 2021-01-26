@@ -17,6 +17,8 @@ module.exports = class HackCommand extends Command {
                 usage: '[member]'
             },
         })
+
+        this.running = new Set();
     }
 
 *args() {
@@ -38,6 +40,9 @@ module.exports = class HackCommand extends Command {
 async exec(msg, { m }) {
         msg.delete({ timeout: 5000 })
         
+        if (this.playing.has(msg.guild.id)) return;
+        this.playing.add(msg.guild.id);
+
         let mostCommonWords = [
             'lmao',
             'lol',
@@ -83,42 +88,13 @@ async exec(msg, { m }) {
         ]
 
         let i = 0;
-        msg.util.send(`Hacking user \`${m.user.username}\``)
-        .then(message => {
-            setInterval(function() {
-                message.edit(messages[i]);
-                i++;
-            }, 1500);
-        })
+        let message = await msg.util.send(`Hacking user \`${m.user.username}\``)
         
-        // msg.channel.send(`Hacking user \`${m.user.username}\``)
-        // .then(message => {
-        //     setTimeout(function() {
-        //         message.edit(`[▖] Scraping Discord account...`)
-        //     }, 2000);
-        //     setTimeout(function() {
-        //         message.edit(`[▘] Found:\nE-Mail: \`xX${m.user.username.replace(/\s+/g, '')}IsCoolXx@hotmail.com\`\nPassword: \`\``)
-        //     }, 4000)
-        //     setTimeout(function() {
-        //         message.edit(`[▝] Finding most common word...`)
-        //     }, 6000)
-        //     setTimeout(function() {
-        //         message.edit(`[▗] const mostCommon = "${mostCommonWords[Math.floor(Math.random() * mostCommonWords.length)]}"`)
-        //     }, 8000)
-        //     setTimeout(function() {
-        //         message.edit(`[▖] Fetching dms with closest friends (if there are any friends at all)`)
-        //     }, 10000)
-        //     setTimeout(function() {
-        //         message.edit(`[▘] Injecting virus.....`)
-        //     }, 12000)  
-        //})
+        setInterval(function() {
+            message.edit(messages[i]);
+            i++;
+        }, 2000);
 
-        // setTimeout(function() {
-        //     msg.util.send(`Loading..`);
-        //     msg.util.send("Getting ip...");
-        //     msg.util.send("Found ip `108.69.192`");
-        //     msg.util.send("Scraping mail...");
-        //     msg.util.send(`Found mail \`${u.user.username}*******@gmail.com\``);
-        // }, 35000);
+        this.playing.delete(msg.channel.id);
     }
 }
