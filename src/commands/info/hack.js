@@ -95,6 +95,6 @@ async exec(msg, { m }) {
             i++;
         }, 2000);
 
-        this.playing.delete(msg.channel.id);
+        this.running.delete(msg.channel.id);
     }
 }
