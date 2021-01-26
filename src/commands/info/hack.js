@@ -9,7 +9,7 @@ module.exports = class HackCommand extends Command {
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
-            cooldown: 0,
+            cooldown: 20000,
             ratelimit: 1,
             ownerOnly: false,
             description: {
@@ -17,8 +17,6 @@ module.exports = class HackCommand extends Command {
                 usage: '[member]'
             },
         })
-
-        this.running = new Set();
     }
 
 *args() {
@@ -39,9 +37,6 @@ module.exports = class HackCommand extends Command {
 
 async exec(msg, { m }) {
         msg.delete({ timeout: 5000 })
-        
-        if (this.running.has(msg.guild.id)) return console.log('Only one game may be occurring per channel.');
-        this.running.add(msg.guild.id);
 
         let mostCommonWords = [
             'lmao',
@@ -94,7 +89,5 @@ async exec(msg, { m }) {
             message.edit(messages[i]);
             i++;
         }, 2000);
-
-        this.running.delete(msg.channel.id);
     }
 }
