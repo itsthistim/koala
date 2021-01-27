@@ -21,7 +21,7 @@ module.exports = class TicTacToeCommand extends Command {
         this.playing = new Set();
     }
 
-    * args() {
+    *args() {
         const opponent = yield {
             type: 'member',
             match: 'phrase',
