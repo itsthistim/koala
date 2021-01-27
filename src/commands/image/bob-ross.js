@@ -17,19 +17,19 @@ module.exports = class BobRossCommand extends Command {
             ownerOnly: false,
             description: {
                 content: 'Will make Bob Ross paint a picture.',
-                usage: '<user>'
+                usage: '<member>'
             },
         })
     }
 
     *args() {
         const u = yield {
-            type: 'user',
+            type: 'member',
             match: 'phrase',
-            default: msg => msg.author,
+            default: msg => msg.guild.members.cache.get(msg.author.id),
             prompt: {
                 start: 'Please provide a user.',
-                retry: 'Please provide a valid u. Try again!',
+                retry: 'Please provide a valid user. Try again!',
                 optional: true
             }
         };
@@ -39,9 +39,9 @@ module.exports = class BobRossCommand extends Command {
 
     async exec(msg, { u }) {
         try {
-            const base = await loadImage("https://media.discordapp.net/attachments/502208815937224718/762102918203179008/bob-ross.png?width=524&height=677");
             //const base = await loadImage(path.join('dirname__', '..', '..', 'util', 'assets', 'images', 'bob-ross.png'));
             //const base = await loadImage('../../util/assets/images/bob-ross.png');
+            const base = await loadImage("https://media.discordapp.net/attachments/502208815937224718/762102918203179008/bob-ross.png?width=524&height=677");
             const avatar = await loadImage(u.avatarURL({format: 'png'}));
             const canvas = createCanvas(base.width, base.height);
             const ctx = canvas.getContext('2d');
@@ -49,7 +49,7 @@ module.exports = class BobRossCommand extends Command {
 
             ctx.fillStyle = '#f0e8d3';
             ctx.fillRect(0, 0, base.width, base.height);
-            ctx.drawImage(avatar, 15, 20, 440, 440);
+            ctx.drawImage(avatar, 15, 23, 440, 440);
             ctx.drawImage(base, 0, 0);
 
             return msg.channel.send({ files: [{ attachment: canvas.toBuffer(), name: 'bob-ross.png' }] });
