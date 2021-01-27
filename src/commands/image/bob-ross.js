@@ -42,7 +42,7 @@ module.exports = class BobRossCommand extends Command {
             //const base = await loadImage(path.join('dirname__', '..', '..', 'util', 'assets', 'images', 'bob-ross.png'));
             //const base = await loadImage('../../util/assets/images/bob-ross.png');
             const base = await loadImage("https://media.discordapp.net/attachments/502208815937224718/762102918203179008/bob-ross.png?width=524&height=677");
-            const avatar = await loadImage(u.avatarURL({format: 'png'}));
+            const avatar = await loadImage(u.user.avatarURL({format: 'png'}));
             const canvas = createCanvas(base.width, base.height);
             const ctx = canvas.getContext('2d');
             
