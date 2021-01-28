@@ -45,10 +45,10 @@ module.exports = class AchievementCommand extends Command {
 
             const ctx = canvas.getContext('2d');
             ctx.drawImage(base, 0, 0);
-            ctx.font = '17px Minecraftia';
+            ctx.font = '20px Minecraftia';
             ctx.fillStyle = '#ffff00';
             ctx.fillStyle = '#ffffff';
-            ctx.fillText(shortenText(ctx, text, 230), 60, 61);
+            ctx.fillText(shortenText(ctx, text, 230), 60, 50);
             return msg.util.send({ files: [{ attachment: canvas.toBuffer(), name: 'achievement.png' }] });
         } catch (error) {
             return msg.util.send(`Something went wrong... \`${error.message}\``);
