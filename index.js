@@ -226,9 +226,9 @@ class Client extends AkairoClient {
 			if (fileTypeReg.test(phrase.toLowerCase())) return phrase;
 			
 			try {
-				const userType = this.commandHandler.resolver.type('user');
-				const user = userType(msg, phrase);
-				return user.avatarURL({ format: 'png', size: 128 });
+				const memberType = this.commandHandler.resolver.type('member');
+				const member = memberType(msg, phrase);
+				return member.user.avatarURL({ format: 'png', size: 128 });
 			} catch (e) {
 				return null;
 			}
