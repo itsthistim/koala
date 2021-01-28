@@ -41,7 +41,7 @@ module.exports = class GhandiQuoteCommand extends Command {
 
         registerFont(path.join(__dirname, '../../util/assets/fonts/LibreBaskerville-Italic.ttf'), { family: 'Libre Baskerville Italic' });
 
-        const base = await loadImage("https://cdn.discordapp.com/attachments/502208815937224718/804103751446036480/gandhi-quote.png");
+        const base = await loadImage(path.join(__dirname, '..', '..', 'util', 'assets', 'images', 'gandhi-quote.png'));
 		const canvas = createCanvas(base.width, base.height);
 		const ctx = canvas.getContext('2d');
         

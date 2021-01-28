@@ -51,9 +51,7 @@ module.exports = class RainbowCommand extends Command {
 
     async exec(msg, { image }) {    
         try {
-            const base = await loadImage("https://media.discordapp.net/attachments/502208815937224718/804116108365529108/rainbow.png");
-            
-            // const data = await loadImage(u.user.avatarURL({format: 'png', size: 128 }));
+            const base = await loadImage(path.join(__dirname, '..', '..', 'util', 'assets', 'images', 'rainbow.png'));
             const data = await loadImage(image);
             
             const canvas = createCanvas(data.width, data.height);

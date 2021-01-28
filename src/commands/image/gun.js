@@ -23,17 +23,6 @@ module.exports = class GunCommand extends Command {
     }
 
     *args() {
-        // const u = yield {
-        //     type: 'member',
-        //     match: 'phrase',
-        //     default: msg => msg.guild.members.cache.get(msg.author.id),
-        //     prompt: {
-        //         start: 'Please provide a user.',
-        //         retry: 'Please provide a valid user. Try again!',
-        //         optional: true
-        //     }
-        // };
-
         const image = yield {
             type: 'image',
             default: msg => msg.author.avatarURL({ format: 'png', size: 128 }),
@@ -49,7 +38,7 @@ module.exports = class GunCommand extends Command {
 
     async exec(msg, { image }) {    
         try {
-            const base = await loadImage("https://cdn.discordapp.com/attachments/502208815937224718/804110271437078548/gun.png");
+            const base = await loadImage(path.join(__dirname, '..', '..', 'util', 'assets', 'images', 'gun.png'));
             const data = await loadImage(image);
             
             const canvas = createCanvas(data.width, data.height);

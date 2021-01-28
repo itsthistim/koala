@@ -49,7 +49,7 @@ module.exports = class HandsCommand extends Command {
 
     async exec(msg, { image }) {    
         try {
-            const base = await loadImage("https://cdn.discordapp.com/attachments/502208815937224718/804113450481352704/hands.png");
+            const base = await loadImage(path.join(__dirname, '..', '..', 'util', 'assets', 'images', 'hands.png'));
             const data = await loadImage(image);
 
 			const canvas = createCanvas(data.width, data.height);

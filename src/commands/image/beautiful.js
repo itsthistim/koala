@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo');
 const Logger = require('../../util/logger.js');
 const { createCanvas, loadImage } = require('canvas');
+const path = require('path');
 
 module.exports = class BeautifulCommand extends Command {
     constructor() {
@@ -21,38 +22,30 @@ module.exports = class BeautifulCommand extends Command {
     }
 
     *args() {
-        const user = yield {
-            type: 'member',
-            match: 'phrase',
+        const image = yield {
+            type: 'image',
+            default: msg => msg.author.avatarURL({ format: 'png', size: 128 }),
             prompt: {
-                start: 'Who is beautiful?',
-                retry: 'Please provide a valid user. Try again!',
+                start: 'Please provide a valid image.',
+                retry: 'Please provide a valid image. Try again!',
                 optional: true
-            },
-            default: msg => msg.guild.members.cache.get(msg.author.id)
+            }
         };
         
-        return { user };
+        return { image };
     }
 
-    async exec(msg, { user: u }) {
-        
-        const avatarURL = u.user.avatarURL({ format: 'png', size: 128 });
-		try {
-            // const base = await loadImage(path.join(__dirname, '..', '..', 'assets', 'images', 'beautiful.png'));
-            const base = await loadImage("https://media.discordapp.net/attachments/502208815937224718/804092347440168960/beautiful.png");
+    async exec(msg, { image }) {        
+		try {            
+            const base = await loadImage(path.join(__dirname, '..', '..', 'util', 'assets', 'images', 'beautiful.png'));
+            const data = await loadImage(image);
             
-            // const { body } = await request.get(avatarURL);
-			// const avatar = await loadImage(body);
-            
-            const avatar = await loadImage(u.user.avatarURL({format: 'png'}));
-
             const canvas = createCanvas(base.width, base.height);
 			const ctx = canvas.getContext('2d');
 			ctx.fillStyle = 'white';
 			ctx.fillRect(0, 0, base.width, base.height);
-			ctx.drawImage(avatar, 249, 24, 105, 105);
-			ctx.drawImage(avatar, 249, 223, 105, 105);
+			ctx.drawImage(data, 249, 24, 105, 105);
+			ctx.drawImage(data, 249, 223, 105, 105);
 			ctx.drawImage(base, 0, 0);
 			return msg.util.send({ files: [{ attachment: canvas.toBuffer(), name: 'beautiful.png' }] });
 		} catch (err) {
