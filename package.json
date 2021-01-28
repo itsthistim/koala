@@ -22,7 +22,6 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
     "mysql2": "^2.2.5",
-    "node-superfetch": "^0.1.10",
     "nodemon": "^2.0.6",
     "owoify-js": "^1.0.7",
     "random-js": "^2.1.0",
