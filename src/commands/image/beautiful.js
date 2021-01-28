@@ -11,7 +11,7 @@ module.exports = class BeautifulCommand extends Command {
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
-            cooldown: 0,
+            cooldown: 2000,
             ratelimit: 1,
             ownerOnly: false,
             description: {
