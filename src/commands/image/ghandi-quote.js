@@ -38,6 +38,9 @@ module.exports = class GhandiQuoteCommand extends Command {
 
     async exec(msg, { quote }) {
         // const base = await loadImage(path.join(__dirname, '..', '..', 'assets', 'images', 'gandhi-quote.png'));
+
+        registerFont(path.join(__dirname, '../../util/assets/fonts/LibreBaskerville-Italic.ttf'), { family: 'Libre Baskerville Italic' });
+
         const base = await loadImage("https://cdn.discordapp.com/attachments/502208815937224718/804103751446036480/gandhi-quote.png");
 		const canvas = createCanvas(base.width, base.height);
 		const ctx = canvas.getContext('2d');
@@ -45,14 +48,14 @@ module.exports = class GhandiQuoteCommand extends Command {
         ctx.drawImage(base, 0, 0);
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'top';
-		ctx.font = '50px Latin Modern Roman';
+		ctx.font = '50px Libre Baskerville Italic';
 		ctx.fillStyle = 'white';
         
         let fontSize = 50;
         
         while (ctx.measureText(quote).width > 945) {
 			fontSize--;
-			ctx.font = `${fontSize}px Latin Modern Roman`;
+			ctx.font = `${fontSize}px Libre Baskerville Italic`;
 		}
         
         const lines = await this.wrapText(ctx, quote, 270);
