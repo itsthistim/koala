@@ -23,25 +23,40 @@ module.exports = class RainbowCommand extends Command {
     }
 
     *args() {
-        const u = yield {
-            type: 'member',
-            match: 'phrase',
-            default: msg => msg.guild.members.cache.get(msg.author.id),
+        // const u = yield {
+        //     type: 'member',
+        //     match: 'phrase',
+        //     default: msg => msg.guild.members.cache.get(msg.author.id),
+        //     prompt: {
+        //         start: 'Please provide a user.',
+        //         retry: 'Please provide a valid user. Try again!',
+        //         optional: true
+        //     }
+        // };
+
+        // return { u };
+
+        const image = yield {
+            type: 'image',
+            default: msg => msg.author.avatarURL({ format: 'png', size: 128 }),
             prompt: {
-                start: 'Please provide a user.',
-                retry: 'Please provide a valid user. Try again!',
+                start: 'Please provide a valid image.',
+                retry: 'Please provide a valid image. Try again!',
                 optional: true
             }
         };
 
-        return { u };
+        return { image };
     }
 
-    async exec(msg, { u }) {    
+    async exec(msg, { image }) {    
         try {
             const base = await loadImage("https://media.discordapp.net/attachments/502208815937224718/804116108365529108/rainbow.png");
-            const data = await loadImage(u.user.avatarURL({format: 'png', size: 128 }));
-			const canvas = createCanvas(data.width, data.height);
+            
+            // const data = await loadImage(u.user.avatarURL({format: 'png', size: 128 }));
+            const data = await loadImage(image);
+            
+            const canvas = createCanvas(data.width, data.height);
 			const ctx = canvas.getContext('2d');
 			ctx.drawImage(data, 0, 0);
 			ctx.drawImage(base, 0, 0, data.width, data.height);

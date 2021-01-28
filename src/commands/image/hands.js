@@ -23,24 +23,34 @@ module.exports = class HandsCommand extends Command {
     }
 
     *args() {
-        const u = yield {
-            type: 'member',
-            match: 'phrase',
-            default: msg => msg.guild.members.cache.get(msg.author.id),
+        // const u = yield {
+        //     type: 'member',
+        //     match: 'phrase',
+        //     default: msg => msg.guild.members.cache.get(msg.author.id),
+        //     prompt: {
+        //         start: 'Please provide a user.',
+        //         retry: 'Please provide a valid user. Try again!',
+        //         optional: true
+        //     }
+        // };
+
+        const image = yield {
+            type: 'image',
+            default: msg => msg.author.avatarURL({ format: 'png', size: 128 }),
             prompt: {
-                start: 'Please provide a user.',
-                retry: 'Please provide a valid user. Try again!',
+                start: 'Please provide a valid image.',
+                retry: 'Please provide a valid image. Try again!',
                 optional: true
             }
         };
-
-        return { u };
+        
+        return { image };
     }
 
-    async exec(msg, { u }) {    
+    async exec(msg, { image }) {    
         try {
             const base = await loadImage("https://cdn.discordapp.com/attachments/502208815937224718/804113450481352704/hands.png");
-            const data = await loadImage(u.user.avatarURL({format: 'png', size: 128 }));
+            const data = await loadImage(image);
 
 			const canvas = createCanvas(data.width, data.height);
 			const ctx = canvas.getContext('2d');

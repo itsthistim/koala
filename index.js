@@ -4,22 +4,12 @@ const mysql2 = require("mysql2/promise");
 
 global.DB = require('./src/util/queryDatabase.js')
 
-// (async () => {
-// 	global.DB = await mysql2.createConnection({
-// 		host: process.env.DB_HOST,
-// 		user: process.env.DB_USER,
-// 		password: process.env.DB_PW,
-// 		database: process.env.DB_NAME,
-// 		enableKeepAlive: true
-// 	});
-// 	console.log('Connected to Database!');
-// })();
-
 //#endregion
 //#region Discord & Akairo
 const Discord = require('discord.js');
 const { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler, Flag } = require('discord-akairo');
 const Logger = require('./src/util/logger.js');
+const request = require('node-superfetch');
 //#endregion
 //#region Paths
 const { join } = require('path');
@@ -76,18 +66,12 @@ class Client extends AkairoClient {
 								.setDescription('❌ ' + text);
 							message.util.send(embed);
 						}
-						//message.reactions.removeAll();
-						//pmsg.react('❔');
 					},
 					ended: async (message, { message: pmsg }) => {
 						const embed = new Discord.MessageEmbed()
 							.setColor(global.gcolors[0])
 							.setDescription('❗ Too many retries! Cancelled command.');
-						message.channel.send(embed);
-
-						//message.reactions.removeAll();
-						//message.react('❗');
-						
+						message.channel.send(embed);	
 						pmsg.delete();
 					},
 					cancel: async (message, { message: pmsg }) => {
@@ -95,8 +79,6 @@ class Client extends AkairoClient {
 							.setColor(global.gcolors[0])
 							.setDescription('❌ Command has been cancelled!');
 						message.util.send(embed);
-						//message.reactions.removeAll();
-						//message.react('❌');
 						pmsg.delete();
 					},
 					timeout: async (message) => {
@@ -104,9 +86,6 @@ class Client extends AkairoClient {
 							.setColor(global.gcolors[0])
 							.setDescription('⏱ Time ran out, command has been cancelled!');
 						message.util.send(embed);
-
-						//message.reactions.removeAll();
-						//message.react('⏱');
 					}
 				}
 			}
@@ -131,10 +110,10 @@ class Client extends AkairoClient {
 			inhibitorHandler: this.inhibitorHandler
 		});
 
+		//#region Custom Types
 		this.commandHandler.resolver.addType('amember', async (message, phrase) => {
 			if (!phrase) return null;
 			let memberArray = [];
-
 			let membersFound = this.util.resolveMembers(phrase, message.guild.members.cache);
 
 			if (membersFound.size == 0) return null;
@@ -146,40 +125,33 @@ class Client extends AkairoClient {
 			if (membersFound.size > 10) return null;
 
 			let ind = 1;
-
 			let membersMap = membersFound.map(c => `**${ind++}.** \`${c.user.tag}\``).join("\n");
-
 			const listEmbed = new Discord.MessageEmbed()
-				.setAuthor(message.author.tag, message.author.avatarURL({
-					dynamic: true
-				}))
-				.setDescription(`Mulitple members found. Please choose one of the following members, or type cancel.\n\n${membersMap}`)
+			.setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+			.setDescription(`Mulitple members found. Please choose one of the following members, or type cancel.\n\n${membersMap}`)
 
 			let userMsgFind = await msgFilter.find(c => c.userID === message.author.id)
 
 			if (!userMsgFind) {
 				//Prompt was not fired, send new message
 				promptMsg = await message.channel.send(listEmbed)
-
 			} else {
 				//Prompt was fired, edit prompt msg
 				promptMsg = await message.channel.messages.fetch(userMsgFind.msgID)
 				await promptMsg.edit(listEmbed)
 			}
 
-
 			let msgFilterReset = msgFilter.filter(c => c.userID !== message.author.id)
 			msgFilter = msgFilterReset
 
 			let filter = m => m.author.id == message.author.id
 			let collectedInput;
-
 			let tries = 0;
 			let failed = true;
 			let outOfTime = false;
 			let coll;
-			for (tries = 0; tries < 5; tries++) {
 
+			for (tries = 0; tries < 5; tries++) {
 				try {
 					//Collect Message
 					coll = await message.channel.awaitMessages(filter, {
@@ -187,23 +159,16 @@ class Client extends AkairoClient {
 						time: 5000,
 						errors: ["time"]
 					})
-
 				} catch (e) {
 					//Catch timeout
 					const outOfTimeE = new Discord.MessageEmbed()
-						.setAuthor(message.author.tag, message.author.avatarURL({
-							dynamic: true
-						}))
-						.setDescription(`<a:rxm:683827905377206310> You ran out of time, command has been cancelled`)
+					.setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+					.setDescription(`<a:rxm:683827905377206310> You ran out of time, command has been cancelled`)
 
 					outOfTime = await true;
-
 					promptMsg ? promptMsg.edit(outOfTimeE) : message.channel.send(outOfTimeE)
-
-
-					return Flag.cancel()
+					return Flag.cancel();
 				}
-
 
 				//Time is over
 				if (outOfTime == true) return Flag.cancel()
@@ -222,7 +187,6 @@ class Client extends AkairoClient {
 					break
 				}
 
-
 				//A valid input was not found
 				const notValidInput = new Discord.MessageEmbed()
 					.setAuthor(message.author.tag, message.author.avatarURL({
@@ -231,41 +195,46 @@ class Client extends AkairoClient {
 					.setDescription(`❌ Your \`Input\` was not valid. Please choose a valid numbers from below, or type cancel.\n\n${membersMap}`)
 
 				promptMsg ? promptMsg.edit(notValidInput) : message.util.send(notValidInput)
-
 			}
-
 
 			//To many tries, command failed
 			if (failed == true) {
-
-
 				let embed = new Discord.MessageEmbed()
-					.setAuthor(message.author.tag, message.author.avatarURL({
-						format: 'png',
-						dynamic: true
-					}))
-					.setColor("#BA0000")
-					.setDescription(`<a:rxm:683827905377206310> Too many retries, command has been cancelled`)
-
+				.setAuthor(message.author.tag, message.author.avatarURL( {format: 'png', dynamic: true }))
+				.setColor("#BA0000")
+				.setDescription(`<a:rxm:683827905377206310> Too many retries, command has been cancelled`)
 				promptMsg ? promptMsg.edit(embed) : message.util.send(embed)
 
 				return Flag.cancel()
 			}
 
 			if (collectedInput === "cancel") {
-
 				let embed = new Discord.MessageEmbed()
-					.setAuthor(message.author.tag, message.author.avatarURL({
-						format: 'png',
-						dynamic: true
-					}))
+					.setAuthor(message.author.tag, message.author.avatarURL( { format: 'png', dynamic: true }))
 					.setDescription(` ${w} Command has been cancelled`);
-				promptMsg ? promptMsg.edit(embed) : message.channel.send(embed)
-				return Flag.cancel()
+				promptMsg ? promptMsg.edit(embed) : message.channel.send(embed);
+				return Flag.cancel();
 			}
 
 			return memberArray[collectedInput - 1]
 		});
+		
+		this.commandHandler.resolver.addType('image', (msg, phrase) => {
+			const fileTypeReg = /\.(jpe?g|png|gif|jfif|bmp)$/i;
+			const attachment = msg.attachments.first();
+			if (attachment) return attachment.url;
+			if (!phrase) return null;
+			if (fileTypeReg.test(phrase.toLowerCase())) return phrase;
+			
+			try {
+				const userType = this.commandHandler.resolver.type('user');
+				const user = userType(msg, phrase);
+				return user.avatarURL({ format: 'png', size: 512 });
+			} catch (e) {
+				return null;
+			}
+		});
+		//#endregion
 
 		this.commandHandler.loadAll();
 		this.listenerHandler.loadAll();
