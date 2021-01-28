@@ -7,7 +7,7 @@ module.exports = class BeautifulCommand extends Command {
     constructor() {
         super('beautiful', {
             aliases: ['beautiful'],
-            category: '',
+            category: 'Image',
             userPermissions: [],
             clientPermissions: ['ATTACH_FILES'],
             ignorePermissions: [],

@@ -10,7 +10,7 @@ module.exports = class AchievementCommand extends Command {
     constructor() {
         super('achievement', {
             aliases: ['achievement', 'minecraft', 'advancement'],
-            category: '',
+            category: 'Image',
             userPermissions: [],
             clientPermissions: ['ATTACH_FILES'],
             ignorePermissions: [],
