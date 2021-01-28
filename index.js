@@ -219,10 +219,12 @@ class Client extends AkairoClient {
 		});
 		
 		this.commandHandler.resolver.addType('image', (msg, phrase) => {
-			const fileTypeReg = /\.(jpe?g|png|gif|jfif|bmp)$/i;
+			const fileTypeReg = /\.(jpe?g<?>?|png<?>?|gif<?>?|jfif<?>?|bmp<?>?)$/i;
 			const attachment = msg.attachments.first();
+
 			if (attachment) return attachment.url;
 			if (!phrase) return null;
+			
 			if (fileTypeReg.test(phrase.toLowerCase())) return phrase;
 			
 			try {
