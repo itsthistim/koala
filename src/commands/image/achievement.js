@@ -3,7 +3,7 @@ const Logger = require('../../util/logger.js');
 const { createCanvas, loadImage, registerFont } = require('canvas');
 const { shortenText } = require('../../util/Canvas');
 const path = require('path');
-registerFont(path.join(__dirname, '..', '..', 'util', 'assets', 'fonts', 'Minecraftia-Regular.ttf'), { family: 'Minecraftia' });
+registerFont(path.join(__dirname, '..', '..', 'util', 'assets', 'fonts', 'MinecraftRegular-Bmg3.ttf'), { family: 'Minecraftia' });
 
 
 module.exports = class AchievementCommand extends Command {
