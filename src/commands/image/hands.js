@@ -10,14 +10,14 @@ module.exports = class HandsCommand extends Command {
             aliases: ['hands', 'hand'],
             category: 'Image',
             userPermissions: [],
-            clientPermissions: [],
+            clientPermissions: ['ATTACH_FILES'],
             ignorePermissions: [],
             cooldown: 2000,
             ratelimit: 1,
             ownerOnly: false,
             description: {
                 content: 'Will make a user raise their hands in a threatening way.',
-                usage: '<member>'
+                usage: '<imageUrl | member>'
             },
         })
     }

@@ -10,14 +10,14 @@ module.exports = class BobRossCommand extends Command {
             aliases: ['bob-ross', 'ross'],
             category: 'Image',
             userPermissions: [],
-            clientPermissions: [],
+            clientPermissions: ['ATTACH_FILES'],
             ignorePermissions: [],
             cooldown: 2000,
             ratelimit: 1,
             ownerOnly: false,
             description: {
                 content: 'Will make Bob Ross paint a picture.',
-                usage: '<member>'
+                usage: '<imageUrl | member>'
             },
         })
     }

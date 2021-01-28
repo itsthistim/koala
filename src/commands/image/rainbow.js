@@ -10,14 +10,14 @@ module.exports = class RainbowCommand extends Command {
             aliases: ['rainbow', 'gay'],
             category: 'Image',
             userPermissions: [],
-            clientPermissions: [],
+            clientPermissions: ['ATTACH_FILES'],
             ignorePermissions: [],
             cooldown: 2000,
             ratelimit: 1,
             ownerOnly: false,
             description: {
                 content: 'Will show a members profile picture behind a rainbow.',
-                usage: '<member>'
+                usage: '<imageUrl | member>'
             },
         })
     }

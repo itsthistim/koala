@@ -10,14 +10,14 @@ module.exports = class GunCommand extends Command {
             aliases: ['gun'],
             category: 'Image',
             userPermissions: [],
-            clientPermissions: [],
+            clientPermissions: ['ATTACH_FILES'],
             ignorePermissions: [],
             cooldown: 2000,
             ratelimit: 1,
             ownerOnly: false,
             description: {
                 content: 'Will make anyone hold a gun.',
-                usage: '<member>'
+                usage: '<imageUrl | member>'
             },
         })
     }

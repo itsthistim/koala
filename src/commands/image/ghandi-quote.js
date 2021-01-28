@@ -10,7 +10,7 @@ module.exports = class GhandiQuoteCommand extends Command {
             aliases: ['ghandi-quote', 'ghandi', 'gandhi'],
             category: 'Image',
             userPermissions: [],
-            clientPermissions: [],
+            clientPermissions: ['ATTACH_FILES'],
             ignorePermissions: [],
             cooldown: 2000,
             ratelimit: 1,

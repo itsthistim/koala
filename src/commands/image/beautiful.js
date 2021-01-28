@@ -9,14 +9,14 @@ module.exports = class BeautifulCommand extends Command {
             aliases: ['beautiful'],
             category: '',
             userPermissions: [],
-            clientPermissions: [],
+            clientPermissions: ['ATTACH_FILES'],
             ignorePermissions: [],
             cooldown: 2000,
             ratelimit: 1,
             ownerOnly: false,
             description: {
-                content: 'No description provided.',
-                usage: ''
+                content: 'Draw an image over over Gravity Falls\' "Oh, this? This is beautiful." meme.',
+                usage: '<imageUrl | member>'
             },
         })
     }
