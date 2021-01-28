@@ -34,7 +34,7 @@ module.exports = class AddPrefixCommand extends Command {
                 i++;
             });
 
-            embed.setAuthor(`Prefix${prefixes.length > 1 ? 'es' : ''} for ${msg.guild.name}`, this.client.user.avatarURL())
+            embed.setAuthor(`Prefix${prefixes.length > 1 ? 'es' : ''} for ${msg.guild.name}`, this.client.user.displayAvatarURL())
             embed.setDescription(prefixesStr);
         }
         else {

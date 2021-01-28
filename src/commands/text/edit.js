@@ -71,10 +71,10 @@ module.exports = class SayCommand extends Command {
                 let embed = this.client.util.embed();
                 embed.setColor(global.gcolors[0])
                 if (args.silent) {
-                    embed.setAuthor(this.client.user.tag, this.client.user.avatarURL())
+                    embed.setAuthor(this.client.user.tag, this.client.user.displayAvatarURL())
                 }
                 else {
-                    embed.setAuthor(msg.author.tag, msg.author.avatarURL())
+                    embed.setAuthor(msg.author.tag, msg.author.displayAvatarURL())
                 }
             
                 if (args.uwu) {

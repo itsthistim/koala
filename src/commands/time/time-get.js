@@ -77,13 +77,13 @@ module.exports = class GetCommand extends Command {
             msg.channel.send(moment().tz(args.timeUser).format(userFormat[0].Format));
             
             embed.setColor(global.gcolors[0]);
-            embed.setAuthor(`Time for ${args.timeUser}`, args.timeUser.user.avatarURL( {dynamic: true} ));
+            embed.setAuthor(`Time for ${args.timeUser}`, args.timeUser.user.displayAvatarURL( {dynamic: true} ));
             embed.setDescription(moment().tz(userTime[0].TimeZone).format('hh:mm:ss a'));
         }
         else {
             if (userTime.length > 0) {
                 embed.setColor(global.gcolors[0]);
-                embed.setAuthor(`${args.timeUser.user.username}'s time`, args.timeUser.user.avatarURL( {dynamic: true} ));
+                embed.setAuthor(`${args.timeUser.user.username}'s time`, args.timeUser.user.displayAvatarURL( {dynamic: true} ));
                 embed.setDescription(moment().tz(userTime[0].TimeZone).format(userFormat[0].Format));
             }
             else {

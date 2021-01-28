@@ -53,7 +53,7 @@ module.exports = class ShowPostCommand extends Command {
         embed.setImage(post.url);
     
         embed.setColor('RANDOM');
-        embed.setFooter(`👍 ${post.ups} | 👤 u/${post.author} | 📆 ${moment.unix(post.created).format('DD MMM YYYY')}`, msg.author.avatarURL({dynamic: true}));
+        embed.setFooter(`👍 ${post.ups} | 👤 u/${post.author} | 📆 ${moment.unix(post.created).format('DD MMM YYYY')}`, msg.author.displayAvatarURL({dynamic: true}));
     
         msg.channel.send({ embed });
     }

@@ -64,7 +64,7 @@ module.exports = class TestCommand extends Command {
 
         const base = await Canvas.loadImage('https://media.discordapp.net/attachments/502208815937224718/762102918203179008/bob-ross.png?width=524&height=677');
 
-        const { body } = u.avatarURL({ format: 'png' });
+        const { body } = u.displayAvatarURL({ format: 'png' });
         const avatar = await loadImage(body);
 
         const canvas = createCanvas(base.width, base.height);

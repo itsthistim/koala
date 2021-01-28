@@ -126,7 +126,7 @@ class Client extends AkairoClient {
 			let ind = 1;
 			let membersMap = membersFound.map(c => `**${ind++}.** \`${c.user.tag}\``).join("\n");
 			const listEmbed = new Discord.MessageEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+			.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
 			.setDescription(`Mulitple members found. Please choose one of the following members, or type cancel.\n\n${membersMap}`)
 
 			let userMsgFind = await msgFilter.find(c => c.userID === message.author.id)
@@ -161,7 +161,7 @@ class Client extends AkairoClient {
 				} catch (e) {
 					//Catch timeout
 					const outOfTimeE = new Discord.MessageEmbed()
-					.setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))
+					.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
 					.setDescription(`<a:rxm:683827905377206310> You ran out of time, command has been cancelled`)
 
 					outOfTime = await true;
@@ -188,7 +188,7 @@ class Client extends AkairoClient {
 
 				//A valid input was not found
 				const notValidInput = new Discord.MessageEmbed()
-					.setAuthor(message.author.tag, message.author.avatarURL({
+					.setAuthor(message.author.tag, message.author.displayAvatarURL({
 						dynamic: true
 					}))
 					.setDescription(`❌ Your \`Input\` was not valid. Please choose a valid numbers from below, or type cancel.\n\n${membersMap}`)
@@ -199,7 +199,7 @@ class Client extends AkairoClient {
 			//To many tries, command failed
 			if (failed == true) {
 				let embed = new Discord.MessageEmbed()
-				.setAuthor(message.author.tag, message.author.avatarURL( {format: 'png', dynamic: true }))
+				.setAuthor(message.author.tag, message.author.displayAvatarURL( {format: 'png', dynamic: true }))
 				.setColor("#BA0000")
 				.setDescription(`<a:rxm:683827905377206310> Too many retries, command has been cancelled`)
 				promptMsg ? promptMsg.edit(embed) : message.util.send(embed)
@@ -209,7 +209,7 @@ class Client extends AkairoClient {
 
 			if (collectedInput === "cancel") {
 				let embed = new Discord.MessageEmbed()
-					.setAuthor(message.author.tag, message.author.avatarURL( { format: 'png', dynamic: true }))
+					.setAuthor(message.author.tag, message.author.displayAvatarURL( { format: 'png', dynamic: true }))
 					.setDescription(` ${w} Command has been cancelled`);
 				promptMsg ? promptMsg.edit(embed) : message.channel.send(embed);
 				return Flag.cancel();
@@ -230,7 +230,7 @@ class Client extends AkairoClient {
 			try {
 				const memberType = this.commandHandler.resolver.type('member');
 				const member = memberType(msg, phrase);
-				return member.user.avatarURL({ format: 'png', size: 128 });
+				return member.user.displayAvatarURL({ format: 'png', size: 128 });
 			} catch (e) {
 				return null;
 			}

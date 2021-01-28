@@ -50,7 +50,7 @@ module.exports = class FormatCommand extends Command {
         
         let e = this.client.util.embed()
         .setColor(global.gcolors[1])
-        .setAuthor(`Updated format!`, this.client.user.avatarURL())
+        .setAuthor(`Updated format!`, this.client.user.displayAvatarURL())
         .setDescription(`${this.client.user.username} will now use the ${args.format} format for the time commands!`);
         
         msg.util.send(e);

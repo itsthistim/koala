@@ -168,7 +168,7 @@ module.exports = class ScrollCommand extends Command {
             embed.setTitle(post.title);
             embed.setURL(`https://reddit.com${post.permalink}`);
             embed.setColor('RANDOM');
-            embed.setFooter(`👍 ${post.ups} | 👤 u/${post.author} | 📆 ${moment.unix(post.created).format('DD MMM YYYY')}`, msg.author.avatarURL({ dynamic: true }));
+            embed.setFooter(`👍 ${post.ups} | 👤 u/${post.author} | 📆 ${moment.unix(post.created).format('DD MMM YYYY')}`, msg.author.displayAvatarURL({ dynamic: true }));
 
             let postMsg = await msg.util.send({ embed });
             return postMsg;

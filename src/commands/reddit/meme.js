@@ -33,7 +33,7 @@ module.exports = class MemeCommand extends Command {
         embed.setImage(srcURL);
     
         embed.setColor('RANDOM');
-        embed.setFooter(`👍 ${post.ups} | 👤 u/${post.author} | 📆 ${moment.unix(post.created).format('DD MMM YYYY')}`, msg.author.avatarURL({dynamic: true}));
+        embed.setFooter(`👍 ${post.ups} | 👤 u/${post.author} | 📆 ${moment.unix(post.created).format('DD MMM YYYY')}`, msg.author.displayAvatarURL({dynamic: true}));
     
         msg.channel.send({ embed });
     }

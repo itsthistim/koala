@@ -40,7 +40,7 @@ module.exports = class TestCommand extends Command {
         .setURL(`https://reddit.com${post1.permalink}`)
         .setImage(srcURL1)
         .setColor('RANDOM')
-        .setFooter(`👍 ${post1.ups} | 👤 u/${post1.author} | 📆 ${moment.unix(post1.created).format('DD MMM YYYY')}`, message.author.avatarURL({dynamic: true}));
+        .setFooter(`👍 ${post1.ups} | 👤 u/${post1.author} | 📆 ${moment.unix(post1.created).format('DD MMM YYYY')}`, message.author.displayAvatarURL({dynamic: true}));
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
@@ -57,7 +57,7 @@ module.exports = class TestCommand extends Command {
         .setURL(`https://reddit.com${post2.permalink}`)
         .setImage(srcURL2)
         .setColor('RANDOM')
-        .setFooter(`👍 ${post2.ups} | 👤 u/${post2.author} | 📆 ${moment.unix(post2.created).format('DD MMM YYYY')}`, message.author.avatarURL({dynamic: true}));
+        .setFooter(`👍 ${post2.ups} | 👤 u/${post2.author} | 📆 ${moment.unix(post2.created).format('DD MMM YYYY')}`, message.author.displayAvatarURL({dynamic: true}));
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -74,7 +74,7 @@ module.exports = class TestCommand extends Command {
         .setURL(`https://reddit.com${post3.permalink}`)
         .setImage(srcURL3)
         .setColor('RANDOM')
-        .setFooter(`👍 ${post3.ups} | 👤 u/${post3.author} | 📆 ${moment.unix(post3.created).format('DD MMM YYYY')}`, message.author.avatarURL({dynamic: true}));
+        .setFooter(`👍 ${post3.ups} | 👤 u/${post3.author} | 📆 ${moment.unix(post3.created).format('DD MMM YYYY')}`, message.author.displayAvatarURL({dynamic: true}));
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -91,7 +91,7 @@ module.exports = class TestCommand extends Command {
         .setURL(`https://reddit.com${post4.permalink}`)
         .setImage(srcURL4)
         .setColor('RANDOM')
-        .setFooter(`👍 ${post4.ups} | 👤 u/${post4.author} | 📆 ${moment.unix(post4.created).format('DD MMM YYYY')}`, message.author.avatarURL({dynamic: true}));
+        .setFooter(`👍 ${post4.ups} | 👤 u/${post4.author} | 📆 ${moment.unix(post4.created).format('DD MMM YYYY')}`, message.author.displayAvatarURL({dynamic: true}));
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,7 +108,7 @@ module.exports = class TestCommand extends Command {
         .setURL(`https://reddit.com${post5.permalink}`)
         .setImage(srcURL5)
         .setColor('RANDOM')
-        .setFooter(`👍 ${post5.ups} | 👤 u/${post5.author} | 📆 ${moment.unix(post5.created).format('DD MMM YYYY')}`, message.author.avatarURL({dynamic: true}));
+        .setFooter(`👍 ${post5.ups} | 👤 u/${post5.author} | 📆 ${moment.unix(post5.created).format('DD MMM YYYY')}`, message.author.displayAvatarURL({dynamic: true}));
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		let channel = message.channel;
@@ -118,10 +118,10 @@ module.exports = class TestCommand extends Command {
 			.then(hooks => {
 				if(hooks.size == 0) {
 					channel.createWebhook(this.client.user.username, {
-						avatar: this.client.user.avatarURL({dynamic: true}),
+						avatar: this.client.user.displayAvatarURL({dynamic: true}),
 					}).then(hook => hook.send({
 						username: this.client.user.username,
-						avatarURL: this.client.user.avatarURL(),
+						displayAvatarURL: this.client.user.displayAvatarURL(),
 						embeds: [embed1, embed2, embed3, embed4, embed5],
 					}))
 				}
@@ -129,7 +129,7 @@ module.exports = class TestCommand extends Command {
 					let hook = hooks.first();
 					hook.send({
 						username: this.client.user.username,
-						avatarURL: this.client.user.avatarURL(),
+						displayAvatarURL: this.client.user.displayAvatarURL(),
 						embeds: [embed1, embed2, embed3, embed4, embed5],
 					})
 				}

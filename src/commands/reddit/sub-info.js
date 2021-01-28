@@ -50,7 +50,7 @@ module.exports = class SubInfoCommand extends Command {
             embed.addField(`Members`, `👋 Active users: ${sub.active_user_count}\n🌟 Subscribers: ${sub.subscribers}`, true);
             embed.setColor(global.gcolors[0]);
             embed.setTimestamp();
-            embed.setFooter(`Requested by ${msg.author.tag}`, msg.author.avatarURL({ dynamic: true }));
+            embed.setFooter(`Requested by ${msg.author.tag}`, msg.author.displayAvatarURL({ dynamic: true }));
 
             if (!sub.over_18) {
                 embed.setThumbnail(sub.icon_img);

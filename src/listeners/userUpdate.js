@@ -25,8 +25,8 @@ module.exports = class UserUpdateListener extends Listener {
 				embed.addField(`Discriminator`, `Old: ${oldUser.discriminator}\nNew: ${newUser.discriminator}`);
 			}
 
-			if (newUser.avatarURL() != oldUser.avatarURL()) {
-				embed.addField(`Discriminator`, `Old: \`${oldUser.avatarURL()}\`\nNew: \`${newUser.avatarURL()}\``);
+			if (newUser.displayAvatarURL() != oldUser.displayAvatarURL()) {
+				embed.addField(`Discriminator`, `Old: \`${oldUser.displayAvatarURL()}\`\nNew: \`${newUser.displayAvatarURL()}\``);
 			}
 		}
 	}

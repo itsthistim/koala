@@ -36,7 +36,7 @@ module.exports = class TweetCommand extends Command {
 
     async exec(msg, args) {
         const embed = this.client.util.embed()
-            .setAuthor(msg.author.username, msg.author.avatarURL({dynamic: true}))
+            .setAuthor(msg.author.username, msg.author.displayAvatarURL({dynamic: true}))
             .setDescription(`${args.text}`)
             .setFooter(`@${msg.author.username} on Twitter`, "http://pluspng.com/img-png/twitter-logo-png-twitter-logo-vector-png-clipart-library-518.png")
             .setColor("#1DA1F2");
