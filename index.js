@@ -228,7 +228,7 @@ class Client extends AkairoClient {
 			try {
 				const userType = this.commandHandler.resolver.type('user');
 				const user = userType(msg, phrase);
-				return user.avatarURL({ format: 'png', size: 512 });
+				return user.avatarURL({ format: 'png', size: 128 });
 			} catch (e) {
 				return null;
 			}
