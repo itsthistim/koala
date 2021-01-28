@@ -23,19 +23,6 @@ module.exports = class RainbowCommand extends Command {
     }
 
     *args() {
-        // const u = yield {
-        //     type: 'member',
-        //     match: 'phrase',
-        //     default: msg => msg.guild.members.cache.get(msg.author.id),
-        //     prompt: {
-        //         start: 'Please provide a user.',
-        //         retry: 'Please provide a valid user. Try again!',
-        //         optional: true
-        //     }
-        // };
-
-        // return { u };
-
         const image = yield {
             type: 'image',
             default: msg => msg.author.avatarURL({ format: 'png', size: 128 }),
