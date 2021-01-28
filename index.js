@@ -9,7 +9,6 @@ global.DB = require('./src/util/queryDatabase.js')
 const Discord = require('discord.js');
 const { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler, Flag } = require('discord-akairo');
 const Logger = require('./src/util/logger.js');
-const request = require('node-superfetch');
 //#endregion
 //#region Paths
 const { join } = require('path');
