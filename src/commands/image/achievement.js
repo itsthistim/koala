@@ -9,7 +9,7 @@ registerFont(path.join(__dirname, '..', '..', 'util', 'assets', 'fonts', 'Minecr
 module.exports = class AchievementCommand extends Command {
     constructor() {
         super('achievement', {
-            aliases: ['achievement'],
+            aliases: ['achievement', 'minecraft', 'advancement'],
             category: '',
             userPermissions: [],
             clientPermissions: ['ATTACH_FILES'],
