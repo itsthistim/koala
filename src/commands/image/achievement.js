@@ -1,7 +1,7 @@
 const { Command } = require('discord-akairo');
 const Logger = require('../../util/logger.js');
 const { createCanvas, loadImage, registerFont } = require('canvas');
-const { shortenText } = require('../../util/Canvas');
+const { shortenText, drawImageWithTint  } = require('../../util/Canvas');
 const path = require('path');
 registerFont(path.join(__dirname, '..', '..', 'util', 'assets', 'fonts', 'MinecraftRegular-Bmg3.otf'), { family: 'Minecraftia' });
 
@@ -24,19 +24,19 @@ module.exports = class AchievementCommand extends Command {
         })
     }
 
-*args() {
-    const text = yield {
-        type: 'string',
-        match: 'text',
-        prompt: {
-            start: 'What should the achievement be?',
-            retry: 'Please provide a valid text. Try again!',
-            optional: false
-        }
-    };
-    
-    return { text };
-}
+    *args() {
+        const text = yield {
+            type: 'string',
+            match: 'text',
+            prompt: {
+                start: 'What should the achievement be?',
+                retry: 'Please provide a valid text. Try again!',
+                optional: false
+            }
+        };
+        
+        return { text };
+    }
 
     async exec(msg, { text }) {        
 		try {            
