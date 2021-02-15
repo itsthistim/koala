@@ -1,4 +1,4 @@
-const { Command } = require('discord-akairo');
+const { Command, Argument } = require('discord-akairo');
 const Logger = require('../../util/logger.js');
 const moment = require('moment');
 
@@ -11,11 +11,11 @@ module.exports = class UserInfoCommand extends Command {
                 {
                     id: 'cuser',
                     match: 'phrase',
-                    type: 'user',
+                    type: Argument.union('member', 'user'),
                     default: msg => msg.author,
                     unordered: false,
                     prompt: {
-                        start: 'Please provide a valid member.',
+                        start: 'Please provide a valid user.',
                         retry: 'Please provide a valid user. Try again!',
                         optional: true
                     }

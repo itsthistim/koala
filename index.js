@@ -109,7 +109,7 @@ class Client extends AkairoClient {
 			inhibitorHandler: this.inhibitorHandler
 		});
 
-		//#region Custom Types
+//#region Custom Types
 		this.commandHandler.resolver.addType('amember', async (message, phrase) => {
 			if (!phrase) return null;
 			let memberArray = [];
@@ -236,7 +236,7 @@ class Client extends AkairoClient {
 				return null;
 			}
 		});
-		//#endregion
+//#endregion
 
 		this.commandHandler.loadAll();
 		this.listenerHandler.loadAll();
