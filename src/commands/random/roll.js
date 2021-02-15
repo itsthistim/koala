@@ -13,8 +13,8 @@ module.exports = class RollCommand extends Command {
             ratelimit: 1,
             ownerOnly: false,
             description: {
-                content: 'Roll a dice with a given amount of sides.',
-                usage: '[sides]'
+                content: 'Roll one die or multiple dice with a given amount of sides.',
+                usage: '[sides] [amount of dice]'
             },
         });
     }
