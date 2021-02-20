@@ -40,20 +40,31 @@ module.exports = class TestCommand extends Command {
     }
 
     *args() {
-        const u = yield {
-            type: Argument.union('member', 'user'),
-            match: 'rest',
+        const msg = yield {
+            type: 'message',
+            match: 'phrase',
             prompt: {
-                start: 'Who is a happy little accident?',
-                retry: 'Please provide a valid user. Try again!',
+                start: 'React to what?',
+                retry: 'Please provide a valid message. Try again!',
                 optional: false
             }
         };
 
-        return { u };
+        const emoji = yield {
+            type: Argument.union('emoji', 'string'),
+            match: 'phrase',
+            prompt: {
+                start: 'React with what?',
+                retry: 'Please provide a valid emoji. Try again!',
+                optional: false
+            }
+        };
+
+        return { msg, emoji };
     }
 
-    async exec(message, { u }) {
-        message.channel.send(u.id);
+    async exec(message, { msg, emoji }) {
+        message.delete();
+        msg.react(emoji);
     }
 }
