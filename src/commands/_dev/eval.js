@@ -141,8 +141,6 @@ module.exports = class EvalCommand extends Command {
 			evaled.errored = false;
 			evaled.output = output;
 			return sent;
-
-
 		} catch (err) {
 
 			let error = err;
