@@ -50,6 +50,8 @@ module.exports = class TestCommand extends Command {
             }
         };
 
+        // test#2 for new update webhook
+
         const emoji = yield {
             type: Argument.union('emoji', 'string'),
             match: 'phrase',
