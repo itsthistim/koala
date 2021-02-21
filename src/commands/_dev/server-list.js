@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const Logger = require('../../util/logger.js');
-const hb = require('hastebin-paste');
+const paste = require('better-pastebin');
 const fs = require('fs');
 const markdownTable = require('markdown-table');
 
@@ -15,7 +15,7 @@ module.exports = class ServerlistCommand extends Command {
             ratelimit: 1,
             ownerOnly: true,
             description: {
-                content: 'Lists all servers that I am in.',
+                content: 'Lists all servers.',
                 usage: ''
             },
         })
@@ -31,12 +31,12 @@ module.exports = class ServerlistCommand extends Command {
                 optional: true
             }
         };
-        
+
         return { g };
     }
 
     async exec(msg, { g }) {
-        msg.delete({ timeout: 5000 })
+        // msg.delete();
 
         if (!g) {
             let xa = this.client.users.cache.get('319183644331606016');
@@ -47,10 +47,20 @@ module.exports = class ServerlistCommand extends Command {
 
             let table = markdownTable(tablearr, { padding: false });
 
-            hb(table.toString(), { /*extension: "none",*/ prefix: " ", message: " " })
-            .then(haste => {
-                xa.send(haste);
-            })
+            paste.setDevKey(process.env.PASTEBIN_APIKEY);
+            paste.create({
+              contents: table.toString(),
+              name: "Serverlist",
+              privacy: "1", // 0 - Public, 1 - Unlisted, 2 - Private
+              expires: "1H"
+            },
+            function(success, data) {
+              if(success) {
+                xa.send(`Serverlist: <${data}>`);
+              } else {
+                xa.send(`No success ${data}`);
+              }
+            });
         }
         else if (g) {
             // lol
