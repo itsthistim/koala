@@ -1,7 +1,7 @@
 const { Command, version: akairoVersion } = require('discord-akairo');
 const { MessageEmbed, version: djsVersion } = require('discord.js');
 
-class StatsCommand extends Command {
+module.exports = class StatsCommand extends Command {
 	constructor() {
 		super('stats', {
 			aliases: ['stats', 'bot-info', 'about'],
@@ -32,6 +32,8 @@ class StatsCommand extends Command {
 	}
 
 	async exec(message) {
+
+		const xav = this.client.users.cache.get(this.client.ownerID);
 		const embed = new MessageEmbed()
 			.setColor(global.gcolors[0])
 			.setTitle('Statistics')
@@ -45,10 +47,9 @@ class StatsCommand extends Command {
 				`**Memory**: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
 				`**Discord.js**: v${djsVersion}`,
 				`**Akairo**: v${akairoVersion}`,
-			], true);
+			], true)
+			.setFooter(`Created by ${xav}`);
 
 		return message.channel.send(embed);
 	}
 }
-
-module.exports = StatsCommand;
