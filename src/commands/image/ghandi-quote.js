@@ -7,7 +7,7 @@ const path = require('path');
 module.exports = class GhandiQuoteCommand extends Command {
     constructor() {
         super('gandhi-quote', {
-            aliases: ['ghandi-quote', 'ghandi', 'gandhi'],
+            aliases: ['gandhi-quote', 'ghandi-quote', 'ghandi', 'gandhi'],
             category: 'Image',
             userPermissions: [],
             clientPermissions: ['ATTACH_FILES'],
