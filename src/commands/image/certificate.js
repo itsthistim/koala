@@ -20,7 +20,7 @@ module.exports = class CertificateCommand extends Command {
             ownerOnly: false,
             description: {
                 content: 'Send a custom award to anyone.',
-                usage: '<reason> <name>'
+                usage: '<name> <reason>'
             },
         })
     }
