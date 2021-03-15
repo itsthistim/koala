@@ -33,7 +33,7 @@ module.exports = class StatsCommand extends Command {
 
 	async exec(message) {
 
-		const xav = this.client.users.cache.get(this.client.ownerID);
+		const xav = this.client.users.cache.get(this.client.ownerID[0]);
 		const embed = new MessageEmbed()
 			.setColor(global.gcolors[0])
 			.setTitle('Statistics')
