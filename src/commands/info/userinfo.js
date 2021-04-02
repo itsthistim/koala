@@ -9,7 +9,7 @@ module.exports = class UserInfoCommand extends Command {
             category: 'Lookup',
             args: [
                 {
-                    id: 'cuser',
+                    id: 'target',
                     match: 'phrase',
                     type: Argument.union('member', 'user'),
                     default: msg => msg.author,
@@ -34,7 +34,7 @@ module.exports = class UserInfoCommand extends Command {
         })
     }
 
-    async exec(msg, { cuser }) {
+    async exec(msg, { target }) {
 
         const status = {
             online: "<:online:580819575742922753>",
@@ -45,57 +45,53 @@ module.exports = class UserInfoCommand extends Command {
         };
         const guild = msg.guild;
         
-        if (cuser) {
-            if (guild.member(cuser.id)) {
-
+        if (target) {
+            if (guild.member(target.id)) {
                 msg.guild.roles.cache.sort(function(x, y) {
                     return y.position - x.position
                 });
 
-                let muser = msg.guild.members.cache.get(cuser.id);
-
+                let guildmember = msg.guild.members.cache.get(target.id);
                 let usergame;
                 let userstatus;
 
-                for (let i = muser.presence.activities.length - 1; i >= 0; i--) {
-                    if (muser.presence.activities[i].type == 'CUSTOM_STATUS') {
-                        userstatus = muser.presence.activities[i].state;
+                for (let i = guildmember.presence.activities.length - 1; i >= 0; i--) {
+                    if (guildmember.presence.activities[i].type == 'CUSTOM_STATUS') {
+                        userstatus = guildmember.presence.activities[i].state;
                     }
-                    else if (muser.presence.activities[i].type == 'PLAYING') {
-                        usergame = muser.presence.activities[i].name;
+                    else if (guildmember.presence.activities[i].type == 'PLAYING') {
+                        usergame = guildmember.presence.activities[i].name;
                     }
                 }
-
 
                 const embed = this.client.util.embed()
                 .setColor(global.gcolors[0])
                 .setTitle(`Let me check the archives!`)
-                .setAuthor(cuser.username + '#' + cuser.discriminator, cuser.displayAvatarURL({dynamic: true}))
-                .setDescription(`${status[muser.presence.status]}${muser} ${userstatus ? userstatus : ' '}`)
-                .setThumbnail(cuser.displayAvatarURL({dynamic: true, size: 2048}))
-                //.setImage(cuser.displayAvatarURL({dynamic: true}))
-                //.addField(`Nickname`,`${muser.nickname ? `${muser.nickname}` : '\`No nickname\`'}`, true)
-                .addField(`Joined Server`, `${moment.utc(muser.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(muser.joinedAt).fromNow()})`, true)
-                .addField(`Joined Discord`, `${moment.utc(cuser.createdAt).format('MMMM Do YYYY')}\n(${moment.utc(cuser.createdAt).fromNow()})`, true)
+                .setAuthor(guildmember.user.username + '#' + guildmember.user.discriminator, guildmember.user.displayAvatarURL({dynamic: true}))
+                .setDescription(`${status[guildmember.presence.status]}${guildmember} ${userstatus ? userstatus : ' '}`)
+                .setThumbnail(guildmember.user.displayAvatarURL({dynamic: true, size: 2048}))
+                //.addField(`Nickname`,`${guildmember.nickname ? `${guildmember.nickname}` : '\`No nickname\`'}`, true)
+                .addField(`Joined Server`, `${moment.utc(guildmember.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(guildmember.joinedAt).fromNow()})`, true)
+                .addField(`Joined Discord`, `${moment.utc(guildmember.createdAt).format('MMMM Do YYYY')}\n(${moment.utc(guildmember.createdAt).fromNow()})`, true)
                 .addField('\u200b', '\u200b', true)
                 .addField(`Game`,`${usergame ? usergame : "\`none\`"}`, true)
-                .addField(`Last message`, `${muser.lastMessage ? `[${muser.lastMessage.content}](${muser.lastMessage.url})` : "\`none\`"}`, true)
+                .addField(`Last message`, `${guildmember.lastMessage ? `[${guildmember.lastMessage.content}](${guildmember.lastMessage.url})` : "\`none\`"}`, true)
                 .addField('\u200b', '\u200b', true)
-                .addField(`Roles`, `${muser.roles.cache.map(roles => `${roles}`).join(' ')}`)
-                .setFooter(`Member ID: ${muser.id}`);
+                .addField(`Roles`, `${guildmember.roles.cache.map(roles => `${roles}`).join(' ')}`)
+                .setFooter(`Member ID: ${guildmember.id}`);
                 msg.util.send({ embed });
             }
             else {
                 const embed = this.client.util.embed()
                 .setColor(global.gcolors[0])
                 .setTitle(`Let me check the archives!`)
-                .setAuthor(cuser.username + '#' + cuser.discriminator, cuser.displayAvatarURL({dynamic: true}))
-                .setDescription(`${cuser}.`)
-                .setThumbnail(`${cuser.displayAvatarURL({dynamic: true})}`)
-                .addField("Status", `${status[cuser.presence.status]}`, true)
-                .addField(`Joined Discord`, `${moment.utc(cuser.createdAt).fromNow()}.`, true)
-                .addField(`Game`,`${cuser.presence.game ? muser.presence.game.name : 'None'}`, true)
-                .setFooter(`User ID: ${cuser.id}`);
+                .setAuthor(target.username + '#' + target.discriminator, target.displayAvatarURL({dynamic: true}))
+                .setDescription(`${target}.`)
+                .setThumbnail(`${target.displayAvatarURL({dynamic: true})}`)
+                .addField("Status", `${status[target.presence.status]}`, true)
+                .addField(`Joined Discord`, `${moment.utc(target.createdAt).fromNow()}.`, true)
+                .addField(`Game`,`${target.presence.game ? guildmember.presence.game.name : 'None'}`, true)
+                .setFooter(`User ID: ${target.id}`);
                 msg.util.send(embed);
             }
         }
