@@ -25,7 +25,7 @@ module.exports = class HeartsCommand extends Command {
     *args() {
         const image = yield {
             type: 'image',
-            default: msg => msg.author.displayAvatarURL({ format: 'png', size: 128 }),
+            default: msg => msg.author.displayAvatarURL({ format: 'png', size: 512 }),
             prompt: {
                 start: 'Please provide a valid image or user.',
                 retry: 'Please provide a valid image or user. Try again!',

@@ -3,7 +3,7 @@ const { Command } = require('discord-akairo');
 module.exports = class HelpCommand extends Command {
 	constructor() {
 		super('help', {
-			aliases: ['help', 'halp', 'h'],
+			aliases: ['help', 'halp'],
 			category: 'Lookup',
 			clientPermissions: ['EMBED_LINKS'],
 			args: [
@@ -75,9 +75,9 @@ module.exports = class HelpCommand extends Command {
 		}
 
 		await message.util.send({ embed });
-		
+
 		// IN DM
-		
+
 		// const shouldReply = message.guild && message.channel.permissionsFor(this.client.user).has('SEND_MESSAGES');
 		// try {
 		// 	await message.util.send({ embed });
@@ -93,26 +93,26 @@ module.exports = class HelpCommand extends Command {
 function hasPermission(message, Command) {
 	var client = true, command = true;
 	var result = true;
-	if(Command.ownerOnly) {
+	if (Command.ownerOnly) {
 		return message.author.id == '319183644331606016';
-	} else 
-	if(message.guild) {
-		if(Command.clientPermissions) {
-			if (typeof Command.clientPermissions !== "function") {
-				client = message.guild.me.hasPermission(Command.clientPermissions);
-			} else {
-				client = Command.clientPermissions(message);
+	} else
+		if (message.guild) {
+			if (Command.clientPermissions) {
+				if (typeof Command.clientPermissions !== "function") {
+					client = message.guild.me.hasPermission(Command.clientPermissions);
+				} else {
+					client = Command.clientPermissions(message);
+				}
 			}
-		}
-		if (Command.userPermissions) {
-			if (typeof Command.userPermissions !== "function") {
-				command = message.member.hasPermission(Command.userPermissions);
-			} else {
-				command = Command.userPermissions(message);
+			if (Command.userPermissions) {
+				if (typeof Command.userPermissions !== "function") {
+					command = message.member.hasPermission(Command.userPermissions);
+				} else {
+					command = Command.userPermissions(message);
+				}
 			}
+		} else {
+			result = Command.channelRestriction !== 'guild';
 		}
-	} else {
-		result = Command.channelRestriction !== 'guild';
-	}
 	return result && client && command;
 }

@@ -25,7 +25,7 @@ module.exports = class GunCommand extends Command {
     *args() {
         const image = yield {
             type: 'image',
-            default: msg => msg.author.displayAvatarURL({ format: 'png', size: 128 }),
+            default: msg => msg.author.displayAvatarURL({ format: 'png', size: 512 }),
             prompt: {
                 start: 'Please provide a valid image.',
                 retry: 'Please provide a valid image. Try again!',
