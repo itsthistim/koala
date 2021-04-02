@@ -241,7 +241,7 @@ class Client extends AkairoClient {
 			try {
 				const memberType = this.commandHandler.resolver.type('member');
 				const member = memberType(msg, phrase);
-				return member.user.displayAvatarURL({ format: 'png', size: 128 });
+				return member.user.displayAvatarURL({ format: 'png', size: 512 });
 			} catch (e) {
 				return null;
 			}
