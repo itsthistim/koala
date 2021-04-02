@@ -70,7 +70,7 @@ class Client extends AkairoClient {
 						const embed = new Discord.MessageEmbed()
 							.setColor(global.gcolors[0])
 							.setDescription('❗ Too many retries! Cancelled command.');
-						message.channel.send(embed);	
+						message.channel.send(embed);
 						pmsg.delete();
 					},
 					cancel: async (message, { message: pmsg }) => {
@@ -110,6 +110,7 @@ class Client extends AkairoClient {
 		});
 
 //#region Custom Types
+
 		this.commandHandler.resolver.addType('amember', async (message, phrase) => {
 			if (!phrase) return null;
 			let memberArray = [];
@@ -217,17 +218,26 @@ class Client extends AkairoClient {
 
 			return memberArray[collectedInput - 1]
 		});
-		
-		this.commandHandler.resolver.addType('image', (msg, phrase) => {
-			const fileTypeReg = /\.(jpe?g|png|gif|jfif|bmp)$/i;
-			const attachment = msg.attachments.first();
 
-			if (attachment) return attachment.url;
+		this.commandHandler.resolver.addType('image', (msg, phrase) => {
+			// if no user or no image url its invalid -> null
 			if (!phrase) return null;
+
+			// attachments
+			const attachment = msg.attachments.first();
+			if (attachment) return attachment.url;
+
+			// regex to check if the given string ends in a valid file type
+			const fileTypeReg = /\.(jpe?g|png|gif|jfif|bmp)$/i;
+
+			// make <links> work
 			phrase = phrase.replace('<', '');
 			phrase = phrase.replace('>', '');
+
+			// if regex returns true then return it to the commmand
 			if (fileTypeReg.test(phrase.toLowerCase())) return phrase;
-			
+
+			// if its not an url check if its a member. if it is return the members pfp url to the command
 			try {
 				const memberType = this.commandHandler.resolver.type('member');
 				const member = memberType(msg, phrase);
@@ -236,6 +246,7 @@ class Client extends AkairoClient {
 				return null;
 			}
 		});
+
 //#endregion
 
 		this.commandHandler.loadAll();

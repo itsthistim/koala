@@ -4,7 +4,7 @@ const { Message } = require('discord.js');
 const Canvas = require('canvas');
 const { createCanvas, loadImage } = require('canvas');
 const path = require('path');
-const GIFEncoder = require('gifencoder');
+// const GIFEncoder = require('gifencoder');
 const frameCount = 31;
 
 module.exports = class TestCommand extends Command {
@@ -53,7 +53,7 @@ module.exports = class TestCommand extends Command {
     //     return { image };
     // }
 
-    async exec(msg, { image }) {        
+    async exec(msg, { image }) {
 
 
         let attmsg = msg.channel.messages.cache.get('825514833935859722');
@@ -63,12 +63,12 @@ module.exports = class TestCommand extends Command {
         for (let i = 0; i < att.length; i++) {
             res += att[i].url + "\n"
         }
-        
+
         msg.channel.send(res);
-		// try {            
+		// try {
         //     const base = await loadImage(path.join(__dirname, '..', '..', 'util', 'assets', 'images', 'beautiful.png'));
         //     const avatar = await loadImage(image);
-            
+
         //     const encoder = new GIFEncoder(base.width, base.height);
         //     const canvas = createCanvas(base.width, base.height);
 		// 	const ctx = canvas.getContext('2d');
@@ -77,7 +77,7 @@ module.exports = class TestCommand extends Command {
         //     encoder.setRepeat(0);
         //     encoder.setDelay(100);
         //     encoder.setQuality(200);
-            
+
         //     for (let i = 0; i < frameCount; i++) {
         //         const frameID = `frame-${i.toString().padStart(2, '0')}.png`;
 		// 		const frame = await loadImage(path.join(__dirname, '..', '..', 'assets', 'images', 'fire', frameID));
@@ -88,7 +88,7 @@ module.exports = class TestCommand extends Command {
         //         encoder.addFrame(ctx);
         //     }
 
-            
+
 		// 	ctx.fillStyle = 'white';
 		// 	ctx.fillRect(0, 0, base.width, base.height);
 		// 	ctx.drawImage(avatar, 249, 24, 105, 105);
