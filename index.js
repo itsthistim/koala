@@ -109,7 +109,7 @@ class Client extends AkairoClient {
 			inhibitorHandler: this.inhibitorHandler
 		});
 
-//#region Custom Types
+	//#region Custom Types
 
 		this.commandHandler.resolver.addType('amember', async (message, phrase) => {
 			if (!phrase) return null;
@@ -247,7 +247,7 @@ class Client extends AkairoClient {
 			}
 		});
 
-//#endregion
+	//#endregion
 
 		this.commandHandler.loadAll();
 		this.listenerHandler.loadAll();
@@ -257,6 +257,3 @@ class Client extends AkairoClient {
 
 const client = new Client({ ws: { intents: ['GUILD_PRESENCES', 'GUILD_MEMBERS'] } });
 client.login();
-//ts
-
-// ws: { intents: ['GUILD_MEMBERS'] }
