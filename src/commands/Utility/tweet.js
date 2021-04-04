@@ -5,7 +5,7 @@ module.exports = class TweetCommand extends Command {
     constructor() {
         super('tweet', {
             aliases: ['tweet'],
-            category: 'Text',
+            category: 'Utility',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],

@@ -7,7 +7,7 @@ module.exports = class UserInfoCommand extends Command {
     constructor() {
         super('urban', {
             aliases: ['urban'],
-            category: 'Lookup',
+            category: 'Info',
             args: [
                 {
                     id: 'term',

@@ -5,7 +5,7 @@ module.exports = class Base64Command extends Command {
 	constructor() {
 		super('base64', {
 			aliases: ['base64', 'b64'],
-            category: 'Cipher',
+            category: 'Cryptography',
             typing: true,
             args: [
                 {

@@ -5,7 +5,7 @@ module.exports = class GoogleCommand extends Command {
    constructor() {
        super('google', {
             aliases: ['google'],
-            category: 'Lookup',
+            category: 'Info',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],

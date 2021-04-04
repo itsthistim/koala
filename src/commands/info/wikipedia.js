@@ -8,7 +8,7 @@ module.exports = class WikipediaCommand extends Command {
     constructor() {
         super('wikipedia', {
             aliases: ['wikipedia', 'wiki'],
-            category: 'Lookup',
+            category: 'Info',
             userPermissions: [],
             clientPermissions: ['EMBED_LINKS'],
             ignorePermissions: [],

@@ -4,6 +4,7 @@ const Logger = require('../../util/logger.js');
 module.exports = class AddPrefixCommand extends Command {
     constructor() {
         super('prefix-list', {
+            // category: 'Info',
             userPermissions: [],
             clientPermissions: [],
             ignorePermissions: [],
