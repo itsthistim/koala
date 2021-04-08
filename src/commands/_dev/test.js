@@ -40,63 +40,21 @@ module.exports = class TestCommand extends Command {
         })
     }
 
-    // *args() {
-    //     const image = yield {
-    //         type: 'image',
-    //         default: msg => msg.author.displayAvatarURL({ format: 'png', size: 512 }),
-    //         prompt: {
-    //             start: 'Please provide a valid image.',
-    //             retry: 'Please provide a valid image. Try again!',
-    //             optional: true
-    //         }
-    //     };
-    //     return { image };
-    // }
+    *args() {
+        const time = yield {
+            type: 'timespan',
+            match: 'rest',
+            prompt: {
+                start: 'How long?',
+                retry: 'Please provide a valid time. Try again!',
+                optional: false
+            }
+        };
+        
+        return { time };
+    }
 
-    async exec(msg, { image }) {
-
-
-        let attmsg = msg.channel.messages.cache.get('825514833935859722');
-        let att = attmsg.attachments.array();
-        let res = "";
-
-        for (let i = 0; i < att.length; i++) {
-            res += att[i].url + "\n"
-        }
-
-        msg.channel.send(res);
-		// try {
-        //     const base = await loadImage(path.join(__dirname, '..', '..', 'util', 'assets', 'images', 'beautiful.png'));
-        //     const avatar = await loadImage(image);
-
-        //     const encoder = new GIFEncoder(base.width, base.height);
-        //     const canvas = createCanvas(base.width, base.height);
-		// 	const ctx = canvas.getContext('2d');
-        //     const stream = encoder.createReadStream();
-        //     encoder.start();
-        //     encoder.setRepeat(0);
-        //     encoder.setDelay(100);
-        //     encoder.setQuality(200);
-
-        //     for (let i = 0; i < frameCount; i++) {
-        //         const frameID = `frame-${i.toString().padStart(2, '0')}.png`;
-		// 		const frame = await loadImage(path.join(__dirname, '..', '..', 'assets', 'images', 'fire', frameID));
-		// 		const ratio = frame.width / frame.height;
-		// 		const height = Math.round(avatar.width / ratio);
-
-        //         ctx.drawImage(frame, 0, avatar.height - height, avatar.width, height);
-        //         encoder.addFrame(ctx);
-        //     }
-
-
-		// 	ctx.fillStyle = 'white';
-		// 	ctx.fillRect(0, 0, base.width, base.height);
-		// 	ctx.drawImage(avatar, 249, 24, 105, 105);
-		// 	ctx.drawImage(avatar, 249, 223, 105, 105);
-		// 	ctx.drawImage(base, 0, 0);
-		// 	return msg.util.send({ files: [{ attachment: canvas.toBuffer(), name: 'beautiful.png' }] });
-		// } catch (err) {
-		// 	return msg.util.send(`Oh no, an error occurred: \`${err.message}\`. Try again later!`);
-		// }
+    async exec(msg, { time }) {
+        msg.util.send(`The given time amounts to ${time} ms.`);
     }
 }
