@@ -79,6 +79,8 @@ module.exports = class extends Command {
 			message.util.send(`${this.client.emoji.moderation} ${mutedMember.user.tag} has been **muted**.`);
 		});
 
+		// stage test 2
+
 		try {
 			message.guild.channels.cache.forEach((channel) => {
 				channel.updateOverwrite(muteRole.id, {

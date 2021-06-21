@@ -41,20 +41,26 @@ module.exports = class TestCommand extends Command {
     }
 
     *args() {
-        const time = yield {
-            type: 'timespan',
+        const color = yield {
+            type: 'color',
             match: 'rest',
             prompt: {
-                start: 'How long?',
-                retry: 'Please provide a valid time. Try again!',
+                start: 'What color?',
+                retry: 'Please provide a valid color. Try again!',
                 optional: false
             }
         };
         
-        return { time };
+        return { color };
     }
 
-    async exec(msg, { time }) {
-        msg.util.send(`The given time amounts to ${time} ms.`);
+    async exec(msg, { color }) {
+        let embed = this.client.util.embed()
+            .setColor(color)
+            .Title(color.ToString() + "<- this might cause problems");
+
+        msg.util.send(embed);
+
+        // stage test
     }
 }
