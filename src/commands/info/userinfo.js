@@ -73,7 +73,7 @@ module.exports = class UserInfoCommand extends Command {
                 .setDescription( `${status[guildmember.presence.status]}${guildmember}${userstatus ? " - " + emojiExists ? this.client.emojis.cache.get(target.presence.activities[0].emoji.id).toString() : "" + userstatus : ''}`)
                 .setThumbnail(guildmember.user.displayAvatarURL({dynamic: true, size: 2048}))
                 .addField(`Joined Server`, `${moment.utc(guildmember.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(guildmember.joinedAt).fromNow()})`, true)
-                .addField(`Joined Discord`, `${moment.utc(guildmember.createdAt).format('MMMM Do YYYY')}\n(${moment.utc(guildmember.createdAt).fromNow()})`, true)
+                .addField(`Joined Discord`, `${moment(guildmember.createdAt).format('MMMM Do YYYY')}\n(${moment(guildmember.createdAt).fromNow()})`, true)
                 .addField('\u200b', '\u200b', true)
                 .addField(`Playing`,`${usergame ? usergame : "Nothing"}`, true)
                 .addField(`Last message`, `${guildmember.lastMessage ? `[${guildmember.lastMessage.content}](${guildmember.lastMessage.url})` : "none"}`, true)

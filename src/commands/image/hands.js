@@ -23,17 +23,6 @@ module.exports = class HandsCommand extends Command {
     }
 
     *args() {
-        // const u = yield {
-        //     type: 'member',
-        //     match: 'phrase',
-        //     default: msg => msg.guild.members.cache.get(msg.author.id),
-        //     prompt: {
-        //         start: 'Please provide a user.',
-        //         retry: 'Please provide a valid user. Try again!',
-        //         optional: true
-        //     }
-        // };
-
         const image = yield {
             type: 'image',
             default: msg => msg.author.displayAvatarURL({ format: 'png', size: 512 }),
