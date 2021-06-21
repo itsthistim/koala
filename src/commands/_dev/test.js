@@ -60,7 +60,5 @@ module.exports = class TestCommand extends Command {
             .Title(color.ToString() + "<- this might cause problems");
 
         msg.util.send(embed);
-
-        // stage test
     }
 }
