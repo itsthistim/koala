@@ -87,7 +87,11 @@ module.exports = class WikipediaCommand extends Command {
                 return msg.channel.send(embed);
 
         } catch (err) {
-            return msg.channel.send(`${err.name}: ${err.message}`);
+            const failembed = this.client.util.embed()
+                .setColor(global.gcolors[2])
+                .setAuthor('Wikipedia', 'https://i.imgur.com/a4eeEhh.png')
+                .setDescription("I was not able to find what you were looking for...");
+                return msg.util.send(failembed);
         }
     }
 }
