@@ -36,17 +36,16 @@ module.exports = class UserInfoCommand extends Command {
 
     async exec(msg, { target }) {
         const guild = msg.guild;
+        const status = {
+            online: "<:online:861986701580697670> ",
+            idle: "<:idle:861986831541207042>",
+            dnd: "<:dnd:861986768517070938> ",
+            streaming: "<:streaming:861986871578722364>",
+            offline: "<:offline:861986750952112189> "
+        };
         
         if (target) {
-            const status = {
-                online: "<:online:580819575742922753>",
-                idle: "<:idle:580819575088742413>",
-                dnd: "<:dnd:580819574816112640>",
-                streaming: "<:streaming:613525444808933379>",
-                offline: "<:offline:580819575319560243>"
-            };
-
-            let emojiExists = this.client.emojis.cache.some(emoji => emoji.id === target.presence.activities[0].emoji.id);
+            //let emojiExists = this.client.emojis.cache.some(emoji => emoji.id === target.presence.activities[0].emoji.id);
 
             let usergame;
             let userstatus;
@@ -70,7 +69,8 @@ module.exports = class UserInfoCommand extends Command {
                 .setColor(global.gcolors[0])
                 .setTitle(`Let me check the archives!`)
                 .setAuthor(guildmember.user.username + '#' + guildmember.user.discriminator, guildmember.user.displayAvatarURL({dynamic: true}))
-                .setDescription( `${status[guildmember.presence.status]}${guildmember}${userstatus ? " - " + emojiExists ? this.client.emojis.cache.get(target.presence.activities[0].emoji.id).toString() : "" + userstatus : ''}`)
+                //.setDescription( `${status[guildmember.presence.status]}${guildmember}${userstatus ? " - " + emojiExists ? this.client.emojis.cache.get(target.presence.activities[0].emoji.id).toString() : "" + userstatus : ''}`)
+                .setDescription( `${status[guildmember.presence.status]}${guildmember}`)
                 .setThumbnail(guildmember.user.displayAvatarURL({dynamic: true, size: 2048}))
                 .addField(`Joined Server`, `${moment.utc(guildmember.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(guildmember.joinedAt).fromNow()})`, true)
                 .addField(`Joined Discord`, `${moment(guildmember.createdAt).format('MMMM Do YYYY')}\n(${moment(guildmember.createdAt).fromNow()})`, true)
