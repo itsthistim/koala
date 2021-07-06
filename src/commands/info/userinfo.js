@@ -45,8 +45,6 @@ module.exports = class UserInfoCommand extends Command {
         };
         
         if (target) {
-            //let emojiExists = this.client.emojis.cache.some(emoji => emoji.id === target.presence.activities[0].emoji.id);
-
             let usergame;
             let userstatus;
             for (let i = target.presence.activities.length - 1; i >= 0; i--) {
@@ -69,7 +67,6 @@ module.exports = class UserInfoCommand extends Command {
                 .setColor(global.gcolors[0])
                 .setTitle(`Let me check the archives!`)
                 .setAuthor(guildmember.user.username + '#' + guildmember.user.discriminator, guildmember.user.displayAvatarURL({dynamic: true}))
-                //.setDescription( `${status[guildmember.presence.status]}${guildmember}${userstatus ? " - " + emojiExists ? this.client.emojis.cache.get(target.presence.activities[0].emoji.id).toString() : "" + userstatus : ''}`)
                 .setDescription( `${status[guildmember.presence.status]}${guildmember}`)
                 .setThumbnail(guildmember.user.displayAvatarURL({dynamic: true, size: 2048}))
                 .addField(`Joined Server`, `${moment.utc(guildmember.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(guildmember.joinedAt).fromNow()})`, true)
