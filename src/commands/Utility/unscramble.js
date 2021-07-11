@@ -5,7 +5,7 @@ const unscramble = require('unscramble');
 module.exports = class UnscrambleCommand extends Command {
     constructor() {
         super('unscramble', {
-            aliases: ['unscramble', 'unscr'],
+            aliases: ['unscramble', 'unscr', 'unsc'],
             category: 'Utility',
             typing: true,
             clientPermissions: ['SEND_MESSAGES'],
@@ -33,9 +33,13 @@ module.exports = class UnscrambleCommand extends Command {
         return { word };
     }
 
-    async exec(msg, { word }) {
+    async exec(msg, args) {
+        
+        if (!args.word) {
+            return msg.channel.send('Wrong args sth is still undefined')
+        }
 
-        let unscrambled = unscramble(word);
+        let unscrambled = unscramble(args.word);
 
         if (unscrambled[0] != 'No results found.') {
             let res = '';

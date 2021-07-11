@@ -1,5 +1,7 @@
 const { Listener } = require('discord-akairo');
 const Logger = require('../util/logger.js');;
+const dr = require('discord-reply');
+const unscramble = require('unscramble');
 
 class MessageListener extends Listener {
 	constructor() {
@@ -12,7 +14,9 @@ class MessageListener extends Listener {
 
 	async exec(msg) {
 
-		let hamWords = ['ham', 'hamborger', 'hamborgerx', '616801307629453314'];
+//#region Resurgence Server
+
+let hamWords = ['ham', 'hamborger', 'hamborgerx', '616801307629453314'];
 		let thorWords = ['thorminator', 'dad', 'daddy', '329796755665190914'];
 		let xirWords = ['xir', 'xiribidus', '729374984551792651'];
 		let walWords = ['wal', 'walrus', 'Walrus5', '467353225104850954'];
@@ -110,6 +114,28 @@ class MessageListener extends Listener {
 				}
 			}
 		}
+
+//#endregion
+	
+//#region Dank Memer Unscrambler
+		if (msg.guild == this.client.guilds.cache.get('861359734941810689') /*STSSWCHBAS*/) {
+			if (msg.author.id == '270904126974590976' /*Dank Memer*/ && msg.content.includes('- Scramble -')) {
+				
+				let scrambledStr = msg.content.match(/`(.*?)`/g)[0].split('`').join('');
+				let unscrambled = unscramble(scrambledStr);
+				
+				if (unscrambled[0] != 'No results found.') {
+					
+					unscrambled.forEach(w => {
+						w = `\`${w}\``;
+					});
+					
+					msg.lineReplyNoMention(`Psssst.. The word${unscrambled.length > 1 ? `s are` : ` is`} ${unscrambled.join(" ")}`);
+				}
+			}
+		}
+//#endregion
+
 	}
 }
 
