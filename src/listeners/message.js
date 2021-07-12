@@ -118,7 +118,7 @@ class MessageListener extends Listener {
 	//#endregion
 		
 	//#region Dank Memer Unscrambler
-		if (msg.guild == this.client.guilds.cache.get('861359734941810689') /*STSSWCHBAS*/ || msg.guild == this.client.guilds.cache.get('502208815937224715') /*..*/) {
+		if (msg.guild == this.client.guilds.cache.get('861359734941810689') /*STSSWCHBAS*/ || msg.guild == this.client.guilds.cache.get('502208815937224715') /*..*/ || msg.guild == this.client.guilds.cache.get('852562130199773244') /*The Bee Nest*/) {
 			if (msg.author.id == '270904126974590976' /*Dank Memer*/ && msg.content.includes('- Scramble -')) {
 				
 				let scrambledStr = msg.content.match(/`(.*?)`/g)[0].split('`').join('');
