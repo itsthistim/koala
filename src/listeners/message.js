@@ -119,17 +119,24 @@ class MessageListener extends Listener {
 		
 	//#region Dank Memer Unscrambler
 		if (msg.guild == this.client.guilds.cache.get('861359734941810689') /*STSSWCHBAS*/ || msg.guild == this.client.guilds.cache.get('502208815937224715') /*..*/ || msg.guild == this.client.guilds.cache.get('852562130199773244') /*The Bee Nest*/) {
-			if (msg.author.id == '270904126974590976' /*Dank Memer*/ && msg.content.includes('- Scramble -')) {
+			if ((msg.author.id == '270904126974590976' /*Dank Memer*/ || msg.author.id == '319183644331606016' /*tim.*/)) {
+				if (msg.content.includes('Scramble -')) {
+					let scrambled = msg.content.match(/`(.*?)`/g)[0].split('`').join('');
+					let unscrambled = unscramble(scrambled);
 				
-				let scrambledStr = msg.content.match(/`(.*?)`/g)[0].split('`').join('');
-				let unscrambled = unscramble(scrambledStr);
-				
-				if (unscrambled[0] != 'No results found.') {
-					unscrambled.forEach(w => {
-						w = `\`${w}\``;
-					});
+					if (unscrambled[0] != 'No results found.') {
+						unscrambled.forEach(w => {
+							w = '`' + w + '`';
+						});
+						
+						msg.lineReplyNoMention(`Psssst.. The word${unscrambled.length > 1 ? `s are` : ` is`} ${unscrambled.join(" ")}`);
+					}	
+				}
+				if (msg.content.includes('Reverse -')) {
+					let reversed = msg.content.match(/`(.*?)`/g)[0].split('`').join('').split('');
+					let unreversed = reversed.reverse().join('');
 					
-					msg.lineReplyNoMention(`Psssst.. The word${unscrambled.length > 1 ? `s are` : ` is`} ${unscrambled.join(" ")}`);
+					msg.lineReplyNoMention(`Psssst.. The word is ${unreversed}`);
 				}
 			}
 		}
