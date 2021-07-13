@@ -5,4 +5,4 @@
 node_modules
 
 # Keep important stuff
-!node_modules/discord-akairo
+!node_modules/discord-akairo/*
