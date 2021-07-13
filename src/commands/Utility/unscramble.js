@@ -34,7 +34,6 @@ module.exports = class UnscrambleCommand extends Command {
     }
 
     async exec(msg, args) {
-        
         if (!args.word) {
             return msg.channel.send('Wrong args sth is still undefined')
         }
