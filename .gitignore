@@ -1,2 +1,8 @@
-node_modules
+# Ignore secret stuff
 .env
+
+# Ignore big stuff
+node_modules
+
+# Keep important stuff
+!node_modules/discord-akairo
