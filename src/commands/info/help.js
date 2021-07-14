@@ -3,7 +3,7 @@ const { Command } = require('discord-akairo');
 module.exports = class HelpCommand extends Command {
 	constructor() {
 		super('help', {
-			aliases: ['help', 'halp'],
+			aliases: ['help', 'halp', 'hlep', 'hepl'],
 			category: 'Info',
 			clientPermissions: ['EMBED_LINKS'],
 			args: [
