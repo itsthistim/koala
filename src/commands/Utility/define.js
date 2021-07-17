@@ -91,9 +91,7 @@ module.exports = class DefineCommand extends Command {
 
     async exec(msg, args) {
         var embed = this.client.util.embed();
-        console.log(args)
         if (args.german) {
-            msg.channel.send("de");
             wd.getDef(args.word, 'de', null, function(result) {
                 embed.setAuthor("Wiktionary", 'https://upload.wikimedia.org/wikipedia/en/thumb/0/06/Wiktionary-logo-v2.svg/1200px-Wiktionary-logo-v2.svg.png')
                 if (!result.err) {
@@ -106,7 +104,6 @@ module.exports = class DefineCommand extends Command {
             });
         }
         else if (args.french) {
-            msg.channel.send("fr");
             wd.getDef(args.word, 'fr', null, function(result) {
                 embed.setAuthor("Wiktionary", 'https://upload.wikimedia.org/wikipedia/en/thumb/0/06/Wiktionary-logo-v2.svg/1200px-Wiktionary-logo-v2.svg.png')
                 if (!result.err) {
@@ -119,9 +116,7 @@ module.exports = class DefineCommand extends Command {
             });
         }
         else {
-            msg.channel.send("else");
             wd.getDef(args.word, 'en', null, function(result) {
-                console.log(result)
                 embed.setAuthor("Wiktionary", 'https://upload.wikimedia.org/wikipedia/en/thumb/0/06/Wiktionary-logo-v2.svg/1200px-Wiktionary-logo-v2.svg.png')
                 if (!result.err) {
                     embed.addField(result.word, result.definition);
