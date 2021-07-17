@@ -27,6 +27,7 @@
     "owoify-js": "^1.0.7",
     "random-js": "^2.1.0",
     "relevant-urban": "^2.0.0",
-    "unscramble": "0.0.1-v"
+    "unscramble": "0.0.1-v",
+    "word-definition": "^2.1.6"
   }
 }
