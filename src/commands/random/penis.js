@@ -14,7 +14,7 @@ module.exports = class PenisCommand extends Command {
             ratelimit: 1,
             ownerOnly: false,
             description: {
-                content: 'Determines a user\'s penis length which can range between 1 and .',
+                content: 'Determines a user\'s penis length which can range between 1 and 30.',
                 usage: '[user]'
             },
         })
