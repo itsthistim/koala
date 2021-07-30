@@ -75,7 +75,7 @@ module.exports = class UserInfoCommand extends Command {
                 .addField(`Playing`,`${usergame ? usergame : "Nothing"}`, true)
                 .addField(`Last message`, `${guildmember.lastMessage ? `[${guildmember.lastMessage.content}](${guildmember.lastMessage.url})` : "none"}`, true)
                 .addField('\u200b', '\u200b', true)
-                .addField(`Roles`, `${guildmember.roles.cache.map(roles => `${roles}`).join(' ')}`)
+                .addField(`Roles ${guildmember.roles.cache.size}`, `${guildmember.roles.cache.map(roles => `${roles}`).join(' ')}`)
                 .setFooter(`Member ID: ${guildmember.id}`);
                 msg.util.send({ embed });
             }
@@ -86,7 +86,7 @@ module.exports = class UserInfoCommand extends Command {
                 .setAuthor(target.username + '#' + target.discriminator, target.displayAvatarURL({dynamic: true}))
                 .setDescription(`${status[target.presence.status]}${target}${userstatus ? ' - ' + emojiExists ? this.client.emojis.cache.get(target.presence.activities[0].emoji.id).toString() : "" + userstatus : ''}`)
                 .setThumbnail(`${target.displayAvatarURL({dynamic: true})}`)
-                .addField(`Joined Discord`, `${moment.utc(target.createdAt).fromNow()}.`, true)
+                .addField(`Joined Discord`, `${moment(target.createdAt).format('MMMM Do YYYY')}\n(${moment(target.createdAt).fromNow()})`, true)
                 .addField(`Playing`,`${usergame ? usergame : "Nothing"}`, true)
                 .setFooter(`User ID: ${target.id}`);
                 msg.util.send(embed);

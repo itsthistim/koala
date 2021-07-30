@@ -40,25 +40,23 @@ module.exports = class TestCommand extends Command {
         })
     }
 
-    *args() {
-        const color = yield {
-            type: 'color',
-            match: 'rest',
-            prompt: {
-                start: 'What color?',
-                retry: 'Please provide a valid color. Try again!',
-                optional: false
-            }
-        };
+    // *args() {
+    //     const color = yield {
+    //         type: 'color',
+    //         match: 'rest',
+    //         prompt: {
+    //             start: 'What color?',
+    //             retry: 'Please provide a valid color. Try again!',
+    //             optional: false
+    //         }
+    //     };
         
-        return { color };
-    }
+    //     return { color };
+    // }
 
-    async exec(msg, { color }) {
-        let embed = this.client.util.embed()
-            .setColor(color)
-            .Title(color.ToString() + "<- this might cause problems");
-
-        msg.util.send(embed);
+    async exec(msg) {
+        message.guild.channels.cache.forEach(c => {
+            c.lockPermissions();
+        });
     }
 }
