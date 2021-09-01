@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "better-pastebin": "^0.4.1",
-    "canvas": "^2.6.1",
+    "canvas": "^2.8.0",
     "common-tags": "^1.8.0",
     "discord-akairo": "^8.1.0",
     "discord-reply": "^0.1.2",
@@ -25,6 +25,7 @@
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.6",
     "owoify-js": "^1.0.7",
+    "parse-duration": "^1.0.0",
     "random-js": "^2.1.0",
     "relevant-urban": "^2.0.0",
     "unscramble": "0.0.1-v",
