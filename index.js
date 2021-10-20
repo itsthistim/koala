@@ -1,5 +1,5 @@
-//#region database
 require('dotenv').config();
+//#region database
 const mysql2 = require("mysql2/promise");
 
 global.DB = require('./src/util/queryDatabase.js')
