@@ -25,6 +25,17 @@ module.exports = class IntervalCommand extends Command {
         type: 'integer',
         match: 'phrase',
         prompt: {
+            start: 'How many seconds of cooldown should there be between the messages?',
+            retry: 'Please provide a valid cooldown. Try again!',
+            optional: true,
+            default: 5
+        }
+    };
+
+    const cooldown = yield {
+        type: 'integer',
+        match: 'phrase',
+        prompt: {
             start: 'How many times do you want to send the message?',
             retry: 'Please provide a valid amount. Try again!',
             optional: true,
@@ -46,7 +57,6 @@ module.exports = class IntervalCommand extends Command {
 }
 
 async exec(msg, args) {
-        msg.delete({ timeout: 5000 })
         msg.channel.send(args.text);
         
         var i = 3;
@@ -56,6 +66,6 @@ async exec(msg, args) {
             }
             msg.channel.send(args.text);
             i = i + 1;
-        }, 10000);
+        }, args.cooldown*1000);
     }
 }

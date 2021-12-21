@@ -13,7 +13,7 @@ class MessageListener extends Listener {
 	}
 
 	async exec(msg) {
-		//#region Resurgence Server
+		//#region Resurgence
 		if ((msg.guild == '502208815937224715' /*..*/ || msg.guild == '752929101412827286' /*Resurgence*/) && msg.channel.type == "text") {
 			let xavWords = ['xav', 'xa', 'xavons', 'x', '319183644331606016'];
 			let hamWords = ['ham', 'hamborger', 'hamborgerx', '616801307629453314'];
@@ -36,7 +36,6 @@ class MessageListener extends Listener {
 			findWords(mightyWords, msg);
 		}
 		//#endregion
-
 		//#region Dank Memer Unscrambler
 		if (/*msg.guild == this.client.guilds.cache.get('861359734941810689') || */ msg.guild == this.client.guilds.cache.get('502208815937224715') /*..*/ || msg.guild == this.client.guilds.cache.get('852562130199773244') /*The Bee Nest*/) {
 			if ((msg.author.id == '270904126974590976' /*Dank Memer*/ || msg.author.id == '319183644331606016' /*tim.*/)) {
