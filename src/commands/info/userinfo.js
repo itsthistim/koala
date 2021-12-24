@@ -70,12 +70,12 @@ module.exports = class UserInfoCommand extends Command {
                 .setDescription( `${status[guildmember.presence.status]}${guildmember}`)
                 .setThumbnail(guildmember.user.displayAvatarURL({dynamic: true, size: 2048}))
                 .addField(`Joined Server`, `${moment.utc(guildmember.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(guildmember.joinedAt).fromNow()})`, true)
-                .addField(`Joined Discord`, `${moment(guildmember.createdAt).format('MMMM Do YYYY')}\n(${moment(guildmember.createdAt).fromNow()})`, true)
+                .addField(`Joined Discord`, `${moment(guildmember.user.createdAt).format('MMMM Do YYYY')}\n(${moment(guildmember.createdAt).fromNow()})`, true)
                 .addField('\u200b', '\u200b', true)
                 .addField(`Playing`,`${usergame ? usergame : "Nothing"}`, true)
                 .addField(`Last message`, `${guildmember.lastMessage ? `[${guildmember.lastMessage.content}](${guildmember.lastMessage.url})` : "none"}`, true)
                 .addField('\u200b', '\u200b', true)
-                .addField(`Roles ${guildmember.roles.cache.size}`, `${guildmember.roles.cache.map(roles => `${roles}`).join(' ')}`)
+                .addField(`Roles ${guildmember.roles.cache.size - 1}`, `${guildmember.roles.cache.map(roles => `${roles}`).join(' ')}`)
                 .setFooter(`Member ID: ${guildmember.id}`);
                 msg.util.send({ embed });
             }
