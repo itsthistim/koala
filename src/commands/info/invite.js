@@ -34,7 +34,7 @@ class InviteCommand extends Command {
 	async exec(message) {
 		const embed = this.client.util.embed()
 			.setColor(global.gcolors[0])
-			.setDescription(`**[Add me to your server!](${await this.fetchInvite()})**`);
+			.setDescription(`[Add me to your server!](${await this.fetchInvite()})`);
 
 		return message.util.send({ embed });
 	}
