@@ -14,7 +14,7 @@ module.exports = class IntervalCommand extends Command {
             ownerOnly: false,
             description: {
                 content: 'No description provided.',
-                usage: ''
+                usage: 'cooldown amount text'
             },
         })
     }
