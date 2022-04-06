@@ -36,7 +36,7 @@ module.exports = class NewHelpCommand extends Command {
         let prefix = this.handler.prefix[0];
 
         if (!command || command === null) {
-            const Home = this.client.util.embed()
+            const HOME = this.client.util.embed()
             .setTitle("Help | Home")
             .addFields([
                 {
@@ -56,7 +56,7 @@ module.exports = class NewHelpCommand extends Command {
             .setFooter(`Requested by ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp();
 
-            const Commands = this.client.util.embed()
+            const COMMANDS = this.client.util.embed()
             .setTitle("Help | Commands")
             .setDescription(`View all commands and their categories below.\nFor further info about a specific command, use \`${prefix}help <command>\`!`);
 
@@ -68,15 +68,15 @@ module.exports = class NewHelpCommand extends Command {
                 }
                 else if (title) {
                     // embed.addField(c.id, `\`${c.map(cmd => cmd.aliases[0]).join('` `')}\``/*, true*/);
-                    Commands.addField(`${title} [${c.size}]`, `\`${c.map((c) => c.id).join("`, `")}\``);
+                    COMMANDS.addField(`${title} [${c.size}]`, `\`${c.map((c) => c.id).join("`, `")}\``);
                 }
             }
 
-            const Search = this.client.util.embed()
+            const SEARCH = this.client.util.embed()
             .setTitle("Help | Search")
             .setDescription("Find commands or aliases by typing a query");
 
-            const msg = await message.util.send(Home);
+            const msg = await message.util.send(HOME);
             try {
                 await msg.react("🏠");
                 await msg.react("📚");
@@ -97,7 +97,7 @@ module.exports = class NewHelpCommand extends Command {
                 r.users.remove(u.id);
                 switch (r.emoji.name) {
                     case "🏠":
-                        msg.edit(Home);
+                        msg.edit(HOME);
 
                         if (SearchCollector === null || SearchCollector === void 0 ? void 0 : SearchCollector.client) {
                             SearchCollector.stop();
@@ -105,7 +105,7 @@ module.exports = class NewHelpCommand extends Command {
 
                         break;
                     case "📚":
-                        msg.edit(Commands);
+                        msg.edit(COMMANDS);
 
                         if (SearchCollector === null || SearchCollector === void 0 ? void 0 : SearchCollector.client) {
                             SearchCollector.stop();
@@ -113,7 +113,7 @@ module.exports = class NewHelpCommand extends Command {
 
                         break;
                     case "🔎":
-                        msg.edit(Search);
+                        msg.edit(SEARCH);
 
                         const filter = m => !m.author.bot;
                         SearchCollector = msg.channel.createMessageCollector(filter, { time: 3e5 });
@@ -131,29 +131,29 @@ module.exports = class NewHelpCommand extends Command {
                                     });
                                 });
 
-                            const Result = this.client.util.embed().setTitle("Search Results");
+                            const RESULT = this.client.util.embed().setTitle("Search Results");
 
                             if (!res.first()) {
-                                Result.setDescription("No commands or aliases have been found.");
+                                RESULT.setDescription("No commands or aliases have been found.");
                                 SearchCollector.stop();
-                                msg.edit(Result);
+                                msg.edit(RESULT);
                                 return m.delete();
                             }
 
                             if (Object.keys(res.first()).includes("category")) {
-                                Result.setDescription("Found Command");
+                                RESULT.setDescription("Found Command");
                                 var _a;
-                                Result.addField(res.first().id, stripIndents`
+                                RESULT.addField(res.first().id, stripIndents`
                                 **\\>** Name: **${res.first().id}**
                                 **\\>** Aliases: **${res.first().aliases.join("**, **")}**
                                 **\\>** Cooldown: **"TODO"**
                                 **\\>** Description: **${res.first().description.toString()}**
                                 ${res.first().ownerOnly ? "**Developer Only!**" : ""}`)
-                                Result.setThumbnail(message.author.displayAvatarURL({ dynamic: true }));
+                                RESULT.setThumbnail(message.author.displayAvatarURL({ dynamic: true }));
 
                                 // insert at TODO above ${ms(res.first().cooldown ?? this.handler.defaultCooldown, { long: true })}
                             }
-                            msg.edit(Result);
+                            msg.edit(RESULT);
                         });
                         break;
                 }

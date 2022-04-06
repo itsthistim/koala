@@ -23,7 +23,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
     "mysql2": "^2.2.5",
-    "nodemon": "^2.0.6",
+    "nodemon": "^2.0.15",
     "owoify-js": "^1.0.7",
     "parse-duration": "^1.0.0",
     "random-js": "^2.1.0",
