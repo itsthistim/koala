@@ -1,22 +1,17 @@
 require('dotenv').config();
-//#region database
-const mysql2 = require("mysql2/promise");
 
+const mysql2 = require("mysql2/promise");
 global.DB = require('./src/util/queryDatabase.js')
 
-//#endregion
-//#region Discord & Akairo
 const Discord = require('discord.js');
 const { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler, Flag } = require('discord-akairo');
 const Logger = require('./src/util/logger.js');
 
-//#endregion
-//#region Paths
 const { join } = require('path');
 const commandsPath = join('./src/commands/');
 const listenersPath = join('./src/listeners/');
 const inhibitorsPath = join('./src/inhibitors/');
-//#endregion
+
 
 global.gcolors = ['#9aacb6', '#43B581', '#F04747'];
 
@@ -110,12 +105,12 @@ class Client extends AkairoClient {
 			inhibitorHandler: this.inhibitorHandler
 		});
 
-	//#region Custom Types
+		//#region Custom Types
 
 		this.commandHandler.resolver.addType('color', async (message, phrase) => {
 			if (!phrase) return null;
-                const color = phrase.startsWith('[') ? phrase.slice(phrase.indexOf('[') + 1).slice(0, phrase.indexOf(']') - 1).split(',').map(e => parseInt(e.trim())) : phrase.toUpperCase().replace(' ', '_');
-                return this.client.util.resolveColor(color);
+			const color = phrase.startsWith('[') ? phrase.slice(phrase.indexOf('[') + 1).slice(0, phrase.indexOf(']') - 1).split(',').map(e => parseInt(e.trim())) : phrase.toUpperCase().replace(' ', '_');
+			return this.client.util.resolveColor(color);
 		});
 
 		this.commandHandler.resolver.addType('timespan', async (message, phrase) => {
@@ -132,15 +127,15 @@ class Client extends AkairoClient {
 				milliseconds: { label: '(?:milliseconds?|msecs?|mills?|millis?|ms)', value: 1 }
 			}
 
-            const regexString = Object.entries(TimeUnits).map(([name, { label }]) => String.raw`(?:(?<${name}>-?(?:\d+)?\.?\d+) *${label})?`).join('\\s*');
-            const match = new RegExp(`^${regexString}$`, 'i').exec(phrase);
-            if (!match) return null;
-            let milliseconds = 0;
-            for (const key in match.groups) {
-                const value = Number(match.groups[key] || 0);
-                milliseconds += value * TimeUnits[key].value;
-            }
-            return milliseconds;
+			const regexString = Object.entries(TimeUnits).map(([name, { label }]) => String.raw`(?:(?<${name}>-?(?:\d+)?\.?\d+) *${label})?`).join('\\s*');
+			const match = new RegExp(`^${regexString}$`, 'i').exec(phrase);
+			if (!match) return null;
+			let milliseconds = 0;
+			for (const key in match.groups) {
+				const value = Number(match.groups[key] || 0);
+				milliseconds += value * TimeUnits[key].value;
+			}
+			return milliseconds;
 		});
 
 		this.commandHandler.resolver.addType('amember', async (message, phrase) => {
@@ -159,8 +154,8 @@ class Client extends AkairoClient {
 			let ind = 1;
 			let membersMap = membersFound.map(c => `**${ind++}.** \`${c.user.tag}\``).join("\n");
 			const listEmbed = new Discord.MessageEmbed()
-			.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-			.setDescription(`Mulitple members found. Please choose one of the following members, or type cancel.\n\n${membersMap}`)
+				.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+				.setDescription(`Mulitple members found. Please choose one of the following members, or type cancel.\n\n${membersMap}`)
 
 			let userMsgFind = await msgFilter.find(c => c.userID === message.author.id)
 
@@ -194,8 +189,8 @@ class Client extends AkairoClient {
 				} catch (e) {
 					//Catch timeout
 					const outOfTimeE = new Discord.MessageEmbed()
-					.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
-					.setDescription(`<a:rxm:683827905377206310> You ran out of time, command has been cancelled`)
+						.setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+						.setDescription(`<a:rxm:683827905377206310> You ran out of time, command has been cancelled`)
 
 					outOfTime = await true;
 					promptMsg ? promptMsg.edit(outOfTimeE) : message.channel.send(outOfTimeE)
@@ -232,9 +227,9 @@ class Client extends AkairoClient {
 			//To many tries, command failed
 			if (failed == true) {
 				let embed = new Discord.MessageEmbed()
-				.setAuthor(message.author.tag, message.author.displayAvatarURL( {format: 'png', dynamic: true }))
-				.setColor("#BA0000")
-				.setDescription(`<a:rxm:683827905377206310> Too many retries, command has been cancelled`)
+					.setAuthor(message.author.tag, message.author.displayAvatarURL({ format: 'png', dynamic: true }))
+					.setColor("#BA0000")
+					.setDescription(`<a:rxm:683827905377206310> Too many retries, command has been cancelled`)
 				promptMsg ? promptMsg.edit(embed) : message.util.send(embed)
 
 				return Flag.cancel()
@@ -242,7 +237,7 @@ class Client extends AkairoClient {
 
 			if (collectedInput === "cancel") {
 				let embed = new Discord.MessageEmbed()
-					.setAuthor(message.author.tag, message.author.displayAvatarURL( { format: 'png', dynamic: true }))
+					.setAuthor(message.author.tag, message.author.displayAvatarURL({ format: 'png', dynamic: true }))
 					.setDescription(` ${w} Command has been cancelled`);
 				promptMsg ? promptMsg.edit(embed) : message.channel.send(embed);
 				return Flag.cancel();
@@ -279,7 +274,7 @@ class Client extends AkairoClient {
 			}
 		});
 
-	//#endregion
+		//#endregion
 
 		this.commandHandler.loadAll();
 		this.listenerHandler.loadAll();
