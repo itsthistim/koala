@@ -30,10 +30,10 @@ module.exports = class SusCommand extends Command {
 
         let channel = message.guild.channels.cache.get('962035096607678464');
 
-        let e = new MessageEmbed()
+        let embed = new MessageEmbed()
             .setColor(COLORS.RED)
             .setDescription("ඞ ඞ ඞ");
 
-        channel.send({ content: `<@${message.author.id}>`, embeds: [e] })
+        channel.send({ content: `<@${message.author.id}>`, embeds: [embed] })
     }
 }
