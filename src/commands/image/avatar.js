@@ -1,44 +1,35 @@
-const { Command } = require('discord-akairo');
-const Logger = require('../../util/logger.js');
+const { send, reply } = require('@sapphire/plugin-editable-commands');
+const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
+const { Time } = require('@sapphire/time-utilities');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class AvatarCommand extends Command {
-    constructor() {
-        super('avatar', {
-            aliases: ['avatar'],
-            category: 'Image',
-            userPermissions: [],
-            clientPermissions: [],
-            ignorePermissions: [],
-            cooldown: 0,
-            ratelimit: 1,
-            ownerOnly: false,
-            description: {
-                content: 'Shows the avatar of a guild member.',
-                usage: '<member>'
-            },
-        })
-    }
+  constructor(context, options) {
+    super(context, {
+      ...options,
+      name: 'avatar',
+      aliases: ['avatar'],
+      requiredUserPermissions: [],
+      requiredClientPermissions: [],
+      preconditions: [],
+      subCommands: [],
+      flags: [],
+      options: [],
+      nsfw: false,
+      description: {
+        content: 'Shows the avatar of a guild member.',
+        usage: '<member>'
+      }
+    });
+  }
 
-    *args() {
-        const guildMember = yield {
-            type: 'member',
-            match: 'phrase',
-            default: msg => msg.guild.members.cache.get(msg.author.id),
-            prompt: {
-                start: 'Who do you want to view the avatar of?',
-                retry: 'Please provide a valid member. Try again!',
-                optional: true
-            }
-        };
-        
-        return { guildMember };
-    }
+  async messageRun(message, args) {
+    const guildMember = await args.pick('member').catch(() => message.guild.members.cache.get(message.author.id));
 
-    async exec(msg, { guildMember }) {
-        const embed = this.client.util.embed()
-        .setAuthor(guildMember.user.username + "#" + guildMember.user.discriminator, guildMember.user.displayAvatarURL({ dynamic: true }))
-        .setImage(guildMember.user.displayAvatarURL({ dynamic: true, size: 1024 }));
+    const embed = new MessageEmbed()
+      .setAuthor({ name: guildMember.user.username + "#" + guildMember.user.discriminator, iconURL: guildMember.user.displayAvatarURL({ dynamic: true }) })
+      .setImage(guildMember.user.displayAvatarURL({ dynamic: true, size: 1024 }));
 
-        return msg.util.send(embed);
-    }
+    await reply(message, { embeds: [embed] });
+  }
 }

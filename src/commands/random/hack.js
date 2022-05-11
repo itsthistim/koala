@@ -1,43 +1,35 @@
-const { Command } = require('discord-akairo');
-const Logger = require('../../util/logger.js');
+const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
+const { send, reply } = require('@sapphire/plugin-editable-commands');
+const { Time } = require('@sapphire/time-utilities');
+const { PaginatedMessage } = require('@sapphire/discord.js-utilities');
+const { MessageEmbed } = require('discord.js');
+
 
 module.exports = class HackCommand extends Command {
-    constructor() {
-        super('hack', {
-            aliases: ['hack'],
-            category: 'Random',
-            userPermissions: [],
-            clientPermissions: [],
-            ignorePermissions: [],
-            cooldown: 20000,
-            ratelimit: 1,
-            ownerOnly: false,
+    constructor(context, options) {
+        super(context, {
+            ...options,
+            name: 'hack',
+            aliases: ['hack', 'love'],
+            requiredUserPermissions: [],
+            requiredClientPermissions: [],
+            preconditions: [],
+            subCommands: [],
+            flags: [],
+            options: [],
+            nsfw: false,
             description: {
-                content: 'Hack a member.',
-                usage: '[member]'
+                content: 'Hack a user',
+                usage: '[user]',
+                examples: ['', '@User#1234']
             },
-        })
+            detailedDescription: ''
+        });
     }
 
-*args() {
-
-    const m = yield {
-        type: 'member',
-        match: 'phrase',
-        prompt: {
-            start: 'Who do you want to hack?',
-            retry: 'Please provide a valid member. Try again!',
-            optional: true,
-        },
-        default: msg => msg.guild.members.cache.get(msg.author.id)
-    };
-    
-    return { m };
-}
-
-async exec(msg, { m }) {
-        msg.delete({ timeout: 5000 })
-
+    async messageRun(message, args) {
+        // message.delete().catch(() => {});
+        var target = await args.pick('member').catch(() => message.guild.members.cache.get(message.author.id));
         let mostCommonWords = [
             'lmao',
             'lol',
@@ -79,7 +71,7 @@ async exec(msg, { m }) {
 
         let messages = [
             `[▖] Scraping Discord account...`,
-            `[▘] Found:\nE-Mail: \`xX${m.user.username.replace(/\s+/g, '')}IsCoolXx@hotmail.com\`\nPassword: \`${passwords[Math.floor(Math.random() * passwords.length)]}\``,
+            `[▘] Found:\nE-Mail: \`xX${target.user.username.replace(/\s+/g, '')}IsCoolXx@hotmail.com\`\nPassword: \`${passwords[Math.floor(Math.random() * passwords.length)]}\``,
             `[▝] Finding most common word...`,
             `[▗] const mostCommon = "${mostCommonWords[Math.floor(Math.random() * mostCommonWords.length)]}"`,
             `[▖] Fetching dms with closest friends (if there are any friends at all)`,
@@ -87,14 +79,14 @@ async exec(msg, { m }) {
             `[▝] Stealing emojis ${stolenEmojis[Math.floor(Math.random() * stolenEmojis.length)]}`,
             `[▗] Fetching IP address...`,
             `[▖] Found: \`${ipAddresses[Math.floor(Math.random() * ipAddresses.length)]}\``,
-            `**Finished** hacking user \`${m.user.username}\``
+            `**Finished** hacking user \`${target.user.username}\``
         ]
 
         let i = 0;
-        let message = await msg.util.send(`Hacking user \`${m.user.username}\``)
-        
-        setInterval(function() {
-            message.edit(messages[i]);
+        let msg = await send(message, `Hacking user \`${target.user.username}\`...`)
+
+        setInterval(function () {
+            msg.edit(messages[i]);
             i++;
         }, 2000);
     }
