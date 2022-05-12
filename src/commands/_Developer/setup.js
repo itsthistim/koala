@@ -25,13 +25,25 @@ module.exports = class SyncCommand extends Command {
     }
 
     async messageRun(message, args) {
+        message.delete().catch(() => { });
+
+        // set mute role permissions for all channels
+        let muterole = message.guild.roles.cache.find(role => role.name === 'Muted');
         let channels = message.guild.channels.cache;
+
+        channels.forEach(channel => {
+            channel.permissionOverwrites.create(muterole, {
+                SEND_MESSAGES: false,
+                SPEAK: false,
+                ADD_REACTIONS: false
+            });
+        });
+
+        // sync permissions with parent
         channels.forEach(channel => {
             if (channel.parent) {
                 channel.lockPermissions().catch(console.error);
             }
         });
-
-        reply(message, { embeds: [{ description: `${EMOJIS.POSITIVE} Syncronized all permissions with their parent.`, color: COLORS.GREEN }] });
     }
 }
