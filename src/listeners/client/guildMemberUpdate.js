@@ -11,6 +11,7 @@ module.exports = class GuildMemberUpdateListener extends Listener {
     }
 
     run(oldmember, newmember) {
+        //#region auto remove nickname
         let target = 'x';
 
         if (oldmember.user.id == target) {
@@ -20,5 +21,8 @@ module.exports = class GuildMemberUpdateListener extends Listener {
                 }
             }
         }
+        //#endregion
+
+        
     }
 }
