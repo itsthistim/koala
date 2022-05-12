@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Run Discord Webhook
-      uses: Mist3r-Robot/classic-discord-webhook@v1.2.0
+      uses: ItsThisTim/classic-discord-webhook@v1.2.0
       with:
         id: ${{ secrets.DISCORD_WEBHOOK_ID }}
         token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}

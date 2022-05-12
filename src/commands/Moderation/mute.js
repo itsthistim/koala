@@ -43,26 +43,22 @@ module.exports = class MuteCommand extends Command {
         }
 
         if (!time) {
-            return reply(message, 'You must specify a valid time to mute the user.');
+            return reply(message, 'You must specify a valid duration to mute the user.');
         }
 
         var duration = parse(time);
 
         if (!duration) {
-            return reply(message, 'You must specify a valid time to mute the user.');
+            return reply(message, 'You must specify a valid duration to mute the user.');
         }
 
-        if (duration < 1000) {
-            return reply(message, 'You must specify a duration greater than 1 second.');
-        }
-
-        if (duration > 2419200000) {
-            return reply(message, 'You must specify a duration less than 28 days.');
+        if (duration < 1000 || duration >= 2419200000) {
+            return reply(message, 'You must specify a duration between 1 second and 27 days.');
         }
 
         if (member.moderatable) {
-            member.timeout(duration, reason);
-            reply(message, `${member.user.tag} has been muted for **${humanizeDuration(duration, { units: ['y', 'mo', 'w', 'd', 'h', 'm', 's', 'ms'], conjunction: " and ", serialComma: false })}**${reason ? ` for \`${reason}\`` : ''}.`);
+            member.timeout(duration, `Muted by ${message.author.tag}${reason ? `: ${reason}` : ''}`);
+            reply(message, `${member.user.tag} has been muted for **${humanizeDuration(duration, { units: ['w', 'd', 'h', 'm', 's', 'ms'], conjunction: " and ", serialComma: false })}**${reason ? ` for \`${reason}\`` : ''}.`);
         } else {
             return reply(message, `I am unable to timeout ${member.user.tag}.`);
         }
