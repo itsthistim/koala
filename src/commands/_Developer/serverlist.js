@@ -34,7 +34,7 @@ module.exports = class ServerListCommand extends Command {
     ];
 
     this.container.client.guilds.cache.sort((a, b) => b.memberCount - a.memberCount).forEach(guild => {
-      data.push([
+      return data.push([
         guild.name,
         guild.id,
         this.container.client.users.cache.get(guild.ownerId).tag,
@@ -42,14 +42,7 @@ module.exports = class ServerListCommand extends Command {
         guild.members.cache.filter(m => m.user.bot).size,
         guild.memberCount,
         moment(guild.createdTimestamp).format('MMMM Do YYYY, h:mm:ss a') + ` (${moment(guild.createdTimestamp).fromNow()})`,
-        // TODO: fix invites
-        guild.invites.fetch().then(function(invites) {
-          if (invites.size > 0) {
-            return invites.first().url;
-          } else {
-            return "No Invite";
-          }
-        })
+        guild.invites.cache.first()?.url ?? "None"
       ]);
     });
 
@@ -64,10 +57,10 @@ module.exports = class ServerListCommand extends Command {
         expires: new Date(Date.now() + Time.Minute * 2),
         description: title,
         files: [{
-          name: `${title}.js`,
+          name: `${title}.txt`,
           content: {
             format: 'text',
-            highlight_language: 'javascript',
+            highlight_language: null,
             value: content
           }
         }]
