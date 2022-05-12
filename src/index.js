@@ -5,6 +5,7 @@ const { Time } = require('@sapphire/time-utilities');
 const { createConnection } = require('mysql');
 const { Player } = require("discord-player");
 const { Lyrics } = require("@discord-player/extractor");
+const parse = require('parse-duration');
 
 let prefixes = [];
 if (!process.env.DEV) {
@@ -43,6 +44,8 @@ global.EMOJIS = {
 
 global.PLAYER = new Player(client);
 global.LYRICS = Lyrics.init(/*process.env.GENIUS_TOKEN*/);
+
+parse['mo'] = parse['month'];
 
 // global.DB = createConnection({
 // 	host: '127.0.0.1',

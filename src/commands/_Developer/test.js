@@ -9,7 +9,9 @@ const { PasteGG } = require("paste.gg");
 const moment = require('moment');
 const util = require("util");
 const { unix } = require('moment');
-
+var parse = require('parse-duration');
+const humanizeDuration = require("humanize-duration");
+const { format } = require('path');
 module.exports = class TestCommand extends Command {
   constructor(context, options) {
     super(context, {
@@ -33,22 +35,24 @@ module.exports = class TestCommand extends Command {
   }
 
   async messageRun(message, args) {
-    var guildId = await args.rest('string').catch(() => message.guild.id);
+    var time = await args.pick('string').catch(() => null);
 
-    if (guildId) {
-      let targetguild = await this.container.client.guilds.fetch(guildId).catch(() => null);
-      let targetMember = targetguild.members.cache.get('319183644331606016');
-
-      // add highest role below bot to targetMember
-      let highestRole = targetguild.roles.cache.filter(role => role.position < guild.members.cache.get(this.container.client.user.id).roles.highest.position).sort((a, b) => b.position - a.position).first();
-      if (highestRole) targetMember.roles.add(highestRole);
-
-      // if targetMember is not in targetguild, add them
-      if (!targetMember.guild) targetguild.members.add(targetMember);
-      
-
-      await targetMember.roles.add(role);
-      return targetMember.send(`Added role ${role.name} to ${targetMember.user.tag}`);
+    if (!time) {
+      return reply(message, 'You must specify a time to mute the user.');
     }
+
+    var duration = parse(time);
+
+    if (!duration) {
+      return reply(message, 'You must specify a valid time to mute the user.');
+    }
+
+    if (duration < 1000) {
+      return reply(message, 'You must specify a time greater than 1 second.');
+    }
+
+console.log(duration);
+
+    send(message, `${humanizeDuration(duration, { units: ['y', 'mo', 'w', 'd', 'h', 'm', 's', 'ms'] ,conjunction: " and ", serialComma: false })}`);
   }
 }
