@@ -2,7 +2,8 @@ const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/f
 const { send, reply } = require('@sapphire/plugin-editable-commands');
 const { MessageEmbed } = require('discord.js');
 const { Time } = require('@sapphire/time-utilities');
-const { table } = require('table');
+// const { table } = require('table');
+let table = require("table");
 const PasteGG = require("paste.gg");
 const moment = require('moment');
 
@@ -29,12 +30,15 @@ module.exports = class ServerListCommand extends Command {
 
   async messageRun(message, args) {
     let xa = this.container.client.users.cache.get('319183644331606016');
+
+    // create table
     const data = [
       ["Name", "ID", "Owner", "Members", "Bots", "Total", "Created", "Invite"]
     ];
 
+    // for each guild sorted by total membercount add the values to the corresponding row
     this.container.client.guilds.cache.sort((a, b) => b.memberCount - a.memberCount).forEach(guild => {
-      return data.push([
+      data.push([
         guild.name,
         guild.id,
         this.container.client.users.cache.get(guild.ownerId).tag,
@@ -42,11 +46,26 @@ module.exports = class ServerListCommand extends Command {
         guild.members.cache.filter(m => m.user.bot).size,
         guild.memberCount,
         moment(guild.createdTimestamp).format('MMMM Do YYYY, h:mm:ss a') + ` (${moment(guild.createdTimestamp).fromNow()})`,
-        guild.invites.cache.first()?.url ?? "None"
+        this.getFirstInvite(guild)
       ]);
     });
 
-    return xa.send(await this.getPaste(table(data), 'guilds'));
+    let config = {
+      border: table.getBorderCharacters("ramac"),
+    }
+
+    let list = table.table(data, config);
+    return xa.send(await this.getPaste(list, 'guilds'));
+  }
+
+
+  async getFirstInvite(guild) {
+    let invite = await guild.invites.fetch();
+    if (invite.size > 0) {
+      return invite.first().code;
+    } else {
+      return "No Invite";
+    }
   }
 
   async getPaste(content, title) {
