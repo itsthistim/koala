@@ -34,9 +34,15 @@ module.exports = class EvalCommand extends Command {
   async messageRun(message, args) {
     let code = await args.rest('string');
 
-    const wait = args.getOption('wait');
-    const flagTime = args.getFlags('no-timeout') ? (wait === null ? 60000 : Number(wait)) : Infinity;
-    const language = args.getOption('lang', 'language') ?? (args.getFlags('json') ? 'json' : 'js');
+  
+    const flagAsync = args.getFlags('async');
+    const flagJson = args.getFlags('json');
+    const flagSilent = args.getFlags('silent');
+    const flagHidden = args.getFlags('hidden');
+
+    const optionWait = args.getOption('wait');
+    const optionLang = args.getOption('lang') ?? args.getOption('language');
+    const optionOutput = args.getOption('output');    
 
     const { success, result, time, thenable } = await this.eval(code, args, message);
 
