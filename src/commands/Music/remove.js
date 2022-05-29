@@ -22,7 +22,7 @@ module.exports = class SongRemoveCommand extends Command {
             description: {
                 content: 'Removes a song from the queue with an index.',
                 usage: '<song index>',
-                examples: ['remove 2']
+                examples: ['2']
             },
             detailedDescription: `\nYou can see a list of all songs with the \`queue\` command.`
         });
