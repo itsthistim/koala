@@ -8,7 +8,7 @@ module.exports = class NowPlayingCommand extends Command {
     super(context, {
       ...options,
       name: 'nowplaying',
-      aliases: ['nowplaying', 'playing', 'np'],
+      aliases: ['nowplaying', 'now-playing', 'playing', 'np'],
       requiredUserPermissions: [],
       requiredClientPermissions: [],
       preconditions: [],
@@ -40,7 +40,7 @@ module.exports = class NowPlayingCommand extends Command {
       .setColor(COLORS.GREEN)
       .setThumbnail(queue.current.thumbnail)
       .setTitle(``)
-      .setDescription(`**[${queue.current.title}](${queue.current.url})** - ${queue.current.requestedBy}`)
+      .setDescription(`**[${queue.current.title}](${queue.current.url})** - ${queue.current.author}\n${queue.current.requestedBy}`)
       .addField(`\u200b`, progress.replace(/ 0:00/g, ' ◉ LIVE'));
     return reply(message, { embeds: [embed] });
   }

@@ -27,20 +27,19 @@ module.exports = class SyncCommand extends Command {
   async messageRun(message, args) {
     message.delete().catch(() => {});
 
-    var actions = await args.repeat("string").catch(() => null);
+    var action = await args.pick("string").catch(() => null);
+    var muterole = await args.pick("role").catch(() => null);
 
-    if (!actions) return reply(message, "No actions specified.");
+    if (!action) return reply(message, "No action specified.");
+    if (action != "mute" && action != "sync") return reply(message, "Invalid action.");
 
-    var mute = actions.includes("mute") || actions.includes("muted") || actions.includes("mutes");
-    var sync = actions.includes("sync");
+    if (action == "mute") {
+      if (!muterole) return reply(message, "No muterole specified.");
 
-    if (!mute && !sync) return reply(message, "No actions specified.");
-
-    if (mute) {
       // set mute role permissions for all channels
-      let muterole = message.guild.roles.cache.find(
-        (role) => role.name === "Muted"
-      );
+      // let muterole = message.guild.roles.cache.find(
+      //   (role) => role.name === "muted"
+      // );
 
       let channels = message.guild.channels.cache;
       channels.forEach((channel) => {
@@ -52,7 +51,7 @@ module.exports = class SyncCommand extends Command {
       });
     }
 
-    if (sync) {
+    if (action == "sync") {
       // sync permissions with parent
       channels.forEach((channel) => {
         if (channel.parent) {
