@@ -31,7 +31,7 @@
     "tweetnacl": "^1.0.3",
     "ytdl-core": "^4.11.0"
   },
-  "name": "joke",
+  "name": "koala",
   "version": "1.0.0",
   "main": "./src/index.js",
   "scripts": {
@@ -40,5 +40,5 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "Joke Utilities"
+  "description": "Koala"
 }
