@@ -26,6 +26,9 @@ module.exports = class PurgeCommand extends Command {
 
   async messageRun(message, args) {
     var amount = await args.pick("integer").catch(() => 0);
+    
+    if(amount > 1000) { return reply(message, "You can only delete up to 1000 messages at a time."); } 
+
     amount++; // include the message that triggered the command
     var deleted = 0; // number of messages deleted
     var deletedTotal = 0; // total number of messages deleted
