@@ -54,11 +54,11 @@ module.exports = class BrowseCommand extends Command {
 
         try {
             let embed = new MessageEmbed();
-            let post = await this.getReddit(subreddit, filter, time);
+            let post = await this.getPost(subreddit, filter, time);
 
             let tries = 0;
             while ((post.is_video || post.stickied) || (!msg.channel.nsfw && post.over_18) || (post.selftext && post.selftext.length > 1900)) {
-                post = await this.getReddit(subreddit, filter, time);
+                post = await this.getPost(subreddit, filter, time);
                 if (tries > 5) {
                     return reply(msg, "**Couldn't find a valid post!**\nIf you provided a NSFW subreddit please try again in a NSFW channel!")
                 }
@@ -92,7 +92,7 @@ module.exports = class BrowseCommand extends Command {
 * @param {String} filter
 * @param {String} time
 */
-    async getReddit(subreddit, filter, time) {
+    async getPost(subreddit, filter, time) {
         let sub = subreddit.replace('r/', '');
         const res = await get(`https://www.reddit.com/r/${sub}/${filter}/.json?t=${time}`);
         if (res.data.data.children.length === 0) {

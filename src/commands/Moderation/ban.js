@@ -9,7 +9,7 @@ module.exports = class BanCommand extends Command {
         super(context, {
             ...options,
             name: 'ban',
-            aliases: ['ban', 'b'],
+            aliases: ['ban'],
             requiredUserPermissions: ['BAN_MEMBERS'],
             requiredClientPermissions: ['BAN_MEMBERS'],
             preconditions: [],
