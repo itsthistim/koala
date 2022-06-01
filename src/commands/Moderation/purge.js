@@ -12,7 +12,7 @@ module.exports = class PurgeCommand extends Command {
     super(context, {
       ...options,
       name: "purge",
-      aliases: ["purge"],
+      aliases: ["purge", "prune", "clear", "clean", "delete"],
       requiredUserPermissions: ["MANAGE_MESSAGES"],
       requiredClientPermissions: ["MANAGE_MESSAGES"],
       preconditions: [],
@@ -20,7 +20,7 @@ module.exports = class PurgeCommand extends Command {
       flags: [],
       options: [],
       nsfw: false,
-      description: "Deletes messages.",
+      description: "Deletes messages except for pinned ones.",
     });
   }
 
@@ -32,19 +32,19 @@ module.exports = class PurgeCommand extends Command {
 
     // keep deleting messages in 100 message chunks until a deletable amount of messages is reached
     while (amount > 100) {
-      deleted = await message.channel.bulkDelete((await message.channel.messages.fetch({limit: 100})).filter(message => !message.pinned), true);
+      deleted = await message.channel.bulkDelete((await message.channel.messages.fetch({limit: 100})).filter(message => !message.pinned && message.deletable), true);
       deletedTotal += deleted;
       amount -= deleted;
     }
 
     // delete the remaining messages
     if (amount > 0) {
-      deletedTotal += await message.channel.bulkDelete((await message.channel.messages.fetch({limit: amount})).filter(message => !message.pinned), true);
+      deletedTotal += await message.channel.bulkDelete((await message.channel.messages.fetch({limit: amount})).filter(message => !message.pinned && message.deletable), true);
     }
 
     // send the response and delete it after 5 seconds
     // let response = await message.channel.send(`Deleted ${deletedTotal} messages.`);
-    // setTimeout(() => response.delete().catch(() => {}), 5000);
+    // response.delete({ timeout: 10000 });
 
     // message.delete().catch(() => { });
 
