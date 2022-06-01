@@ -32,12 +32,12 @@ module.exports = class MemeCommand extends Command {
         let embed = new MessageEmbed();
 
         let subredditArr = await this.randomFromArray(['memes', 'dankmemes']);
-        let post = await this.getReddit(subredditArr);
+        let post = await this.getPost(subredditArr);
         let srcPostURL = post.url;
         let srcURL = srcPostURL.replace('.gifv', '.gif');
 
         while (post.is_video || post.over_18 || !post.post_hint === 'image' || post.stickied) {
-            post = await this.getReddit(subredditArr);
+            post = await this.getPost(subredditArr);
         }
 
         embed.setTitle(post.title);
@@ -53,9 +53,9 @@ module.exports = class MemeCommand extends Command {
     * Validates, if a subreddit exists and returns it
     * @param {String} subreddit
     */
-    async getReddit(subreddit) {
+    async getPost(subreddit) {
         let sub = subreddit.replace('r/', '');
-        const res = await get(`https://www.reddit.com/r/${sub}/top.json?t=month`);
+        const res = await get(`https://www.reddit.com/r/${sub}/top/.json`);
         if (res.length === 0) {
             return false;
         } else {
