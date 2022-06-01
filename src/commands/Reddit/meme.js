@@ -11,7 +11,7 @@ module.exports = class MemeCommand extends Command {
         super(context, {
             ...options,
             name: 'meme',
-            aliases: ['meme'],
+            aliases: ['meme', 'memes', 'dankmemes'],
             requiredUserPermissions: [],
             requiredClientPermissions: [],
             preconditions: [],
