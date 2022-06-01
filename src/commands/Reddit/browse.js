@@ -94,7 +94,7 @@ module.exports = class BrowseCommand extends Command {
 */
     async getReddit(subreddit, filter, time) {
         let sub = subreddit.replace('r/', '');
-        const res = await get(`https://www.reddit.com/r/${sub}/${filter}.json?t=${time}`);
+        const res = await get(`https://www.reddit.com/r/${sub}/${filter}/.json?t=${time}`);
         if (res.data.data.children.length === 0) {
             return false;
         } else {
