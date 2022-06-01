@@ -10,7 +10,7 @@ module.exports = class HackCommand extends Command {
         super(context, {
             ...options,
             name: 'hack',
-            aliases: ['hack', 'love'],
+            aliases: ['hack'],
             requiredUserPermissions: [],
             requiredClientPermissions: [],
             preconditions: [],
