@@ -1,28 +1,50 @@
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { MessageEmbed } = require('discord.js');
-const { Time } = require('@sapphire/time-utilities');
+const {
+  Command,
+  CommandOptionsRunTypeEnum,
+  BucketScope,
+} = require("@sapphire/framework");
+const { send, reply } = require("@sapphire/plugin-editable-commands");
+const { MessageEmbed } = require("discord.js");
+const { Time } = require("@sapphire/time-utilities");
 
 module.exports = class PurgeCommand extends Command {
   constructor(context, options) {
     super(context, {
       ...options,
-      name: 'purge',
-      aliases: ['purge'],
-      requiredUserPermissions: ['MANAGE_MESSAGES'],
-      requiredClientPermissions: ['MANAGE_MESSAGES'],
+      name: "purge",
+      aliases: ["purge"],
+      requiredUserPermissions: ["MANAGE_MESSAGES"],
+      requiredClientPermissions: ["MANAGE_MESSAGES"],
       preconditions: [],
       subCommands: [],
       flags: [],
       options: [],
       nsfw: false,
-      description: 'Deletes messages.'
+      description: "Deletes messages.",
     });
   }
 
   async messageRun(message, args) {
-    message.delete().catch(() => { });
-    // var amount = await args.pick('integer').catch(() => 0);
+    var amount = await args.pick("integer").catch(() => 0);
+    amount++; // include the message that triggered the command
+    var deleted = 0; // number of messages deleted
+    var deletedTotal = 0; // total number of messages deleted
+
+    // keep deleting messages in 100 message chunks until a deletable amount of messages is reached
+    while (amount > 100) {
+      deleted = await message.channel.bulkDelete((await message.channel.messages.fetch({limit: 100})).filter(message => !message.pinned), true);
+      deletedTotal += deleted;
+      amount -= deleted;
+    }
+
+    // delete the remaining messages
+    if (amount > 0) {
+      deletedTotal += await message.channel.bulkDelete((await message.channel.messages.fetch({limit: amount})).filter(message => !message.pinned), true);
+    }
+
+    // send the response and delete it after 5 seconds
+    // let response = await message.channel.send(`Deleted ${deletedTotal} messages.`);
+    // setTimeout(() => response.delete().catch(() => {}), 5000);
 
     // message.delete().catch(() => { });
 
@@ -56,4 +78,4 @@ module.exports = class PurgeCommand extends Command {
     //   }
     // })(2 * Time.Second)
   }
-}
+};
