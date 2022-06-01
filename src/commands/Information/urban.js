@@ -1,3 +1,4 @@
+// dev
 const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
 const { send, reply } = require('@sapphire/plugin-editable-commands');
 const { MessageEmbed } = require('discord.js');
@@ -17,29 +18,30 @@ module.exports = class UrbanCommand extends Command {
       flags: [],
       options: [],
       nsfw: false,
-      description: 'Looks up anything on urbandictionary.com.'
+      description: {
+        content: 'Looks up anything on urbandictionary.com.',
+        usage: '<query>',
+        examples: ['lmao', 'rofl']
+      }
     });
   }
 
   async messageRun(message, args) {
     const term = await args.rest('string').catch(() => '');
 
-    if(!term) {
-      return reply(message, "You didn't provide a term to look for.")
+    if (!term) {
+      return reply(message, { embeds: [{ description: `${EMOJIS.NEGATIVE} You did not specify a term.`, color: COLORS.RED }] });
     }
 
     try {
       var res = await urban(term);
     } catch (error) {
-      const errembed = new MessageEmbed()
-        .setColor(COLORS[2])
-        .setDescription(`:x: Nothing found!`);
-      return reply(message, { embeds: [errembed] });
+      reply(message, { embeds: [{ description: `${EMOJIS.NEGATIVE} I could not find anything for this query.`, color: COLORS.RED }] });
     }
 
     const embed = new MessageEmbed()
-      .setColor(COLORS[0])
-      .setAuthor({ name: 'Urban Dictionary', iconUrl: 'https://i.imgur.com//VFXr0ID.jpg' })
+      .setColor('#58809A')
+      .setAuthor({ name: 'Urban Dictionary', iconUrl: 'https://i.imgur.com/VFXr0ID.jpg' })
       .setTitle(res.word)
       .setURL(res.urbanURL)
       .setDescription(res.definition.replace(/([\[\]])/g, ''))

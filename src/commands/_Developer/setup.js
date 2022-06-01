@@ -36,11 +36,6 @@ module.exports = class SyncCommand extends Command {
     if (action == "mute") {
       if (!muterole) return reply(message, "No muterole specified.");
 
-      // set mute role permissions for all channels
-      // let muterole = message.guild.roles.cache.find(
-      //   (role) => role.name === "muted"
-      // );
-
       let channels = message.guild.channels.cache;
       channels.forEach((channel) => {
         channel.permissionOverwrites.create(muterole, {

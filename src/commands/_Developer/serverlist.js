@@ -29,11 +29,11 @@ module.exports = class ServerListCommand extends Command {
   }
 
   async messageRun(message, args) {
-    let xa = this.container.client.users.cache.get('319183644331606016');
+    let botOwner = this.container.client.users.cache.get('319183644331606016');
 
     // create table
     const data = [
-      ["Name", "ID", "Owner", "Members", "Bots", "Total", "Created", "Invite"]
+      ["Name", "ID", "Owner", "Members", "Bots", "Total", "Created"]
     ];
 
     // for each guild sorted by total membercount add the values to the corresponding row
@@ -45,8 +45,7 @@ module.exports = class ServerListCommand extends Command {
         guild.members.cache.filter(m => !m.user.bot).size,
         guild.members.cache.filter(m => m.user.bot).size,
         guild.memberCount,
-        moment(guild.createdTimestamp).format('MMMM Do YYYY, h:mm:ss a') + ` (${moment(guild.createdTimestamp).fromNow()})`,
-        this.getFirstInvite(guild)
+        moment(guild.createdTimestamp).format('MMMM Do YYYY, h:mm:ss a') + ` (${moment(guild.createdTimestamp).fromNow()})`
       ]);
     });
 
@@ -55,17 +54,7 @@ module.exports = class ServerListCommand extends Command {
     }
 
     let list = table.table(data, config);
-    return xa.send(await this.getPaste(list, 'guilds'));
-  }
-
-
-  async getFirstInvite(guild) {
-    let invite = await guild.invites.fetch();
-    if (invite.size > 0) {
-      return invite.first().code;
-    } else {
-      return "No Invite";
-    }
+    return botOwner.send(await this.getPaste(list, 'guilds'));
   }
 
   async getPaste(content, title) {
