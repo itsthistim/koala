@@ -20,7 +20,12 @@ module.exports = class PurgeCommand extends Command {
       flags: [],
       options: [],
       nsfw: false,
-      description: "Deletes messages except for pinned ones.",
+      description: {
+        content: "Purge messages from the current channel.",
+        usage: "<amount>",
+        examples: ["10"],
+      },
+      detailedDescription: "\n",
     });
   }
 
@@ -40,7 +45,12 @@ module.exports = class PurgeCommand extends Command {
 
     // keep deleting messages in 100 message chunks until a deletable amount of messages is reached
     while (amount > 100) {
-      deleted = await message.channel.bulkDelete((await message.channel.messages.fetch({ limit: 100 })).filter((message) => !message.pinned && message.deletable), true);
+      deleted = await message.channel.bulkDelete(
+        (
+          await message.channel.messages.fetch({ limit: 100 })
+        ).filter((message) => !message.pinned && message.deletable),
+        true
+      );
       deletedTotal += deleted.size;
       amount -= deleted.size; // TODO: potentially have to rewrite to subtract 100 to prevent possible infinite loops
     }
