@@ -1,5 +1,6 @@
 require('dotenv').config();
 require('@sapphire/plugin-editable-commands/register');
+const { Intents } = require('discord.js');
 const { SapphireClient, BucketScope, container } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
 const { createConnection } = require('mysql');
@@ -16,7 +17,27 @@ if (!process.env.DEV) {
 
 const client = new SapphireClient({
 	defaultPrefix: prefixes,
-	intents: 32767,
+	intents: [
+		'GUILDS',
+		'GUILD_MEMBERS',
+		'GUILD_BANS',
+		// 'GUILD_EMOJIS_AND_STICKERS',
+		'GUILD_VOICE_STATES',
+		'GUILD_INVITES',
+		// 'GUILD_INTEGRATIONS',
+		// 'GUILD_WEBHOOKS',
+		'GUILD_PRESENCES',
+		'GUILD_MESSAGES',
+		// 'GUILD_MESSAGE_REACTIONS',
+		// 'GUILD_MESSAGE_REACTIONS',
+		'DIRECT_MESSAGES',
+		// 'DIRECT_MESSAGE_REACTIONS',
+		// 'DIRECT_MESSAGE_TYPING',
+		// 'MESSAGE_CONTENT',
+		// 'GUILD_SCHEDULED_EVENTS',
+		// 'AUTO_MODERATION_CONFIGURATION',
+		// 'AUTO_MODERATION_EXECUTION'
+	],
 	allowedMentions: { parse: ['users', 'roles', 'everyone'], repliedUser: true },
 	caseInsensitiveCommands: true,
 	caseInsensitivePrefixes: true
@@ -62,7 +83,7 @@ parse['mo'] = parse['month'];
 // 		}
 // 		console.log(`Successfully connected to ${DB.config.database}.`);
 // 	});
-	
+
 // 	DB.query('SELECT * FROM `books` WHERE `author` = ?', ['David'], function (error, results, fields) {
 // 	});
 // }
