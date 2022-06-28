@@ -51,8 +51,6 @@ module.exports = class TestCommand extends Command {
       return reply(message, 'You must specify a time greater than 1 second.');
     }
 
-console.log(duration);
-
     send(message, `${humanizeDuration(duration, { units: ['y', 'mo', 'w', 'd', 'h', 'm', 's', 'ms'] ,conjunction: " and ", serialComma: false })}`);
   }
 }

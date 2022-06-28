@@ -65,7 +65,6 @@ global.EMOJIS = {
 
 global.PLAYER = new Player(client);
 global.LYRICS = Lyrics.init(/*process.env.GENIUS_TOKEN*/);
-
 parse['mo'] = parse['month'];
 
 // global.DB = createConnection({
@@ -75,17 +74,18 @@ parse['mo'] = parse['month'];
 // 	database: 'koala_db',
 // });
 
-// if(process.env.DEV) {
-// 	DB.connect(function (err) {
-// 		if (err) {
-// 			console.error('error connecting: ' + err.stack);
-// 			return;
-// 		}
-// 		console.log(`Successfully connected to ${DB.config.database}.`);
-// 	});
+// DB.connect(function (err) {
+// 	if (err) {
+// 		console.error('error connecting: ' + err.stack);
+// 		return;
+// 	}
+// 	console.log(`Successfully connected to ${DB.config.database}.`);
+// });
 
-// 	DB.query('SELECT * FROM `books` WHERE `author` = ?', ['David'], function (error, results, fields) {
+// DB.query(`SELECT value FROM config WHERE settingId = 1 AND guildId = '502208815937224715';`, function (error, results, fields) {
+// 	results.forEach(item => {
+// 		console.log(item.value);
 // 	});
-// }
+// });
 
 client.login();

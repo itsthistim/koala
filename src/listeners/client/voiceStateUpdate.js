@@ -16,7 +16,6 @@ module.exports = class ReadyListener extends Listener {
     if (!oldState.channel.members.size - 1)
       setTimeout(() => {
         if (!oldState.channel.members.size - 1) {
-          console.log("leave")
           oldState.guild.me.voice.disconnect().catch(() => { });
         }
       }, Time.Second * 5);
