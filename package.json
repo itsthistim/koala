@@ -30,6 +30,7 @@
     "relevant-urban": "^2.0.0",
     "table": "^6.8.0",
     "tweetnacl": "^1.0.3",
+    "word-definition": "^2.1.6",
     "ytdl-core": "^4.11.0"
   },
   "name": "koala",
