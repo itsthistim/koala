@@ -23,7 +23,7 @@ module.exports = class DecryptCommand extends Command {
                 usage: '<message> <method> [key]',
                 examples: ['"lipps asvph!" ceasar 4']
             },
-            detailedDescription: ''
+            detailedDescription: '\n**Methods:**\n- ceasar\n- vigenere'
         });
     }
 

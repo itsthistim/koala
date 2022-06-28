@@ -22,7 +22,7 @@ module.exports = class EncryptCommand extends Command {
                 usage: '<message> <method> [key]',
                 examples: ['"Hello world!" ceasar 4']
             },
-            detailedDescription: ''
+            detailedDescription: '\n**Methods:**\n- ceasar\n- vigenere'
         });
     }
 
