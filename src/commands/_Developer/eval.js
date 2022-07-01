@@ -19,13 +19,13 @@ module.exports = class EvalCommand extends Command {
       requiredClientPermissions: [],
       preconditions: ['ownerOnly'],
       subCommands: [],
-      flags: ['async', 'json', 'silent', 'showHidden', 'hidden'],
-      options: ['wait', 'lang', 'language', 'output'],
+      flags: ['async'],
+      options: [],
       quotes: [],
       nsfw: false,
       description: {
         content: 'Evaluates code.',
-        usage: '<code> [--wait <time>] [--lang <language>] [--output <file>] [--async] [--json] [--silent] [--hidden]',
+        usage: '<code> [--async]',
         examples: ['message.channel.send("Hello World") --json']
       }
     });
@@ -33,34 +33,28 @@ module.exports = class EvalCommand extends Command {
 
   async messageRun(message, args) {
     let code = await args.rest('string');
+    const { success, result, time, thenable } = await this.eval(code, message, args.getFlags('async'));
 
-  
-    const flagAsync = args.getFlags('async');
-    const flagJson = args.getFlags('json');
-    const flagSilent = args.getFlags('silent');
-    const flagHidden = args.getFlags('hidden');
-
-    const optionWait = args.getOption('wait');
-    const optionLang = args.getOption('lang') ?? args.getOption('language');
-    const optionOutput = args.getOption('output');    
-
-    const { success, result, time, thenable } = await this.eval(code, args, message);
+    if (success) {
+      if (thenable) {
+        return result;
+      }
+    }
 
     return reply(message, `${result.length > 2000 ? await this.getPaste(result, code).catch((err) => codeBlock(err)) : codeBlock('js', result)}\n${time}`);
   }
 
-  async eval(code, args, message) {
-    const stopwatch = new Stopwatch();
+  async eval(code, message, async) {
     let success;
     let syncTime;
     let asyncTime;
     let result;
     let thenable = false;
 
+    const stopwatch = new Stopwatch();
     try {
-      if (args.getFlags('async')) code = `(async () => {\n${code}\n})();`;
+      if (async) code = `(async () => {\n${code}\n})();`;
 
-      const msg = message;
       result = eval(code);
       syncTime = stopwatch.toString();
 
@@ -81,10 +75,7 @@ module.exports = class EvalCommand extends Command {
 
     stopwatch.stop();
     if (typeof result !== 'string') {
-      result = result instanceof Error ? result.stack : args.getFlags('json') ? JSON.stringify(result, null, 4) : inspect(result, {
-        depth: Number(args.getOption('depth') ?? 0) || 0,
-        showHidden: args.getFlags('showHidden', 'hidden')
-      });
+      result = result instanceof Error ? result.stack : inspect(result, { depth: 0 });
     }
 
     return { success, time: this.formatTime(syncTime, asyncTime ?? ''), result: this.clean(result), thenable };
@@ -95,8 +86,8 @@ module.exports = class EvalCommand extends Command {
   }
 
   clean(text) {
-    let tokens = [process.env.DISCORD_TOKEN];
-    let sensitivePattern = new RegExp(tokens.map(regExpEsc).join('|'), 'gi');
+    let token = [process.env.DISCORD_TOKEN];
+    let sensitivePattern = new RegExp(token.map(regExpEsc).join('|'), 'gi');
 
     const zws = String.fromCharCode(8203)
     return text.replace(sensitivePattern, '「ｒｅｄａｃｔｅｄ」').replace(/`/g, `\`${zws}`).replace(/@/g, `@${zws}`);
