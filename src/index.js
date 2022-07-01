@@ -15,20 +15,20 @@ if (!process.env.DEV) {
 	prefixes = ['+'];
 }
 
-global.DB = createConnection({
-	host: process.env.DB_HOST,
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	database: process.env.DB_DATABASE,
-});
+// global.DB = createConnection({
+// 	host: process.env.DB_HOST,
+// 	user: process.env.DB_USER,
+// 	password: process.env.DB_PASSWORD,
+// 	database: process.env.DB_DATABASE,
+// });
 
-DB.connect(function (err) {
-	if (err) {
-		console.error('error connecting: ' + err.stack);
-		return;
-	}
-	console.log(`Successfully connected to ${DB.config.database}.`);
-});
+// DB.connect(function (err) {
+// 	if (err) {
+// 		console.error('error connecting: ' + err.stack);
+// 		return;
+// 	}
+// 	console.log(`Successfully connected to ${DB.config.database}.`);
+// });
 
 // DB.query(`SELECT value FROM guild_config WHERE settingId = 1 AND guildId = '502208815937224715';`, function (error, results, fields) {
 // 	results.forEach(item => {
