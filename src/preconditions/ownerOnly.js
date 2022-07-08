@@ -1,7 +1,7 @@
 const { Precondition } = require('@sapphire/framework');
 
-class OwnerOnlyPrecondition extends Precondition {
-  run(message) {
+module.exports = class OwnerOnlyPrecondition extends Precondition {
+  messageRun(message) {
 
     let owners = ['319183644331606016'];
 
@@ -16,7 +16,3 @@ class OwnerOnlyPrecondition extends Precondition {
     };
   }
 }
-
-module.exports = {
-  OwnerOnlyPrecondition
-};
