@@ -25,15 +25,20 @@ module.exports = class SusCommand extends Command {
     }
 
     async messageRun(message, args) {
-        message.delete().catch(() => {});
-        const { MessageEmbed } = require('discord.js');
+        try {
+            const { MessageEmbed } = require('discord.js');
 
-        let channel = message.guild.channels.cache.get('962035096607678464');
+            let channel = message.guild.channels.cache.get('962035096607678464');
 
-        let embed = new MessageEmbed()
-            .setColor(COLORS.RED)
-            .setDescription("ඞ ඞ ඞ");
+            let embed = new MessageEmbed()
+                .setColor(COLORS.RED)
+                .setDescription("ඞ ඞ ඞ");
 
-        channel.send({ content: `<@${message.author.id}>`, embeds: [embed] })
+            channel.send({ content: `<@${message.author.id}>`, embeds: [embed] })
+            message.delete().catch(() => { });
+        } catch (error) {
+            reply(message, `ඞ`);
+        }
+
     }
 }
