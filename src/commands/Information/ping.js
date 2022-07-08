@@ -9,35 +9,14 @@ module.exports = class PingCommand extends Command {
       name: "ping",
       aliases: ["pong"],
       preconditions: [],
-      description: "See the bot's latency.",
-      chatInputCommand: {
-        register: true,
-      },
+      description: "See the bot's latency."
     });
   }
 
-  async messageRun(message) {
-    const msg = await reply(message, {
-      embeds: [
-        {
-          description: `🤖 API latency: **${this.container.client.ws.ping} ms**`,
-          color: COLORS.RED,
-        },
-      ],
-    });
-
-    return send(message, {
-      embeds: [
-        {
-          description: `🤖 API latency: **${
-            this.container.client.ws.ping
-          } ms**\n💬 Message latency: **${
-            msg.createdTimestamp - message.createdTimestamp
-          } ms**\n`,
-          color: COLORS.GREEN,
-        },
-      ],
-    });
+  registerApplicationCommands(registry) {
+    registry.registerChatInputCommand((builder) =>
+      builder.setName(this.name).setDescription(this.description)
+    );
   }
 
   async chatInputRun(interaction) {
@@ -55,5 +34,27 @@ module.exports = class PingCommand extends Command {
       );
     }
     return interaction.editReply("Failed to retrieve ping.");
+  }
+
+  async messageRun(message) {
+    const msg = await reply(message, {
+      embeds: [
+        {
+          description: `🤖 API latency: **${this.container.client.ws.ping} ms**`,
+          color: COLORS.RED,
+        },
+      ],
+    });
+
+    return send(message, {
+      embeds: [
+        {
+          description: `🤖 API latency: **${this.container.client.ws.ping
+            } ms**\n💬 Message latency: **${msg.createdTimestamp - message.createdTimestamp
+            } ms**\n`,
+          color: COLORS.GREEN,
+        },
+      ],
+    });
   }
 };
