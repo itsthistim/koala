@@ -36,7 +36,11 @@ module.exports = class InviteCommand extends Command {
   async fetchInvite() {
     if (this.invite) return this.invite;
     const invite = this.container.client.generateInvite({
-      scopes: ['bot'], permissions: [
+      scopes: [
+        'bot',
+        'applications.commands'
+      ],
+      permissions: [
         'ADMINISTRATOR',
         'VIEW_CHANNEL',
         'SEND_MESSAGES',
