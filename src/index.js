@@ -61,7 +61,8 @@ const client = new SapphireClient({
 	],
 	allowedMentions: { parse: ['users', 'roles', 'everyone'], repliedUser: true },
 	caseInsensitiveCommands: true,
-	caseInsensitivePrefixes: true
+	caseInsensitivePrefixes: true,
+	loadMessageCommandListeners: true
 });
 
 global.COLORS = {
