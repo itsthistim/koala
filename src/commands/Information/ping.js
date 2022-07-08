@@ -13,11 +13,11 @@ module.exports = class PingCommand extends Command {
     });
   }
 
-  registerApplicationCommands(registry) {
-    registry.registerChatInputCommand((builder) =>
-      builder.setName(this.name).setDescription(this.description)
-    );
-  }
+  // registerApplicationCommands(registry) {
+  //   registry.registerChatInputCommand((builder) =>
+  //     builder.setName(this.name).setDescription(this.description)
+  //   ), { idHints: '995013895217491968' }
+  // }
 
   async chatInputRun(interaction) {
     const ping = Math.round(this.container.client.ws.ping);
