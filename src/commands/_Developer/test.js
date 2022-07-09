@@ -1,17 +1,12 @@
 const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
 const { MessageEmbed, MessageAttachment, Permissions } = require('discord.js');
-const { codeBlock, isThenable, PaginatedMessage } = require('@sapphire/utilities');
+const { codeBlock, isThenable } = require('@sapphire/utilities');
 const { Time, Duration } = require('@sapphire/time-utilities');
 const { send, reply } = require('@sapphire/plugin-editable-commands');
 const { fetch, FetchResultTypes, FetchMethods } = require('@sapphire/fetch');
-const { Stopwatch } = require('@sapphire/stopwatch');
-const { PasteGG } = require("paste.gg");
-const moment = require('moment');
-const util = require("util");
-const { unix } = require('moment');
 var parse = require('parse-duration');
 const humanizeDuration = require("humanize-duration");
-const { format } = require('path');
+
 module.exports = class TestCommand extends Command {
   constructor(context, options) {
     super(context, {

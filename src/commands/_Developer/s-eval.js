@@ -3,7 +3,7 @@ const { send, reply } = require('@sapphire/plugin-editable-commands');
 const { Time } = require('@sapphire/time-utilities');
 const { Type } = require('@sapphire/type');
 const { codeBlock, isThenable } = require('@sapphire/utilities');
-const { PaginatedMessage } = require('@sapphire/discord.js-utilities');
+const { PaginatedMessage, isTextBasedChannel, isMessageInstance } = require('@sapphire/discord.js-utilities');
 const { MessageEmbed } = require('discord.js');
 const { inspect } = require('util');
 
