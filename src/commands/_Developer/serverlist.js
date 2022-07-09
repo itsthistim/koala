@@ -33,7 +33,7 @@ module.exports = class ServerListCommand extends Command {
 
     // create table
     const data = [
-      ["Name", "ID", "Owner", "Members", "Bots", "Total", "Created"]
+      ["Name", "ID", "Owner", "Members", "Bots", "Total", "Created", "Joined"],
     ];
 
     // for each guild sorted by total membercount add the values to the corresponding row
@@ -45,7 +45,8 @@ module.exports = class ServerListCommand extends Command {
         guild.members.cache.filter(m => !m.user.bot).size,
         guild.members.cache.filter(m => m.user.bot).size,
         guild.memberCount,
-        moment(guild.createdTimestamp).format('MMMM Do YYYY, h:mm:ss a') + ` (${moment(guild.createdTimestamp).fromNow()})`
+        moment(guild.createdTimestamp).format('MMMM Do YYYY, h:mm:ss a') + ` (${moment(guild.createdTimestamp).fromNow()})`,
+        moment(guild.joinedTimestamp).format('MMMM Do YYYY, h:mm:ss a') + ` (${moment(guild.joinedTimestamp).fromNow()})`
       ]);
     });
 
@@ -74,7 +75,9 @@ module.exports = class ServerListCommand extends Command {
         }]
       })
 
-      return `\n${paste?.result?.url}`
+      console.log(paste.result)
+
+      return `\nhttps://paste.gg/p/anonymous/${paste?.result?.id}/revisions`
     } catch (err) {
       return `\n${err}`;
     }
