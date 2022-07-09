@@ -75,8 +75,6 @@ module.exports = class ServerListCommand extends Command {
         }]
       })
 
-      console.log(paste.result)
-
       return `\nhttps://paste.gg/p/anonymous/${paste?.result?.id}/revisions`
     } catch (err) {
       return `\n${err}`;
