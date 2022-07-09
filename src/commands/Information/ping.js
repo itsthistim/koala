@@ -13,16 +13,20 @@ module.exports = class PingCommand extends Command {
     });
   }
 
-  // registerApplicationCommands(registry) {
-  //   registry.registerChatInputCommand((builder) =>
-  //     builder.setName(this.name).setDescription(this.description)
-  //   ), { idHints: '995013895217491968' }
-  // }
+  registerApplicationCommands(registry) {
+    registry.registerChatInputCommand((builder) => {
+      builder.setName(this.name)
+      builder.setDescription(this.description)
+    }, {
+      idHints: '995013895217491968'
+    })
+  }
 
   async chatInputRun(interaction) {
     const ping = Math.round(this.container.client.ws.ping);
     const msg = await interaction.reply({
       content: `🤖 API latency: **${ping} ms**`,
+      embeds: [],
       ephemeral: true,
       fetchReply: true,
     });

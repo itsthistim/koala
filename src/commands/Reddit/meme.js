@@ -1,7 +1,5 @@
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Time } = require('@sapphire/time-utilities');
-const { PaginatedMessage } = require('@sapphire/discord.js-utilities');
+const { Command } = require('@sapphire/framework');
+const { reply } = require('@sapphire/plugin-editable-commands');
 const { MessageEmbed } = require('discord.js');
 const { get } = require('axios');
 const moment = require('moment');
@@ -28,25 +26,81 @@ module.exports = class MemeCommand extends Command {
         });
     }
 
-    async messageRun(msg, args) {
-        let embed = new MessageEmbed();
+    registerApplicationCommands(registry) {
+        registry.registerChatInputCommand((builder) => {
+            builder.setName(this.name)
+            builder.setDescription(this.description.content)
+        }, {
+            idHints: '995289222124687360',
+            behaviorWhenNotIdentical: 'OVERWRITE'
+        })
+    }
 
+    async chatInputRun(interaction) {
+        let data = await this.createMeme();
+
+        let embed = new MessageEmbed()
+            .setTitle(data.title)
+            .setURL(data.postURL)
+            .setImage(data.imageUrl)
+            .setColor('RANDOM')
+            .setFooter({
+                text: data.footer.text
+            });
+
+        return interaction.reply({
+            embeds: [embed],
+            ephemeral: false,
+            fetchReply: true,
+        })
+    }
+
+    async messageRun(msg, args) {
+        let data = await this.createMeme();
+
+        console.log(data.title);
+
+        let embed = new MessageEmbed()
+            .setTitle(data.title)
+            .setURL(data.postURL)
+            .setImage(data.imageUrl)
+            .setColor('RANDOM')
+            .setFooter({
+                text: data.footer.text
+            });
+
+        return reply(msg, { embeds: [embed] });
+    }
+
+    /**
+     * Gets a random meme from reddit in an embed
+     * @returns Object
+     */
+    async createMeme() {
         let subredditArr = await this.randomFromArray(['memes', 'dankmemes']);
         let post = await this.getPost(subredditArr);
         let srcPostURL = post.url;
         let srcURL = srcPostURL.replace('.gifv', '.gif');
 
-        while (post.is_video || post.over_18 || !post.post_hint === 'image' || post.stickied) {
+        let tries = 0;
+
+        while ((post.is_video || post.over_18 || !post.post_hint === 'image' || post.stickied) && tries < 10) {
             post = await this.getPost(subredditArr);
         }
 
-        embed.setTitle(post.title);
-        embed.setURL(`https://reddit.com${post.permalink}`);
-        embed.setImage(srcURL);
-        embed.setColor('RANDOM');
-        embed.setFooter({ text: `👍 ${post.ups} | 👤 u/${post.author} | 📆 ${moment.unix(post.created).format('DD MMM YYYY')}`, iconURL: msg.author.displayAvatarURL({ dynamic: true }) });
+        let data = {
+            title: post.title,
+            postURL: `https://reddit.com${post.permalink}`,
+            imageUrl: srcURL,
+            footer: {
+                text: `👍 ${post.ups} | 👤 u/${post.author} | 📆 ${moment.unix(post.created).format('DD MMM YYYY')}`,
+                iconURL: `https://seeklogo.com/images/R/reddit-logo-23F13F6A6A-seeklogo.com.png`
+            }
+        }
 
-        reply(msg, { embeds: [embed] });
+        console.log(data.title);
+
+        return data;
     }
 
     /**
