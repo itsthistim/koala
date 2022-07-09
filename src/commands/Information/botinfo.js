@@ -42,6 +42,12 @@ module.exports = class BotInfoCommand extends Command {
       .addField('Technical', `**Uptime**: ${this.formatMilliseconds(this.container.client.uptime)}\n**Memory**: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n**Discord.js**: v${djsVersion}\n**Sapphire**: v${sappVersion}`, true)
       .addField('Discord', `**Guilds**: ${this.container.client.guilds.cache.size}\n**Channels**: ${this.container.client.channels.cache.size}\n**Users**: ${this.container.client.users.cache.size}`, true)
       .setFooter({ text: `Created by ${dev.tag}`, iconURL: dev.displayAvatarURL() });
+
+    return interaction.reply({
+      embeds: [embed],
+      ephemeral: false,
+      fetchReply: true,
+    })
   }
 
   async messageRun(message, args) {

@@ -31,8 +31,7 @@ module.exports = class MemeCommand extends Command {
             builder.setName(this.name)
             builder.setDescription(this.description.content)
         }, {
-            idHints: '995289222124687360',
-            behaviorWhenNotIdentical: 'OVERWRITE'
+            idHints: '995289222124687360'
         })
     }
 
@@ -57,8 +56,6 @@ module.exports = class MemeCommand extends Command {
 
     async messageRun(msg, args) {
         let data = await this.createMeme();
-
-        console.log(data.title);
 
         let embed = new MessageEmbed()
             .setTitle(data.title)
