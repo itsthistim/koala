@@ -31,7 +31,7 @@ module.exports = class MemeCommand extends Command {
             builder.setName(this.name)
             builder.setDescription(this.description.content)
         }, {
-            idHints: '995289222124687360'
+            idHints: '995355168407298090'
         })
     }
 

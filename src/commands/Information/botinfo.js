@@ -7,7 +7,7 @@ module.exports = class BotInfoCommand extends Command {
   constructor(context, options) {
     super(context, {
       ...options,
-      name: 'botinfo',
+      name: 'about',
       aliases: ['botinfo', 'bot-info', 'stats', 'statistics', 'about', 'info'],
       requiredUserPermissions: [],
       requiredClientPermissions: [],
@@ -29,7 +29,7 @@ module.exports = class BotInfoCommand extends Command {
       builder.setName(this.name)
       builder.setDescription(this.description.content)
     }, {
-      idHints: '995046344601378897'
+      idHints: '995355165873934418'
     })
   }
 

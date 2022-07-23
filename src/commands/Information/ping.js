@@ -18,7 +18,7 @@ module.exports = class PingCommand extends Command {
       builder.setName(this.name)
       builder.setDescription(this.description)
     }, {
-      idHints: '995013895217491968'
+      idHints: '995355167274836018'
     })
   }
 
