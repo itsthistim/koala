@@ -60,13 +60,15 @@ module.exports = class UserInfoCommand extends Command {
         .setAuthor({ name: target.user.username + '#' + target.user.discriminator, iconUrl: target.user.displayAvatarURL({ dynamic: true }) })
         .setDescription(`${target.presence ? status[target.presence.status] : ''}${target}`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true, size: 2048 }))
+        
         .addField(`Joined Server`, `${moment.utc(target.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(target.joinedAt).fromNow()})`, true)
         .addField(`Joined Discord`, `${moment(target.user.createdAt).format('MMMM Do YYYY')}\n(${moment(target.user.createdAt).fromNow()})`, true)
-        .addField('\u200b', '\u200b', true)
+        .addField(`\u200b`, `\u200b`, true)
         .addField(`Playing`, `${usergame ? usergame : "Nothing"}`, true)
-        .addField(`?`, `?`, true)
-        .addField('\u200b', '\u200b', true)
-        .addField(`Roles [${target.roles.cache.size - 1}]`, `${target.roles.cache.map(roles => `${roles}`).join(' ')}`)
+        .addField(`Badges`, `Coming soon!`, true)
+        .addField(`\u200b`, `\u200b`, true)
+        .addField(`Roles [${target.roles.cache.size - 1}]`, `${target.roles.cache.map(roles => `${roles}`).join(' ')}`, false)
+        
         .setFooter({ text: `User ID: ${target.id}` });
       reply(message, { embeds: [embed] });
     }
