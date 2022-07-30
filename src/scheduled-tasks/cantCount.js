@@ -7,7 +7,7 @@ module.exports = class IntervalTask extends ScheduledTask {
     constructor(context, options) {
         super(context, {
             ...options,
-            interval: 1 * Time.Month
+            interval: 29 * Time.Minute
         });
     }
 
