@@ -7,7 +7,7 @@ module.exports = class CronTask extends ScheduledTask {
     constructor(context, options) {
         super(context, {
             ...options,
-            cron: '0 17 1 1-12 *'
+            cron: '0 16 1 * *'
         });
     }
 
