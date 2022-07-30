@@ -3,11 +3,11 @@ const { Time } = require('@sapphire/time-utilities');
 const { MessageEmbed, MessageAttachment, Attachment } = require('discord.js');
 const PasteGG = require("paste.gg");
 
-module.exports = class IntervalTask extends ScheduledTask {
+module.exports = class CronTask extends ScheduledTask {
     constructor(context, options) {
         super(context, {
             ...options,
-            interval: 29 * Time.Minute
+            cron: '0 17 1 1-12 *'
         });
     }
 
@@ -19,7 +19,7 @@ module.exports = class IntervalTask extends ScheduledTask {
         const idiots = guild.members.cache.filter(member => member.roles.cache.has(idiotRole.id));
         const idiotList = idiots.map(member => member.user.tag).join('\n');
 
-        const msg = `This month there has been **${idiots.size} idiots**.\nNone of them can count and they should be ashamed of themselves.\nHere they are:`;
+        const msg = `This month there has been **${idiots.size} idiots** in <#999791567533527160>.\nNone of them can count and they should be ashamed of themselves.\nHere they are:`;
         
         const paste = await this.getPaste(idiotList, 'Idiots');
         const attachment = {

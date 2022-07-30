@@ -12,7 +12,7 @@ module.exports = class BrowseCommand extends Command {
         super(context, {
             ...options,
             name: 'browse',
-            aliases: ['browse'],
+            aliases: ['browse', 'b'],
             requiredUserPermissions: [],
             requiredClientPermissions: [],
             preconditions: [],
