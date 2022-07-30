@@ -7,20 +7,22 @@ module.exports = class CronTask extends ScheduledTask {
     constructor(context, options) {
         super(context, {
             ...options,
-            cron: '0 17 1 1-12 *'
+            // cron: '0 17 1 1-12 *'
+            cron: '* * * * *'
         });
     }
 
     async run() {
         const guild = this.container.client.guilds.cache.get('988912269909966938');
-        const channel = guild.channels.cache.get('988925360332755004');
+        const channel = guild.channels.cache.get('996531453313699960');
 
         const idiotRole = guild.roles.cache.get('999792913569558658');
         const idiots = guild.members.cache.filter(member => member.roles.cache.has(idiotRole.id));
         const idiotList = idiots.map(member => member.user.tag).join('\n');
 
         const msg = `This month there has been **${idiots.size} idiots** in <#999791567533527160>.\nNone of them can count and they should be ashamed of themselves.\nHere they are:`;
-        
+        // const msg = "test";
+
         const paste = await this.getPaste(idiotList, 'Idiots');
         const attachment = {
             attachment: Buffer.from(idiotList),
@@ -28,6 +30,7 @@ module.exports = class CronTask extends ScheduledTask {
             description: 'Idiots that can\'t count.'
         }
 
+        // channel.send({ content: msg });
         // channel.send({ content: msg + paste});
         channel.send({ content: msg, files: [attachment] });
 
