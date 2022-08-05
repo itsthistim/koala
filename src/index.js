@@ -2,7 +2,7 @@ require('dotenv').config();
 require('@sapphire/plugin-editable-commands/register');
 const { Intents } = require('discord.js');
 const { SapphireClient, BucketScope, container } = require('@sapphire/framework');
-const { ScheduledTaskRedisStrategy } = require('@sapphire/plugin-scheduled-tasks/register-redis');
+// const { ScheduledTaskRedisStrategy } = require('@sapphire/plugin-scheduled-tasks/register-redis');
 
 const { Time } = require('@sapphire/time-utilities');
 const { createConnection } = require('mysql');
@@ -65,19 +65,19 @@ const client = new SapphireClient({
 	caseInsensitiveCommands: true,
 	caseInsensitivePrefixes: true,
 	loadMessageCommandListeners: true,
-	tasks: {
-		strategy: new ScheduledTaskRedisStrategy({
-			bull: {
-				connection: {
-					host: process.env.REDIS_HOST,
-					username: process.env.REDIS_USER,
-					password: process.env.REDIS_PASSWORD,
-					port: process.env.REDIS_PORT,
-					db: process.env.REDIS_DATABASES,
-				}
-			}
-		})
-	}
+	// tasks: {
+	// 	strategy: new ScheduledTaskRedisStrategy({
+	// 		bull: {
+	// 			connection: {
+	// 				host: process.env.REDIS_HOST,
+	// 				username: process.env.REDIS_USER,
+	// 				password: process.env.REDIS_PASSWORD,
+	// 				port: process.env.REDIS_PORT,
+	// 				db: process.env.REDIS_DATABASES,
+	// 			}
+	// 		}
+	// 	})
+	// }
 });
 
 global.COLORS = {
