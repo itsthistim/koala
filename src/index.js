@@ -1,3 +1,4 @@
+const schedule = require('node-schedule');
 require('dotenv').config();
 require('@sapphire/plugin-editable-commands/register');
 const { Intents } = require('discord.js');
@@ -103,5 +104,32 @@ global.EMOJIS = {
 global.PLAYER = new Player(client);
 global.LYRICS = Lyrics.init(/*process.env.GENIUS_TOKEN*/);
 parse['mo'] = parse['month'];
+
+const monthly_idiots = schedule.scheduleJob('0 15 1 * *', async function() {
+	console.log('monthly_idiots triggered @', new Date().toLocaleString());
+
+	const guild = this.container.client.guilds.cache.get('988912269909966938');
+	const channel = guild.channels.cache.get('988925360332755004');
+
+	const idiotRole = guild.roles.cache.get('999792913569558658');
+	const idiots = guild.members.cache.filter(member => member.roles.cache.has(idiotRole.id));
+	const idiotList = idiots.map(member => member.user.tag).join('\n');
+
+	const msg = `This month there has been **${idiots.size} idiots** in <#999791567533527160>.\nNone of them can count and they should be ashamed of themselves.\nHere they are:`;
+
+
+	const paste = await this.getPaste(idiotList, 'Idiots');
+	const attachment = {
+		attachment: Buffer.from(idiotList),
+		name: 'idiots.txt',
+		description: 'Idiots that can\'t count.'
+	}
+
+	channel.send({ content: msg, files: [attachment] });
+
+	idiots.forEach(member => {
+		member.roles.remove(idiotRole).catch(err => console.log(err));
+	});
+});
 
 client.login();
