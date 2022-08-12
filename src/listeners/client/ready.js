@@ -13,5 +13,7 @@ module.exports = class ReadyListener extends Listener {
     const { username, id } = client.user;
     this.container.logger.info(`Successfully logged in as ${username} (${id})`);
     this.container.client.user.setActivity(`${client.options.defaultPrefix[0]}help`, { type: "LISTENING" });
+
+    this.container.client.guilds.channels.cache.get('804398615668719660').send(`${username} is now online!`);
   }
 }
