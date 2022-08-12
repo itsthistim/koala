@@ -42,7 +42,10 @@ module.exports = class SyncCommand extends Command {
           channel.permissionOverwrites.create(muterole, {
             SEND_MESSAGES: false,
             SPEAK: false,
-            ADD_REACTIONS: false
+            ADD_REACTIONS: false,
+            CREATE_PUBLIC_THREADS: false,
+            CREATE_PRIVATE_THREADS: false,
+            CHANGE_NICKNAME: false
           });
         });
         break;
@@ -62,6 +65,16 @@ module.exports = class SyncCommand extends Command {
             member.roles.add(botrole).catch(() => { });
           }
         });
+        break;
+      case "everyone":
+        // remove CREATE_INSTANT_INVITE and MANAGE_CHANNELS from everyone
+        message.guild.roles.cache.forEach((role) => {
+          role.permissions.remove([
+            "CREATE_PUBLIC_THREADS",
+            "CREATE_PRIVATE_THREADS",
+            "MENTION_EVERYONE"
+          ]).catch(() => { });
+        }).catch(() => { });
         break;
       default:
         message.channel.send("Please specify a valid action.");
