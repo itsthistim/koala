@@ -10,8 +10,10 @@ module.exports = class ReadyListener extends Listener {
 
   async run(message) {
     
-    // if a message was sent in server 502208815937224715 and contains the word 'bread', react with 🍞
-    if (message.guild.id === '1005574058781462648' && message.content.includes('bread')) {
+    const breadguilds = ['502208815937224715', '1005574058781462648']
+
+    // if a message was sent in one of the breadguilds, and contains the word 'bread' to lowercase, react with 🍞
+    if (breadguilds.includes(message.channel.guild.id) && message.content.toLowerCase().includes('bread')) {
       message.react('🍞');
     }
   }
