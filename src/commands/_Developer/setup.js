@@ -45,6 +45,7 @@ module.exports = class SyncCommand extends Command {
             ADD_REACTIONS: false,
             CREATE_PUBLIC_THREADS: false,
             CREATE_PRIVATE_THREADS: false,
+            SEND_MESSAGES_IN_THREADS: false,
             CHANGE_NICKNAME: false
           });
         });
