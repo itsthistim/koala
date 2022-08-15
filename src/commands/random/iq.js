@@ -32,7 +32,7 @@ module.exports = class IqCommand extends Command {
         var member = await args.pick('member').catch(() => message.member);
 
         const random = MersenneTwister19937.seed(member.id);
-        const score = integer(35, 228)(random);
+        const score = integer(50, 222)(random);
         return reply(message, `${member.user.username}'s IQ score is ${score}.`)
     }
 }
