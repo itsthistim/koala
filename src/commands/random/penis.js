@@ -30,9 +30,12 @@ module.exports = class PenisCommand extends Command {
 
     async messageRun(message, args) {
         var member = await args.pick('member').catch(() => message.member);
-
+        
         const random = MersenneTwister19937.seed(member.id);
-        const length = integer(2, 30)(random);
+        const length = integer(3, 30)(random);
         return reply(message, `${member.user.username}'s ${message.channel.nsfw ? "penis" : "pp"} size is ${length}cm.`)
     }
 }
+
+// 3, 27 -> 26
+// 3, 30 -> 26
