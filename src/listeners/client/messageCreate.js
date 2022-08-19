@@ -16,7 +16,7 @@ module.exports = class ReadyListener extends Listener {
       if (message.content.toLowerCase().includes('bread')) {
         message.react('🍞');
       }
-      if (message.content.toLowerCase().includes('tim')) {
+      if (message.content.toLowerCase().includes('tim') || message.content.toLowerCase().includes('319183644331606016')) {
         message.react('🇼');
       }
     }
