@@ -7,7 +7,6 @@ const owoify = require('owoify-js').default
 module.exports = class SayCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'say',
       aliases: ['say'],
       requiredUserPermissions: [],

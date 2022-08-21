@@ -6,7 +6,6 @@ const { AudioPlayerStatus, StreamType, createAudioPlayer, createAudioResource, j
 module.exports = class ReplayCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'previous',
       aliases: ['previous', 'prev', 'replay', 'again'],
       requiredUserPermissions: [],

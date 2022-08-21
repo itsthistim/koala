@@ -6,7 +6,6 @@ const path = require('path');
 module.exports = class BeautifulCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'beautiful',
       aliases: ['beautiful', 'bf'],
       requiredUserPermissions: [],

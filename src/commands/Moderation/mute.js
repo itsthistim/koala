@@ -10,7 +10,6 @@ const humanizeDuration = require("humanize-duration");
 module.exports = class MuteCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'mute',
             aliases: ['mute', 'temp-mute', 'tempmute', 'time-out', 'timeout'],
             requiredUserPermissions: [],

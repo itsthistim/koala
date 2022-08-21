@@ -8,7 +8,6 @@ const { colours } = require('nodemon/lib/config/defaults');
 module.exports = class LyricsCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'lyrics',
             aliases: ['lyrics'],
             requiredUserPermissions: [],

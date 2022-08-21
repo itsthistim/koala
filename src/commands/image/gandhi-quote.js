@@ -8,7 +8,6 @@ const path = require('path');
 class GandhiQuoteCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'gandhi-quote',
       aliases: ['gandhi-quote', 'gandhiquote', 'gandhi', 'ghandi-quote', 'ghandiquote', 'ghandi'],
       requiredUserPermissions: [],

@@ -5,7 +5,6 @@ const { Time } = require('@sapphire/time-utilities');
 class PrefixCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'prefix',
       aliases: ['prefix'],
       requiredUserPermissions: [],

@@ -12,7 +12,6 @@ const { get } = require("snekfetch");
 module.exports = class DadJokeCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: "dadjoke",
       aliases: ["dadjoke", "dad", "joke"],
       requiredUserPermissions: [],

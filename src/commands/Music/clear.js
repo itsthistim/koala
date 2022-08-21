@@ -6,7 +6,6 @@ const { AudioPlayerStatus, StreamType, createAudioPlayer, createAudioResource, j
 module.exports = class ClearCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'clear',
       aliases: ['queueclear', 'queue-clear', 'clearqueue', 'clear-queue', 'qclear', 'clearq'],
       requiredUserPermissions: [],

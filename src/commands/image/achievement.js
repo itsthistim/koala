@@ -9,7 +9,6 @@ registerFont(path.join(__dirname, '..', '..', 'utils', 'assets', 'fonts', 'Minec
 class AchievementCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'advancement',
       aliases: ['advancement', 'minecraft', 'achievement', 'minecraft-achievement', 'minecraftachievement'],
       requiredUserPermissions: [],

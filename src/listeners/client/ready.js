@@ -3,7 +3,6 @@ const { Listener } = require('@sapphire/framework');
 module.exports = class ReadyListener extends Listener {
   constructor(context, options = {}) {
     super(context, {
-      ...options,
       once: true,
       event: "ready"
     });

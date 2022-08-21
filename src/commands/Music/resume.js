@@ -6,7 +6,6 @@ const { AudioPlayerStatus, StreamType, createAudioPlayer, createAudioResource, j
 module.exports = class ResumeCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'resume',
       aliases: ['resume', 'continue'],
       requiredUserPermissions: [],

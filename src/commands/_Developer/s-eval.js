@@ -10,7 +10,6 @@ const { inspect } = require('util');
 module.exports = class SEvalCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 's-eval',
             aliases: ['s-eval', 'seval', 'se'],
             requiredUserPermissions: [],

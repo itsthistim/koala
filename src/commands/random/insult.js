@@ -12,7 +12,6 @@ const { get } = require("axios");
 module.exports = class InsultCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: "insult",
       aliases: ["insult"],
       requiredUserPermissions: [],

@@ -7,7 +7,6 @@ const { hyperlink, hideLinkEmbed } = require('@discordjs/builders');
 module.exports = class InviteCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'invite',
       aliases: ['invite'],
       requiredUserPermissions: [],

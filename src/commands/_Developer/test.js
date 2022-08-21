@@ -10,7 +10,6 @@ const humanizeDuration = require("humanize-duration");
 module.exports = class TestCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'test',
       aliases: ['test', 'command'],
       requiredUserPermissions: [],

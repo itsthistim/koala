@@ -6,7 +6,6 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class AvatarCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'avatar',
       aliases: ['avatar'],
       requiredUserPermissions: [],

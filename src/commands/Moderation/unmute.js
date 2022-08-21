@@ -8,7 +8,6 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class UnmuteCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'unmute',
             aliases: ['unmute'],
             requiredUserPermissions: [],

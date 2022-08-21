@@ -7,7 +7,6 @@ const moment = require('moment');
 module.exports = class MemeCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'meme',
             aliases: ['meme', 'memes', 'dankmemes', 'r/dankmemes', 'r/dankmemes'],
             requiredUserPermissions: [],

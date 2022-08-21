@@ -10,7 +10,6 @@ const moment = require('moment');
 module.exports = class ServerListCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'serverlist',
       aliases: ['serverlist', 'server-list', 'slist', 's-list'],
       requiredUserPermissions: [],

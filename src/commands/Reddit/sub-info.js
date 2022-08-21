@@ -8,7 +8,6 @@ const { get } = require('axios');
 module.exports = class SubInfoCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'sub-info',
             aliases: ['sub-info', 'subinfo', 'sub'],
             requiredUserPermissions: [],

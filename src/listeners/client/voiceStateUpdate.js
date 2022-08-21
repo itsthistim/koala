@@ -5,7 +5,6 @@ const { Time } = require('@sapphire/time-utilities');
 module.exports = class ReadyListener extends Listener {
   constructor(context, options = {}) {
     super(context, {
-      ...options,
       event: "voiceStateUpdate"
     });
   }

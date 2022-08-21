@@ -5,7 +5,6 @@ const { codeBlock } = require('@sapphire/utilities');
 module.exports = class CommandDeniedListener extends Listener {
   constructor(context, options = {}) {
     super(context, {
-      ...options,
       once: false,
       event: "commandError"
     });

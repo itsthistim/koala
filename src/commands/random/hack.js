@@ -8,7 +8,6 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class HackCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'hack',
             aliases: ['hack'],
             requiredUserPermissions: [],

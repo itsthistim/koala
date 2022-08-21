@@ -6,7 +6,6 @@ const { get } = require('axios');
 module.exports = class KPDBansCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'kpdbans',
             aliases: ['kpd-bans', 'kpdbans', 'krunker-bans', 'krunkerbans'],
             requiredUserPermissions: ['MANAGE_MESSAGES'],

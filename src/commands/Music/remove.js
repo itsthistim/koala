@@ -9,7 +9,6 @@ const { Player } = require('discord-player');
 module.exports = class SongRemoveCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'remove',
             aliases: ['remove', 'rem'],
             requiredUserPermissions: [],

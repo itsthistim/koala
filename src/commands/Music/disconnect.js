@@ -3,7 +3,6 @@ const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/f
 module.exports = class DisconnectCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'disconnect',
       aliases: ['disconnect', 'dc'],
       requiredUserPermissions: [],

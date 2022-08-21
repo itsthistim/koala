@@ -8,7 +8,6 @@ const urban = require('relevant-urban');
 module.exports = class UrbanCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'urban',
       aliases: ['urban'],
       requiredUserPermissions: [],

@@ -5,7 +5,6 @@ const { send, reply } = require("@sapphire/plugin-editable-commands");
 module.exports = class PingCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: "ping",
       aliases: ["pong"],
       preconditions: [],
