@@ -8,7 +8,7 @@ module.exports = class KPDBansCommand extends Command {
         super(context, {
             ...options,
             name: 'kpdbans',
-            aliases: ['kpd-bans', 'kpdbans', 'krunker-bans', 'krunkerbans'],
+            aliases: ['kpd-bans', 'kpdbans', 'krunker-bans', 'krunkerbans', 'tim-bans', , 'timbans', 'kpd'],
             requiredUserPermissions: ['MANAGE_MESSAGES'],
             requiredClientPermissions: [],
             preconditions: ['ownerOnly'],
