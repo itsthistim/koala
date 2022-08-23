@@ -6,7 +6,6 @@ const PasteGG = require("paste.gg");
 module.exports = class CronTask extends ScheduledTask {
     constructor(context, options) {
         super(context, {
-            ...options,
             cron: '0 15 1 * *'
         });
     }

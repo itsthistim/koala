@@ -7,7 +7,6 @@ const path = require('path');
 module.exports = class SteamPlayingCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'steam-now-playing',
       aliases: ['steam-now-playing', 'steamnowplaying', 'steamplaying', 'steam-playing', 'steamplay', 'steam-playing', 'steam', 'game', 'steam-game', 'steamgame'],
       requiredUserPermissions: [],

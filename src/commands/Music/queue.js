@@ -7,7 +7,6 @@ const { PaginatedMessage } = require('@sapphire/discord.js-utilities');
 module.exports = class QueueCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'queue',
       aliases: ['queue', 'q'],
       requiredUserPermissions: [],

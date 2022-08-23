@@ -7,7 +7,6 @@ const { PaginatedMessage } = require('@sapphire/discord.js-utilities');
 module.exports = class HelpCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'help',
             aliases: ['help', 'h'],
             requiredUserPermissions: [],

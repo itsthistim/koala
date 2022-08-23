@@ -8,7 +8,6 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class UnbanCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'unban',
             aliases: ['unban', 'pardon'],
             requiredUserPermissions: [],

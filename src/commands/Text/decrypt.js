@@ -8,7 +8,6 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class DecryptCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'decrypt',
             aliases: ['decrypt'],
             requiredUserPermissions: [],

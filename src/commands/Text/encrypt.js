@@ -7,7 +7,6 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class EncryptCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'encrypt',
             aliases: ['encrypt'],
             requiredUserPermissions: [],

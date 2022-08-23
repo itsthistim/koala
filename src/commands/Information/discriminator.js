@@ -6,7 +6,6 @@ const { Time } = require('@sapphire/time-utilities');
 module.exports = class DiscriminatorCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'discriminator',
       aliases: ['discriminator', 'discrim'],
       requiredUserPermissions: [],

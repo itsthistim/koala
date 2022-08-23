@@ -12,7 +12,6 @@ const { get } = require("axios");
 module.exports = class InspireCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: "inspire",
       aliases: ["inspire"],
       requiredUserPermissions: [],

@@ -8,7 +8,6 @@ const wd = require('word-definition');
 module.exports = class DefineCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'define',
             aliases: ['define'],
             requiredUserPermissions: [],

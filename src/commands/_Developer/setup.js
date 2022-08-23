@@ -6,7 +6,6 @@ const { Time } = require("@sapphire/time-utilities");
 module.exports = class SyncCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: "setup",
       aliases: ["setup", "sync"],
       requiredUserPermissions: [],

@@ -10,7 +10,6 @@ const { Time } = require("@sapphire/time-utilities");
 module.exports = class PurgeCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: "purge",
       aliases: ["purge", "prune", "clear", "clean", "delete"],
       requiredUserPermissions: ["MANAGE_MESSAGES"],

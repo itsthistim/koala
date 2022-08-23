@@ -6,7 +6,6 @@ const { Time } = require('@sapphire/time-utilities');
 module.exports = class IntervalCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'interval',
       aliases: ['interval'],
       requiredUserPermissions: [],

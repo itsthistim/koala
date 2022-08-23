@@ -8,7 +8,6 @@ var parse = require('parse-duration')
 module.exports = class SeekCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'seek',
             aliases: ['seek'],
             requiredUserPermissions: [],

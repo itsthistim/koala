@@ -10,7 +10,6 @@ const moment = require('moment');
 module.exports = class BrowseCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'browse',
             aliases: ['browse', 'b'],
             requiredUserPermissions: [],

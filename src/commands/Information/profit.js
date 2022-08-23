@@ -5,7 +5,6 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class ProfitCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'profit',
             aliases: ['profit'],
             requiredUserPermissions: [],

@@ -6,7 +6,6 @@ const { Time } = require('@sapphire/time-utilities');
 module.exports = class SusCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'sus',
             aliases: ['sus'],
             requiredUserPermissions: [],

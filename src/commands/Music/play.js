@@ -6,7 +6,6 @@ const { AudioPlayerStatus, StreamType, createAudioPlayer, createAudioResource, j
 module.exports = class PlayCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'play',
       aliases: ['play', 'p', 'music', 'join'],
       requiredUserPermissions: [],

@@ -7,7 +7,6 @@ const moment = require('moment');
 module.exports = class UserInfoCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'userinfo',
       aliases: ['userinfo', 'whois'],
       requiredUserPermissions: [],

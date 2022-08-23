@@ -7,7 +7,6 @@ const { Time } = require('@sapphire/time-utilities');
 module.exports = class BanCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'ban',
             aliases: ['ban'],
             requiredUserPermissions: ['BAN_MEMBERS'],

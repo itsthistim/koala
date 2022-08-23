@@ -7,7 +7,6 @@ const { MessageEmbed, MessageAttachment } = require('discord.js');
 module.exports = class LoopCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'loop',
       aliases: ['queueloop', 'queue-loop', 'loopqueue', 'loop-queue', 'qloop', 'loopq', 'repeat'],
       requiredUserPermissions: [],

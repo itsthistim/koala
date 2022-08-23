@@ -6,7 +6,6 @@ const path = require('path');
 module.exports = class RainbowCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'rainbow',
       aliases: ['rainbow', 'gay'],
       requiredUserPermissions: [],

@@ -6,7 +6,6 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class CommandDeniedListener extends Listener {
   constructor(context, options = {}) {
     super(context, {
-      ...options,
       once: false,
       event: "commandDenied"
     });

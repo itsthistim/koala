@@ -12,7 +12,6 @@ const { inspect } = require("node:util");
 module.exports = class EvalCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'eval',
       aliases: ['eval', 'e', 'ev'],
       requiredUserPermissions: [],

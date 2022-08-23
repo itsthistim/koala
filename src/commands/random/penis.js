@@ -9,7 +9,6 @@ const { MersenneTwister19937, integer } = require('random-js');
 module.exports = class PenisCommand extends Command {
     constructor(context, options) {
         super(context, {
-            ...options,
             name: 'penis',
             aliases: ['penis', 'pp'],
             requiredUserPermissions: [],

@@ -6,7 +6,6 @@ const { MessageEmbed, version: djsVersion } = require('discord.js');
 module.exports = class BotInfoCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'about',
       aliases: ['botinfo', 'bot-info', 'stats', 'statistics', 'about', 'info'],
       requiredUserPermissions: [],

@@ -4,7 +4,6 @@ const { Permissions } = require('discord.js');
 module.exports = class GuildMemberUpdateListener extends Listener {
     constructor(context, options = {}) {
         super(context, {
-            ...options,
             once: true,
             event: "guildMemberUpdate"
         });

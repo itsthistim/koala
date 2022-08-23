@@ -6,7 +6,6 @@ const path = require('path');
 module.exports = class GunCommand extends Command {
   constructor(context, options) {
     super(context, {
-      ...options,
       name: 'gun',
       aliases: ['gun'],
       requiredUserPermissions: [],
