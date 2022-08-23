@@ -17,7 +17,7 @@ module.exports = class ReadyListener extends Listener {
       }
       if (/\btim\b/.test(message.content) || message.content.toLowerCase().includes('319183644331606016')) {
         // message.react('🇼');
-        message.react('🧪');
+        message.react('w');
       }
     }
   }
