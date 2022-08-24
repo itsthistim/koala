@@ -35,7 +35,7 @@ module.exports = class TestCommand extends Command {
       return reply(message, 'You must specify a time.');
     }
 
-    var duration = parse(time);
+    var duration = parse(time, 's');
 
     if (!duration) {
       return reply(message, 'You must specify a valid time.');

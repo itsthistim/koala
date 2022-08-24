@@ -27,7 +27,7 @@ module.exports = class CertificateCommand extends Command {
 
   async messageRun(message, args) {
     let name = await args.pick('string').catch(() => args.pick('member').catch(() => message.author));
-    let reason = await args.pick('string').catch(() => "");
+    var reason = await args.rest('string').catch(() => null);
 
     try {
       if (name.match(UserOrMemberMentionRegex)) {
