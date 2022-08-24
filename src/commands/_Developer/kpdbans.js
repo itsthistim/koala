@@ -10,7 +10,6 @@ module.exports = class KPDBansCommand extends Command {
             aliases: ['kpd-bans', 'kpdbans', 'krunker-bans', 'krunkerbans', 'tim-bans', 'timbans', 'kpd'],
             requiredUserPermissions: ['MANAGE_MESSAGES'],
             requiredClientPermissions: [],
-            preconditions: ['ownerOnly'],
             subCommands: [],
             flags: [],
             options: [],
