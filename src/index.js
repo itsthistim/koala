@@ -7,8 +7,6 @@ const { SapphireClient, BucketScope, container } = require('@sapphire/framework'
 
 const { Time } = require('@sapphire/time-utilities');
 const { createConnection } = require('mysql');
-const { Player } = require("discord-player");
-const { Lyrics } = require("@discord-player/extractor");
 const parse = require('parse-duration');
 
 let prefixes = [];
@@ -101,8 +99,9 @@ global.EMOJIS = {
 	HOURGLASS: '⌛'
 };
 
-global.PLAYER = new Player(client);
-global.LYRICS = Lyrics.init(/*process.env.GENIUS_TOKEN*/);
+// global.PLAYER = new Player(client);
+// global.LYRICS = Lyrics.init(/*process.env.GENIUS_TOKEN*/);
+
 parse['mo'] = parse['month'];
 
 const monthly_idiots = schedule.scheduleJob('0 15 1 * *', async function() {
