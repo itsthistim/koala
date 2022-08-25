@@ -7,7 +7,7 @@ module.exports = class DisconnectCommand extends Command {
       aliases: ['disconnect', 'dc'],
       requiredUserPermissions: [],
       requiredClientPermissions: [],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],

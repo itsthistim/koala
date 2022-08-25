@@ -13,7 +13,7 @@ module.exports = class SongRemoveCommand extends Command {
             aliases: ['remove', 'rem'],
             requiredUserPermissions: [],
             requiredClientPermissions: [],
-            preconditions: [],
+            preconditions: ['ownerOnly'],
             subCommands: [],
             flags: [],
             options: [],

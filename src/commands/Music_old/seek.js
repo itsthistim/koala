@@ -12,7 +12,7 @@ module.exports = class SeekCommand extends Command {
             aliases: ['seek'],
             requiredUserPermissions: [],
             requiredClientPermissions: [],
-            preconditions: [],
+            preconditions: ['ownerOnly'],
             subCommands: [],
             flags: [],
             options: [],

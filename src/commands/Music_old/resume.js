@@ -10,7 +10,7 @@ module.exports = class ResumeCommand extends Command {
       aliases: ['resume', 'continue'],
       requiredUserPermissions: [],
       requiredClientPermissions: ['CONNECT', 'SPEAK', 'USE_VAD'],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],

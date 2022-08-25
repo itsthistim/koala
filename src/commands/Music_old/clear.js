@@ -10,7 +10,7 @@ module.exports = class ClearCommand extends Command {
       aliases: ['queueclear', 'queue-clear', 'clearqueue', 'clear-queue', 'qclear', 'clearq'],
       requiredUserPermissions: [],
       requiredClientPermissions: ['CONNECT', 'SPEAK', 'USE_VAD'],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],
