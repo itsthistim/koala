@@ -41,7 +41,7 @@ module.exports = class SayCommand extends Command {
 
     if (isEmbed) {
       const embed = new MessageEmbed();
-      embed.setColor(COLORS.DEFAULT);
+      embed.setColor(COLORS.GREYPLE);
       embed.setDescription(text);
 
       if (del) {
