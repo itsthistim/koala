@@ -54,7 +54,7 @@ module.exports = class HelpCommand extends Command {
             for (const category of categories) {
                 const categoryCommands = commands.filter(c => c.category === category);
 
-                if (category != '_Developer') {
+                if (category != '_Developer' && category != 'Music_old') {
                     myPaginatedMessage.addPageEmbed((embed) => {
                         embed.setTitle(category);
                         embed.setDescription(`${categoryCommands.map(c => {

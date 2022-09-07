@@ -10,7 +10,7 @@ module.exports = class PlayCommand extends Command {
       aliases: ['play', 'p', 'music', 'join'],
       requiredUserPermissions: [],
       requiredClientPermissions: ['CONNECT', 'SPEAK', 'USE_VAD'],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],

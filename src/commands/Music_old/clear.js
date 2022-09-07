@@ -3,20 +3,20 @@ const { send, reply } = require('@sapphire/plugin-editable-commands');
 const { Time } = require('@sapphire/time-utilities');
 const { AudioPlayerStatus, StreamType, createAudioPlayer, createAudioResource, joinVoiceChannel, generateDependencyReport } = require('@discordjs/voice');
 
-module.exports = class ResumeCommand extends Command {
+module.exports = class ClearCommand extends Command {
   constructor(context, options) {
     super(context, {
-      name: 'pause',
-      aliases: ['pause', 'stop'],
+      name: 'clear',
+      aliases: ['queueclear', 'queue-clear', 'clearqueue', 'clear-queue', 'qclear', 'clearq'],
       requiredUserPermissions: [],
       requiredClientPermissions: ['CONNECT', 'SPEAK', 'USE_VAD'],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],
       nsfw: false,
       description: {
-        content: 'Pauses the current song.',
+        content: 'Clears the current queue.',
         usage: '',
         examples: []
       }
@@ -25,8 +25,10 @@ module.exports = class ResumeCommand extends Command {
 
   async messageRun(message, args) {
     const queue = PLAYER.getQueue(message.guild);
-    if (!queue || !queue.playing) return reply(message, { embeds: [{ description: `❌ | There is nothing to pause.`, color: COLORS.RED }] });
-    const paused = queue.setPaused(true);
-    return paused ? reply(message, { embeds: [{ description: `⏸️ | Paused`, color: COLORS.GREEN }] }) : reply(message, { embeds: [{ description: `❌ | There is nothing to pause.`, color: COLORS.RED }] });
+    if (!queue) {
+      return reply(message, { embeds: [{ description: `❌ | There is no queue to clear.`, color: COLORS.RED }] });
+    }
+    queue.clear();
+    return reply(message, { embeds: [{ description: `✅ | **Cleared** the queue.`, color: COLORS.GREEN }] });
   }
 }

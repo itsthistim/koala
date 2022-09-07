@@ -10,7 +10,7 @@ module.exports = class NowPlayingCommand extends Command {
       aliases: ['nowplaying', 'now-playing', 'playing', 'np'],
       requiredUserPermissions: [],
       requiredClientPermissions: [],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],

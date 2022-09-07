@@ -6,17 +6,17 @@ const { AudioPlayerStatus, StreamType, createAudioPlayer, createAudioResource, j
 module.exports = class ResumeCommand extends Command {
   constructor(context, options) {
     super(context, {
-      name: 'resume',
-      aliases: ['resume', 'continue'],
+      name: 'pause',
+      aliases: ['pause', 'stop'],
       requiredUserPermissions: [],
       requiredClientPermissions: ['CONNECT', 'SPEAK', 'USE_VAD'],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],
       nsfw: false,
       description: {
-        content: 'Resumes the current song.',
+        content: 'Pauses the current song.',
         usage: '',
         examples: []
       }
@@ -25,8 +25,8 @@ module.exports = class ResumeCommand extends Command {
 
   async messageRun(message, args) {
     const queue = PLAYER.getQueue(message.guild);
-    if (!queue || !queue.playing) return reply(message, { embeds: [{ description: `❌ | There is nothing to resume.`, color: COLORS.RED }] });
-    const paused = queue.setPaused(false);
-    return paused ? reply(message, { embeds: [{ description: `▶️ | Resuming.`, color: COLORS.GREEN }] }) : reply(message, { embeds: [{ description: `❌ | There is nothing to resume.`, color: COLORS.RED }] });
+    if (!queue || !queue.playing) return reply(message, { embeds: [{ description: `❌ | There is nothing to pause.`, color: COLORS.RED }] });
+    const paused = queue.setPaused(true);
+    return paused ? reply(message, { embeds: [{ description: `⏸️ | Paused`, color: COLORS.GREEN }] }) : reply(message, { embeds: [{ description: `❌ | There is nothing to pause.`, color: COLORS.RED }] });
   }
 }

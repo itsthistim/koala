@@ -12,7 +12,7 @@ module.exports = class LyricsCommand extends Command {
             aliases: ['lyrics'],
             requiredUserPermissions: [],
             requiredClientPermissions: [],
-            preconditions: [],
+            preconditions: ['ownerOnly'],
             subCommands: [],
             flags: [],
             options: [],

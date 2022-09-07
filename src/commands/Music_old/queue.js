@@ -11,7 +11,7 @@ module.exports = class QueueCommand extends Command {
       aliases: ['queue', 'q'],
       requiredUserPermissions: [],
       requiredClientPermissions: [],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],

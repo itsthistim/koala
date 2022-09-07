@@ -9,7 +9,7 @@ module.exports = class SkipCommand extends Command {
       aliases: ['skip', 's'],
       requiredUserPermissions: [],
       requiredClientPermissions: [],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],

@@ -11,7 +11,7 @@ module.exports = class LoopCommand extends Command {
       aliases: ['queueloop', 'queue-loop', 'loopqueue', 'loop-queue', 'qloop', 'loopq', 'repeat'],
       requiredUserPermissions: [],
       requiredClientPermissions: ['CONNECT', 'SPEAK', 'USE_VAD'],
-      preconditions: [],
+      preconditions: ['ownerOnly'],
       subCommands: [],
       flags: [],
       options: [],
