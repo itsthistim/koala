@@ -7,7 +7,7 @@ var moment = require('moment');
 var parse = require('parse-duration');
 const humanizeDuration = require("humanize-duration");
 
-module.exports = class MuteCommand extends Command {
+module.exports = class TimeOutCommand extends Command {
     constructor(context, options) {
         super(context, {
             name: 'mute',
@@ -24,7 +24,7 @@ module.exports = class MuteCommand extends Command {
                 usage: '<user> <duration> [reason]',
                 examples: ['@user 1h Reason for timeout']
             },
-            detailedDescription: '\nThis command will timeout a user for a specified amount of time. The duration must be between 1 second and 28 days.'
+            detailedDescription: '\nThis command will time out a user for a specified amount of time. The duration must be between 1 second and 28 days.'
         });
     }
 
@@ -34,21 +34,21 @@ module.exports = class MuteCommand extends Command {
         var reason = await args.rest('string').catch(() => null);
 
         if (!member) {
-            return reply(message, 'You must specify a member to mute.');
+            return reply(message, 'You must specify a member to time out.');
         }
 
         if (member.id === message.author.id) {
-            return reply(message, 'You cannot mute yourself.');
+            return reply(message, 'You cannot time out yourself.');
         }
 
         if (!time) {
-            return reply(message, 'You must specify a valid duration to mute the user.');
+            return reply(message, 'You must specify a valid duration to time out the user.');
         }
 
         var duration = parse(time);
 
         if (!duration) {
-            return reply(message, 'You must specify a valid duration to mute the user.');
+            return reply(message, 'You must specify a valid duration to time out the user.');
         }
 
         if (duration < 1000 || duration >= 2419200000) {
@@ -56,8 +56,8 @@ module.exports = class MuteCommand extends Command {
         }
 
         if (member.moderatable) {
-            member.timeout(duration, `Muted by ${message.author.tag}${reason ? `: ${reason}` : ''}`);
-            reply(message, `${member.user.tag} has been muted for **${humanizeDuration(duration, { units: ['w', 'd', 'h', 'm', 's', 'ms'], conjunction: " and ", serialComma: false })}**${reason ? ` for \`${reason}\`` : ''}.`);
+            member.timeout(duration, `Timed out by ${message.author.tag}${reason ? `: ${reason}` : ''}`);
+            reply(message, `${member.user.tag} has been timed out for **${humanizeDuration(duration, { units: ['w', 'd', 'h', 'm', 's', 'ms'], conjunction: " and ", serialComma: false })}**${reason ? ` for \`${reason}\`` : ''}.`);
         } else {
             return reply(message, `I am unable to timeout ${member.user.tag}.`);
         }

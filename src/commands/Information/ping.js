@@ -14,10 +14,12 @@ module.exports = class PingCommand extends Command {
 
   registerApplicationCommands(registry) {
     registry.registerChatInputCommand((builder) => {
-      builder.setName(this.name)
-      builder.setDescription(this.description)
+      builder
+        .setName(this.name)
+        .setDescription(this.description)
     }, {
-      idHints: '995355167274836018'
+      idHints: '995355167274836018',
+      guildIds: []
     })
   }
 
