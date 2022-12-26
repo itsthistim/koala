@@ -46,11 +46,11 @@ module.exports = class SubInfoCommand extends Command {
             embed.setURL(`https://reddit.com/${sub.url}`);
 
             if (sub.public_description) {
-                embed.addField(`About`, sub.public_description);
+                embed.addFields({ name: `About`, value: sub.public_description });
             }
 
-            embed.addField(`Info`, `🍰 Created: ${da}. ${mo} ${ye}\n🙊 Language: ${sub.lang}\n${sub.over18 ? '🔞 This subreddit is NSFW!' : ''}`, true);
-            embed.addField(`Members`, `👋 Active users: ${sub.active_user_count}\n🌟 Subscribers: ${sub.subscribers}`, true);
+            embed.addFields({ name: `Info`, value: `🍰 Created: ${da}. ${mo} ${ye}\n🙊 Language: ${sub.lang}\n${sub.over18 ? '🔞 This subreddit is NSFW!' : ''}` }, true);
+            embed.addFields({ name: `Members`, value: `👋 Active users: ${sub.active_user_count}\n🌟 Subscribers: ${sub.subscribers}` }, true);
             embed.setColor(global.COLORS.DEFAULT);
             embed.setTimestamp();
             embed.setFooter({ text: `Requested by ${msg.author.tag}`, iconURL: msg.author.displayAvatarURL({ dynamic: true }) });

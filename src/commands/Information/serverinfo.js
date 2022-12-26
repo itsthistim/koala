@@ -33,15 +33,21 @@ module.exports = class ServerInfoCommand extends Command {
       .setColor(COLORS.DEFAULT)
       .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL({ dynamic: true }) })
       .setThumbnail(message.guild.iconURL({ dynamic: true }))
-      .addField(`Server Details`, `Owner: <@${message.guild.ownerId}>` +
-        `\nRoles: ${message.guild.roles.cache.size}` +
-        `\nChannels: ${message.guild.channels.cache.size}` +
-        `\nBoosts: ${message.guild.premiumSubscriptionCount} (Level: ${message.guild.premiumTier == 'NONE' ? 0 : message.guild.premiumTier})`, true)
-      .addField(`\u200B`, `Members: ${humans}🧑 ${bots}🤖 | ${message.guild.memberCount}` +
-        `\nEmojis: ${message.guild.emojis.cache.size}` +
-        `\nCreated: ${moment(message.guild.createdAt).format('MMM Do YYYY, hh:mm a')}` +
-        `\nID: \`${message.guild.id}\``, true)
-        .setThumbnail(message.guild.iconURL());
+      .addFields({
+        name: `Server Details`,
+        value: `Owner: <@${message.guild.ownerId}>` +
+          `\nRoles: ${message.guild.roles.cache.size}` +
+          `\nChannels: ${message.guild.channels.cache.size}` +
+          `\nBoosts: ${message.guild.premiumSubscriptionCount} (Level: ${message.guild.premiumTier == 'NONE' ? 0 : message.guild.premiumTier})`
+      }, true)
+      .addFields({
+        name: `\u200B`,
+        value: `Members: ${humans}🧑 ${bots}🤖 | ${message.guild.memberCount}` +
+          `\nEmojis: ${message.guild.emojis.cache.size}` +
+          `\nCreated: ${moment(message.guild.createdAt).format('MMM Do YYYY, hh:mm a')}` +
+          `\nID: \`${message.guild.id}\``
+      }, true)
+      .setThumbnail(message.guild.iconURL());
 
     return reply(message, { embeds: [embed] });
   }

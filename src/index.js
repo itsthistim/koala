@@ -4,10 +4,13 @@ require('@sapphire/plugin-editable-commands/register');
 const { Intents } = require('discord.js');
 const { SapphireClient, BucketScope, container } = require('@sapphire/framework');
 // const { ScheduledTaskRedisStrategy } = require('@sapphire/plugin-scheduled-tasks/register-redis');
+const { DisTube } = require('distube')
+const { YtDlpPlugin } = require('@distube/yt-dlp')
 
 const { Time } = require('@sapphire/time-utilities');
 const { createConnection } = require('mysql');
 const parse = require('parse-duration');
+
 
 let prefixes = [];
 if (!process.env.DEV) {
@@ -79,8 +82,30 @@ const client = new SapphireClient({
 	// }
 });
 
+client.distube = new DisTube(client, {
+	emitNewSongOnly: true,
+	leaveOnStop: false,
+	leaveOnEmpty: true,
+	leaveOnFinish: false,
+	leaveOnStop: false,
+	savePreviousSongs: true,
+	searchSongs: 1, // < 1 -> play first result
+	searchCooldown: 60,
+	emptyCooldown: 60,
+	nsfw: false,
+	emitAddSongWhenCreatingQueue: false,
+	emitAddListWhenCreatingQueue: false,
+	youtubeCookie: process.env.YT_COOKIE,
+	youtubeDL: false,
+	updateYouTubeDL: false,
+	plugins: [
+		new YtDlpPlugin()
+	],
+	// customFilters: []
+})
+
 global.COLORS = {
-	DEFAULT: 0xeaff00,
+	DEFAULT: 0x9BACB4,
 	RED: 0xEF4948,
 	GREEN: 0x2ECC71,
 	BLACK: 0x000000,
@@ -104,7 +129,7 @@ global.EMOJIS = {
 
 parse['mo'] = parse['month'];
 
-const monthly_idiots = schedule.scheduleJob('0 15 1 * *', async function() {
+const monthly_idiots = schedule.scheduleJob('0 15 1 * *', async function () {
 	console.log('monthly_idiots triggered @', new Date().toLocaleString());
 
 	const guild = this.container.client.guilds.cache.get('988912269909966938');

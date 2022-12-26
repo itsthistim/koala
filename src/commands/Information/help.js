@@ -74,18 +74,18 @@ module.exports = class HelpCommand extends Command {
             const embed = new MessageEmbed()
                 .setColor(COLORS.DEFAULT)
                 .setTitle(`\`${prefix}${cmd.name}${cmd.description.usage !== '' ? ' ' + cmd.description.usage : ''}\``)
-                .addField('Description', `${cmd.description.content}${cmd.detailedDescription ? `\n${cmd.detailedDescription}` : ''}`);
+                .addFields({ name: 'Description', value: `${cmd.description.content}${cmd.detailedDescription ? `\n${cmd.detailedDescription}` : ''}` });
 
             if (cmd.description.examples?.length > 0) {
-                embed.addField('Examples', `\`${prefix}${cmd.name} ${cmd.description.examples.join(`\`\n\`${prefix}${cmd.name} `)}\``, true);
+                embed.addFields({ name: 'Examples', value: `\`${prefix}${cmd.name} ${cmd.description.examples.join(`\`\n\`${prefix}${cmd.name} `)}\`` }, true);
             }
 
             if (cmd.aliases.length > 1) {
-                embed.addField('Aliases', `\`${cmd.aliases.join('` `')}\``, true);
+                embed.addFields({ name: 'Aliases', value: `\`${cmd.aliases.join('` `')}\`` }, true);
             }
 
             if (cmd.options.requiredUserPermissions?.length > 0) {
-                embed.addField('Required User Permissions', `\`${cmd.options.requiredUserPermissions.join('` `')}\``);
+                embed.addFields({ name: 'Required User Permissions', value: `\`${cmd.options.requiredUserPermissions.join('` `')}\`` });
             }
 
             return reply(message, { embeds: [embed] });

@@ -59,15 +59,15 @@ module.exports = class UserInfoCommand extends Command {
         .setAuthor({ name: target.user.username + '#' + target.user.discriminator, iconUrl: target.user.displayAvatarURL({ dynamic: true }) })
         .setDescription(`${target.presence ? status[target.presence.status] : ''}${target}`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true, size: 2048 }))
-        
-        .addField(`Joined Server`, `${moment.utc(target.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(target.joinedAt).fromNow()})`, true)
-        .addField(`Joined Discord`, `${moment(target.user.createdAt).format('MMMM Do YYYY')}\n(${moment(target.user.createdAt).fromNow()})`, true)
-        .addField(`\u200b`, `\u200b`, true)
-        .addField(`Playing`, `${usergame ? usergame : "Nothing"}`, true)
-        .addField(`Badges`, `Coming soon!`, true)
-        .addField(`\u200b`, `\u200b`, true)
-        .addField(`Roles [${target.roles.cache.size - 1}]`, `${target.roles.cache.map(roles => `${roles}`).join(' ')}`, false)
-        
+
+        .addFields({ name: `Joined Server`, value: `${moment.utc(target.joinedAt).format('MMMM Do YYYY')}\n(${moment.utc(target.joinedAt).fromNow()})` }, true)
+        .addFields({ name: `Joined Discord`, value: `${moment(target.user.createdAt).format('MMMM Do YYYY')}\n(${moment(target.user.createdAt).fromNow()})` }, true)
+        .addFields({ name: `\u200b`, value: `\u200b` }, true)
+        .addFields({ name: `Playing`, value: `${usergame ? usergame : "Nothing"}` }, true)
+        .addFields({ name: `Badges`, value: `Coming soon!` }, true)
+        .addFields({ name: `\u200b`, value: `\u200b` }, true)
+        .addFields({ name: `Roles [${target.roles.cache.size - 1}]`, value: `${target.roles.cache.map(roles => `${roles}`).join(' ')}` }, false)
+
         .setFooter({ text: `User ID: ${target.id}` });
       reply(message, { embeds: [embed] });
     }
@@ -77,8 +77,8 @@ module.exports = class UserInfoCommand extends Command {
         .setAuthor({ name: target.username + '#' + target.discriminator, iconUrl: target.displayAvatarURL({ dynamic: true }) })
         .setDescription(`${target}`)
         .setThumbnail(`${target.displayAvatarURL({ dynamic: true })}`)
-        .addField(`Joined Discord`, `${moment(target.createdAt).format('MMMM Do YYYY')}\n(${moment(target.createdAt).fromNow()})`, true)
-        .addField(`Playing`, `${usergame ? usergame : "Nothing"}`, true)
+        .addFields({ name: `Joined Discord`, value: `${moment(target.createdAt).format('MMMM Do YYYY')}\n(${moment(target.createdAt).fromNow()})` }, true)
+        .addFields({ name: `Playing`, value: `${usergame ? usergame : "Nothing"}` }, true)
         .setFooter({ text: `User ID: ${target.id}` });
       reply(message, { embeds: [embed] });
     }

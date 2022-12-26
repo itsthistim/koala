@@ -44,9 +44,9 @@ module.exports = class UrbanCommand extends Command {
       .setTitle(res.word)
       .setURL(res.urbanURL)
       .setDescription(res.definition.replace(/([\[\]])/g, ''))
-      .addField('Example', res.example.replace(/([\[\]])/g, '') || 'None')
-      .addField(':+1:', `${res.thumbsUp}`, true)
-      .addField(':-1:', `${res.thumbsDown}`, true)
+      .addFields({ name: 'Example', value: res.example.replace(/([\[\]])/g, '') || 'None' })
+      .addFields({ name: ':+1:', value: `${res.thumbsUp}`}, true)
+      .addFields({ name: ':-1:', value: `${res.thumbsDown}`}, true)
       .setFooter({ text: `Posted by ${res.author}` });
 
     return reply(message, { embeds: [embed] })

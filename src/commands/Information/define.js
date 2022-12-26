@@ -40,7 +40,7 @@ module.exports = class DefineCommand extends Command {
         if (german) {
             wd.getDef(word, 'de', null, function (result) {
                 if (!result.err) {
-                    embed.addField(result.word, result.definition);
+                    embed.addFields({ name: result.word, value: result.definition });
                 }
                 else {
                     embed.setDescription(`I could not find a definition for ${result.word}.`);
@@ -51,7 +51,7 @@ module.exports = class DefineCommand extends Command {
         else if (french) {
             wd.getDef(word, 'fr', null, function (result) {
                 if (!result.err) {
-                    embed.addField(result.word, result.definition);
+                    embed.addFields({ name: result.word, value: result.definition });
                 }
                 else {
                     embed.setDescription(`I could not find a definition for ${result.word}.`);
@@ -62,7 +62,7 @@ module.exports = class DefineCommand extends Command {
         else {
             wd.getDef(word, 'en', null, function (result) {
                 if (!result.err) {
-                    embed.addField(result.word, result.definition);
+                    embed.addFields({ name: result.word, value: result.definition });
                 }
                 else {
                     embed.setDescription(`I could not find a definition for ${result.word}.`);
