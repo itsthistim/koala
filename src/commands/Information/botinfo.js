@@ -44,17 +44,17 @@ module.exports = class BotInfoCommand extends Command {
 			.addFields([
 				{
 					name: 'Technical',
-					value: `**Uptime**: ${this.formatMilliseconds(this.container.client.uptime)}
-                    **Memory**: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
-                    **Discord.js**: v${djsVersion}
-                    **Sapphire**: v${sappVersion}`,
+					value: `**Uptime**: ${this.formatMilliseconds(this.container.client.uptime)}\n` +
+                    `**Memory**: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n` +
+                    `**Discord.js**: v${djsVersion}\n` +
+                    `**Sapphire**: v${sappVersion}`,
           inline: true
 				},
 				{
 					name: 'Discord',
-					value: `**Guilds**: ${this.container.client.guilds.cache.size}
-                  **Channels**: ${this.container.client.channels.cache.size}
-                  **Users**: ${this.container.client.users.cache.size}`,
+					value: `**Guilds**: ${this.container.client.guilds.cache.size}\n` +
+                  		   `**Channels**: ${this.container.client.channels.cache.size}\n` +
+                  		   `**Users**: ${this.container.client.users.cache.size}`,
           inline: true
 				}
 			])
@@ -79,17 +79,17 @@ module.exports = class BotInfoCommand extends Command {
 				.addFields(
           {
             name: 'Technical',
-            value: `**Uptime**: ${this.formatMilliseconds(this.container.client.uptime)}
-                    **Memory**: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
-                    **Discord.js**: v${djsVersion}
-                    **Sapphire**: v${sappVersion}`,
+            value: `**Uptime**: ${this.formatMilliseconds(this.container.client.uptime)}\n` +
+					`**Memory**: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n` +
+					`**Discord.js**: v${djsVersion}\n` +
+					`**Sapphire**: v${sappVersion}`,
             inline: true
           },
           {
             name: 'Discord',
-            value: `**Guilds**: ${this.container.client.guilds.cache.size}
-                  **Channels**: ${this.container.client.channels.cache.size}
-                  **Users**: ${this.container.client.users.cache.size}`,
+            value: `**Guilds**: ${this.container.client.guilds.cache.size}\n` +
+					`**Channels**: ${this.container.client.channels.cache.size}\n` +
+					`**Users**: ${this.container.client.users.cache.size}`,
             inline: true
           }
 				)
