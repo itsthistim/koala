@@ -29,6 +29,7 @@ module.exports = class TestCommand extends Command {
   }
 
   async messageRun(message, args) {
+
     var time = await args.pick('string').catch(() => null);
 
     if (!time) {
