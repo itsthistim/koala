@@ -9,9 +9,9 @@ export default class PlaySongListener extends Listener {
 	}
 
 	async run(queue, song) {
-		// Slash command logic
 		if (song.metadata) {
-			if (song.metadata.i.replied) {				song.metadata.i
+			if (song.metadata.i.replied) {
+				song.metadata.i
 					.followUp({
 						embeds: [
 							{
@@ -27,7 +27,8 @@ export default class PlaySongListener extends Listener {
 					.then((msg) => {
 						queue.npmessage = msg;
 					});
-			} else {				song.metadata.i
+			} else {
+				song.metadata.i
 					.reply({
 						embeds: [
 							{
@@ -44,7 +45,8 @@ export default class PlaySongListener extends Listener {
 						queue.npmessage = msg;
 					});
 			}
-		} else { // Message command logic			queue.textChannel
+		} else {
+			queue.textChannel
 				.send({
 					embeds: [
 						{
