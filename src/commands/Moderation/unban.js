@@ -1,49 +1,92 @@
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Time } = require('@sapphire/time-utilities');
-const { PaginatedMessage } = require('@sapphire/discord.js-utilities');
-const { MessageEmbed } = require('discord.js');
+import { Command } from '@sapphire/framework';
+import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
 
+export class UnbanCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'unban',
+			aliases: ['pardon'],
+			requiredUserPermissions: [PermissionFlagsBits.BanMembers],
+			requiredClientPermissions: [PermissionFlagsBits.BanMembers],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Bans a user from the server.',
+			detailedDescription: '',
+			usage: '<user> [reason]',
+			examples: ['@user#1234 spamming']
+		});
+	}
 
-module.exports = class UnbanCommand extends Command {
-    constructor(context, options) {
-        super(context, {
-            name: 'unban',
-            aliases: ['unban', 'pardon'],
-            requiredUserPermissions: [],
-            requiredClientPermissions: [],
-            preconditions: [],
-            subCommands: [],
-            flags: [],
-            options: [],
-            nsfw: false,
-            description: {
-                content: 'Unbans a user from the server.',
-                usage: '<user> [reason]',
-                examples: ['@user', '@user banned by mistake']
-            },
-            detailedDescription: ''
-        });
-    }
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addUserOption((option) => option.setName('user').setDescription('The user to unban.').setRequired(true))
+					.addStringOption((option) => option.setName('reason').setDescription('The reason for the unban.').setRequired(false));
+			},
+			{
+				guildIds: ['502208815937224715']
+				// idHints: '123456789012345678'
+			}
+		);
+	}
 
-    async messageRun(message, args) {
-        var target = await args.pick('user').catch(async () => await args.pick('string').catch(() => null));
-        var reason = await args.rest('string').catch(() => null);
+	async chatInputRun(interaction) {
+		var user = await interaction.options.getUser('user', true);
+		var reason = await interaction.options.getString('reason', false);
 
-        if (typeof target == 'string') {
-            if (!target.match(/^[0-9]+$/) && target.length > 18) {
-                return reply(message, 'Please provide a valid user to unban.');
-            }
+		if (!user) {
+			return reply(interaction, { embeds: [new EmbedBuilder().setColor(COLORS.RED).setTitle('User Not Found').setDescription('Please specify a user to ban.')] });
+		}
 
-            target = await this.container.client.users.fetch(target).catch(() => null);
-        }
+		if (!reason) {
+			reason = 'No reason specified.';
+		}
 
-        if (!target) {
-            return reply(message, 'Please provide a user to unban.');
-        }
+		this.unbanUser(interaction, user, reason).then((embed) => {
+			reply(interaction, { embeds: [embed] });
+		});
+	}
 
-        message.guild.bans.remove(target.id, { reason: reason })
-            .then(user => reply(message, `${user.username} has been unbanned.`))
-            .catch(error => reply(message, `An error occured while unbanning ${target.username}.`));
-    }
+	async messageRun(message, args) {
+		var user = await args
+			.pick('member')
+			.catch(() => args.pick('user'))
+			.catch(() => null);
+		var reason = await args.rest('string').catch(() => null);
+
+		if (!user) {
+			return reply(message, { embeds: [new EmbedBuilder().setColor(COLORS.RED).setTitle('User Not Found').setDescription('Please specify a user to unban.')] });
+		}
+
+		if (!reason) {
+			reason = 'No reason specified.';
+		}
+
+		this.unbanUser(message, user, reason).then((embed) => {
+			reply(message, { embeds: [embed] });
+		});
+	}
+
+	async unbanUser(interaction, user, reason) {
+		if (user.member) {
+			return new EmbedBuilder()
+				.setColor(COLORS.RED)
+				.setTitle('User Not Banned')
+				.setDescription(`**${user.tag ?? user.user.tag}** is not banned.`);
+		}
+
+		// return await interaction.guild.bans.create(user.id, { reason: reason }).then((banInfo) => {
+		return new EmbedBuilder()
+			.setColor(COLORS.GREEN)
+			.setTitle('User Unbanned')
+			.setDescription(`**${user.tag ?? user.user.tag}** has been unbanned.`)
+			.addFields({ name: 'Reason', value: reason, inline: true });
+		// });
+	}
 }

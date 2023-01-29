@@ -1,25 +1,21 @@
-const { isTextBasedChannel } = require('@sapphire/discord.js-utilities');
-const { Argument } = require('@sapphire/framework');
-const ClientUtil = require('../utils/clientutil.js');
-const { isNullish } = require('@sapphire/utilities');
+import { Argument } from '@sapphire/framework';
+import { ClientUtil } from '#lib/functions';
+import { isNullish } from '@sapphire/utilities';
 
-class MemberArgument extends Argument {
-  run(parameter, context) {
-    const value = ClientUtil.resolveMember(parameter, context.message.guild.members.cache);
+export class MemberArgument extends Argument {
+	async run(parameter, context) {
+		const members = context.message.guild.members.cache.sort((a, b) => a.user.username.localeCompare(b.user.username));
+		const value = ClientUtil.resolveMember(parameter, members);
 
-    if (!isNullish(value)) {
-      return this.ok(value);
-    }
+		if (!isNullish(value)) {
+			return this.ok(value);
+		}
 
-    return this.error({
-      context,
-      parameter,
-      message: 'The provided argument could not be resolved to a member.',
-      identifier: 'InvalidMember'
-    });
-  }
+		return this.error({
+			context,
+			parameter,
+			message: 'The provided argument could not be resolved to a member.',
+			identifier: 'InvalidMember'
+		});
+	}
 }
-
-module.exports = {
-  MemberArgument
-};

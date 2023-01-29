@@ -1,6 +1,6 @@
-const { Listener } = require('@sapphire/framework');
+import { Listener } from '@sapphire/framework';
 
-module.exports = class ErrorListener extends Listener {
+export default class ErrorListener extends Listener {
     constructor(context) {
         super(context, {
             event: "error",

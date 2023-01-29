@@ -1,54 +1,99 @@
-// dev
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { MessageEmbed } = require('discord.js');
-const { Time } = require('@sapphire/time-utilities');
-const urban = require('relevant-urban');
+import { Command } from '@sapphire/framework';
+import { EmbedBuilder } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { cutTo } from '#lib/functions';
+import axios from 'axios';
+import moment from 'moment';
 
-module.exports = class UrbanCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'urban',
-      aliases: ['urban'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: [],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Looks up anything on urbandictionary.com.',
-        usage: '<query>',
-        examples: ['lmao', 'rofl']
-      }
-    });
-  }
+export class UrbanCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'urban',
+			aliases: ['urban-dictionary'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Looks up a word on Urban Dictionary.',
+			detailedDescription: '',
+			usage: '<word>',
+			examples: ['koala']
+		});
+	}
 
-  async messageRun(message, args) {
-    const term = await args.rest('string').catch(() => '');
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addStringOption((option) => option.setName('word').setDescription('The word to look up.').setRequired(true));
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1069358868020338761'
+			}
+		);
+	}
 
-    if (!term) {
-      return reply(message, { embeds: [{ description: `${EMOJIS.NEGATIVE} You did not specify a term.`, color: COLORS.RED }] });
-    }
+	async chatInputRun(interaction) {
+		const query = interaction.options.getString('word', true);
 
-    try {
-      var res = await urban(term);
-    } catch (error) {
-      reply(message, { embeds: [{ description: `${EMOJIS.NEGATIVE} I could not find anything for this query.`, color: COLORS.RED }] });
-    }
+		const definition = await this.getDefinition(query);
+		const embed = await this.getInfoEmbed(definition, query);
+		return interaction.reply({ embeds: [embed] });
+	}
 
-    const embed = new MessageEmbed()
-      .setColor('#58809A')
-      .setAuthor({ name: 'Urban Dictionary', iconUrl: 'https://i.imgur.com/VFXr0ID.jpg' })
-      .setTitle(res.word)
-      .setURL(res.urbanURL)
-      .setDescription(res.definition.replace(/([\[\]])/g, ''))
-      .addFields({ name: 'Example', value: res.example.replace(/([\[\]])/g, '') || 'None' })
-      .addFields({ name: ':+1:', value: `${res.thumbsUp}`}, true)
-      .addFields({ name: ':-1:', value: `${res.thumbsDown}`}, true)
-      .setFooter({ text: `Posted by ${res.author}` });
+	async messageRun(message, args) {
+		const query = await args.rest('string').catch(() => 'koala');
 
-    return reply(message, { embeds: [embed] })
-  }
+		const definition = await this.getDefinition(query);
+		const embed = await this.getInfoEmbed(definition, query);
+		return reply(message, { embeds: [embed] });
+	}
+
+	async getInfoEmbed(definition, word = definition.word) {
+		if (!definition) {
+			return new EmbedBuilder().setColor(COLORS.RED).setDescription(`No definition found for **${word}**.`);
+		}
+
+		return new Promise(async (resolve, reject) => {
+
+			const embed = new EmbedBuilder()
+				.setColor(global.COLORS.DEFAULT)
+				.setTitle(definition.word)
+				.setURL(definition.permalink)
+				.setDescription(cutTo(definition.definition.replace(/\[|\]/g, ''), 0, 4093))
+				.addFields(
+					{ name: 'Example', value: `${cutTo(definition.example.replace(/\[|\]/g, ''), 0, 1021)}\u200B`, inline: false },
+					{ name: '👍', value: `${definition.thumbs_up}\u200B`, inline: true },
+					{ name: '👎', value: `${definition.thumbs_down}\u200B`, inline: true }
+				)
+				.setFooter({ text: `${definition.author}  •  ${moment(definition.written_on).format('MMM Do YYYY, h:mm a')}` });
+
+			return resolve(embed);
+		});
+	}
+
+	async getDefinition(query) {
+		return new Promise(async (resolve, reject) => {
+			const url = `https://api.urbandictionary.com/v0/define?term=${query}`;
+			const response = await axios.get(url);
+
+			if (response.data.list.length === 0) {
+				return resolve(null);
+			}
+
+			let list = response.data.list;
+
+			// sort the list by the number of thumbs up
+			list.sort((a, b) => {
+				return b.thumbs_up - a.thumbs_up;
+			});
+
+			return resolve(list[0]);
+		});
+	}
 }

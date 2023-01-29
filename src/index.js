@@ -1,16 +1,23 @@
-const schedule = require('node-schedule');
-require('dotenv').config();
-require('@sapphire/plugin-editable-commands/register');
-const { Intents } = require('discord.js');
-const { SapphireClient, BucketScope, container } = require('@sapphire/framework');
-// const { ScheduledTaskRedisStrategy } = require('@sapphire/plugin-scheduled-tasks/register-redis');
-const { DisTube } = require('distube')
-const { YtDlpPlugin } = require('@distube/yt-dlp')
+import '#lib/setup';
 
-const { Time } = require('@sapphire/time-utilities');
-const { createConnection } = require('mysql');
-const parse = require('parse-duration');
+import { BucketScope, LogLevel, SapphireClient } from '@sapphire/framework';
+import { Time } from '@sapphire/time-utilities';
 
+import { GatewayIntentBits  } from 'discord.js';
+
+import '@sapphire/plugin-subcommands/register';
+import '@sapphire/plugin-editable-commands/register';
+// import '@sapphire/plugin-scheduled-tasks/register-redis';
+
+import { DisTube } from 'distube';
+import { YtDlpPlugin } from '@distube/yt-dlp';
+
+import parse from 'parse-duration';
+import mysql from 'mysql2';
+import moment from 'moment';
+import momentDurationFormat from 'moment-duration-format';
+
+momentDurationFormat(moment);
 
 let prefixes = [];
 if (!process.env.DEV) {
@@ -19,102 +26,85 @@ if (!process.env.DEV) {
 	prefixes = ['+'];
 }
 
-// global.DB = createConnection({
-// 	host: process.env.DB_HOST,
-// 	user: process.env.DB_USER,
-// 	password: process.env.DB_PASSWORD,
-// 	database: process.env.DB_DATABASE,
-// });
-
-// DB.connect(function (err) {
-// 	if (err) {
-// 		console.error('error connecting: ' + err.stack);
-// 		return;
-// 	}
-// 	console.log(`Successfully connected to ${DB.config.database}.`);
-// });
-
-// DB.query(`SELECT value FROM guild_config WHERE settingId = 1 AND guildId = '502208815937224715';`, function (error, results, fields) {
-// 	results.forEach(item => {
-// 		console.log(item.value);
-// 	});
-// });
-
 const client = new SapphireClient({
 	defaultPrefix: prefixes,
 	intents: [
-		'GUILDS',
-		'GUILD_MEMBERS',
-		'GUILD_BANS',
-		// 'GUILD_EMOJIS_AND_STICKERS',
-		'GUILD_VOICE_STATES',
-		'GUILD_INVITES',
-		// 'GUILD_INTEGRATIONS',
-		// 'GUILD_WEBHOOKS',
-		'GUILD_PRESENCES',
-		'GUILD_MESSAGES',
-		// 'GUILD_MESSAGE_REACTIONS',
-		// 'GUILD_MESSAGE_REACTIONS',
-		'DIRECT_MESSAGES',
-		// 'DIRECT_MESSAGE_REACTIONS',
-		// 'DIRECT_MESSAGE_TYPING',
-		// 'MESSAGE_CONTENT',
-		// 'GUILD_SCHEDULED_EVENTS',
-		// 'AUTO_MODERATION_CONFIGURATION',
-		// 'AUTO_MODERATION_EXECUTION'
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildModeration,
+		GatewayIntentBits.GuildEmojisAndStickers,
+		GatewayIntentBits.GuildIntegrations,
+		GatewayIntentBits.GuildWebhooks,
+		GatewayIntentBits.GuildInvites,
+		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.GuildPresences,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.GuildMessageTyping,
+		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.DirectMessageReactions,
+		GatewayIntentBits.DirectMessageTyping,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildScheduledEvents,
+		GatewayIntentBits.AutoModerationConfiguration,
+		GatewayIntentBits.AutoModerationExecution
 	],
-	allowedMentions: { parse: ['users', 'roles', 'everyone'], repliedUser: true },
+	defaultCooldown: {
+		delay: Time.Second * 10,
+		limit: 2,
+		filteredUsers: process.env.OWNERS.split(','),
+		scope: BucketScope.User
+	},
+	allowedMentions: { repliedUser: true },
 	caseInsensitiveCommands: true,
 	caseInsensitivePrefixes: true,
 	loadMessageCommandListeners: true,
-	// tasks: {
-	// 	strategy: new ScheduledTaskRedisStrategy({
-	// 		bull: {
-	// 			connection: {
-	// 				host: process.env.REDIS_HOST,
-	// 				username: process.env.REDIS_USER,
-	// 				password: process.env.REDIS_PASSWORD,
-	// 				port: process.env.REDIS_PORT,
-	// 				db: process.env.REDIS_DATABASES,
-	// 			}
-	// 		}
-	// 	})
-	// }
+	logger: { level: LogLevel.Info },
+	partials: ['CHANNEL'],
+	shards: 'auto'
+});
+
+const pool = mysql.createPool({
+	host: process.env.DB_HOST,
+	user: process.env.DB_USER,
+	password: process.env.DB_PASS,
+	database: process.env.DB_NAME,
+	port: process.env.DB_PORT,
+	waitForConnections: true,
+	connectionLimit: 10,
+	queueLimit: 0
 });
 
 client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
-	leaveOnStop: false,
+	leaveOnStop: true,
 	leaveOnEmpty: true,
+	emptyCooldown: 10,
 	leaveOnFinish: false,
-	leaveOnStop: false,
 	savePreviousSongs: true,
-	searchSongs: 1, // < 1 -> play first result
+	searchSongs: 1, // 1 -> play first result; 0 -> play all results
 	searchCooldown: 60,
 	emptyCooldown: 60,
 	nsfw: false,
 	emitAddSongWhenCreatingQueue: false,
 	emitAddListWhenCreatingQueue: false,
 	youtubeCookie: process.env.YT_COOKIE,
-	youtubeDL: false,
-	updateYouTubeDL: false,
-	plugins: [
-		new YtDlpPlugin()
-	],
+	plugins: [new YtDlpPlugin()]
 	// customFilters: []
-})
+});
 
+//#region Globals
 global.COLORS = {
-	DEFAULT: 0x9BACB4,
-	RED: 0xEF4948,
-	GREEN: 0x2ECC71,
+	DEFAULT: 0x9bacb4,
+	RED: 0xef4948,
+	GREEN: 0x2ecc71,
 	BLACK: 0x000000,
-	WHITE: 0xFFFFFF,
-	BLURPLE: 0x5865F2,
-	BLURPLE_CLASSIC: 0x7289DA,
-	GREYPLE: 0x99AAB5,
-	DARK_BUT_NOT_BLACK: 0x2C2F33,
-	NOT_QUITE_BLACK: 0x23272A
+	WHITE: 0xffffff,
+	BLURPLE: 0x5865f2,
+	BLURPLE_CLASSIC: 0x7289da,
+	GREYPLE: 0x99aab5,
+	DARK_BUT_NOT_BLACK: 0x2c2f33,
+	NOT_QUITE_BLACK: 0x23272a
 };
 
 global.EMOJIS = {
@@ -124,36 +114,21 @@ global.EMOJIS = {
 	HOURGLASS: '⌛'
 };
 
-// global.PLAYER = new Player(client);
-// global.LYRICS = Lyrics.init(/*process.env.GENIUS_TOKEN*/);
+global.dbPool = pool.promise();
+global.client = client;
 
 parse['mo'] = parse['month'];
+//#endregion
 
-const monthly_idiots = schedule.scheduleJob('0 15 1 * *', async function () {
-	console.log('monthly_idiots triggered @', new Date().toLocaleString());
-
-	const guild = this.container.client.guilds.cache.get('988912269909966938');
-	const channel = guild.channels.cache.get('988925360332755004');
-
-	const idiotRole = guild.roles.cache.get('999792913569558658');
-	const idiots = guild.members.cache.filter(member => member.roles.cache.has(idiotRole.id));
-	const idiotList = idiots.map(member => member.user.tag).join('\n');
-
-	const msg = `This month there has been **${idiots.size} idiots** in <#999791567533527160>.\nNone of them can count and they should be ashamed of themselves.\nHere they are:`;
-
-
-	const paste = await this.getPaste(idiotList, 'Idiots');
-	const attachment = {
-		attachment: Buffer.from(idiotList),
-		name: 'idiots.txt',
-		description: 'Idiots that can\'t count.'
+const main = async () => {
+	try {
+		client.logger.info('Logging in...');
+		await client.login();
+	} catch (error) {
+		client.logger.fatal(error);
+		client.destroy();
+		process.exit(1);
 	}
+};
 
-	channel.send({ content: msg, files: [attachment] });
-
-	idiots.forEach(member => {
-		member.roles.remove(idiotRole).catch(err => console.log(err));
-	});
-});
-
-client.login();
+main();

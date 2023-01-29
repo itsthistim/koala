@@ -1,24 +1,21 @@
-const { Argument } = require('@sapphire/framework');
-const ClientUtil = require('../utils/clientutil.js');
-const { isNullish } = require('@sapphire/utilities');
+import { Argument } from '@sapphire/framework';
+import { ClientUtil } from '#lib/functions';
+import { isNullish } from '@sapphire/utilities';
 
-class UserArgument extends Argument {
-  run(parameter, context) {
-    const value = ClientUtil.resolveUser(parameter, this.container.client.users.cache);
+export class ImageArgument extends Argument {
+	async run(parameter, context) {
+		const users = this.container.client.users.cache.sort((a, b) => a.username.localeCompare(b.username));
+		const value = ClientUtil.resolveUser(parameter, users);
 
-    if (!isNullish(value)) {
-      return this.ok(value);
-    }
+		if (!isNullish(value)) {
+			return this.ok(value);
+		}
 
-    return this.error({
-      context,
-      parameter,
-      message: 'The provided argument could not be resolved to a member.',
-      identifier: 'InvalidUser'
-    });
-  }
+		return this.error({
+			context,
+			parameter,
+			message: 'The provided argument could not be resolved to a member.',
+			identifier: 'InvalidUser'
+		});
+	}
 }
-
-module.exports = {
-  UserArgument
-};

@@ -1,10 +1,10 @@
-const { createCanvas } = require('canvas');
+import { createCanvas } from 'canvas';
 
-module.exports = class CanvasUtil {
+export class CanvasUtil {
   static greyscale(ctx, x, y, width, height) {
     const data = ctx.getImageData(x, y, width, height);
     for (let i = 0; i < data.data.length; i += 4) {
-      const brightness = (0.34 * data.data[i]) + (0.5 * data.data[i + 1]) + (0.16 * data.data[i + 2]);
+      const brightness = 0.34 * data.data[i] + 0.5 * data.data[i + 1] + 0.16 * data.data[i + 2];
       data.data[i] = brightness;
       data.data[i + 1] = brightness;
       data.data[i + 2] = brightness;
@@ -38,7 +38,7 @@ module.exports = class CanvasUtil {
   static sepia(ctx, x, y, width, height) {
     const data = ctx.getImageData(x, y, width, height);
     for (let i = 0; i < data.data.length; i += 4) {
-      const brightness = (0.34 * data.data[i]) + (0.5 * data.data[i + 1]) + (0.16 * data.data[i + 2]);
+      const brightness = 0.34 * data.data[i] + 0.5 * data.data[i + 1] + 0.16 * data.data[i + 2];
       data.data[i] = brightness + 100;
       data.data[i + 1] = brightness + 50;
       data.data[i + 2] = brightness;
@@ -49,12 +49,12 @@ module.exports = class CanvasUtil {
 
   static contrast(ctx, x, y, width, height) {
     const data = ctx.getImageData(x, y, width, height);
-    const factor = (259 / 100) + 1;
+    const factor = 259 / 100 + 1;
     const intercept = 128 * (1 - factor);
     for (let i = 0; i < data.data.length; i += 4) {
-      data.data[i] = (data.data[i] * factor) + intercept;
-      data.data[i + 1] = (data.data[i + 1] * factor) + intercept;
-      data.data[i + 2] = (data.data[i + 2] * factor) + intercept;
+      data.data[i] = data.data[i] * factor + intercept;
+      data.data[i + 1] = data.data[i + 1] * factor + intercept;
+      data.data[i + 2] = data.data[i + 2] * factor + intercept;
     }
     ctx.putImageData(data, x, y);
     return ctx;
@@ -64,10 +64,8 @@ module.exports = class CanvasUtil {
     const data = ctx.getImageData(x, y, width, height);
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
-        const dest = ((i * width) + j) * 4;
-        const grey = Number.parseInt(
-          (0.2125 * data.data[dest]) + (0.7154 * data.data[dest + 1]) + (0.0721 * data.data[dest + 2]), 10
-        );
+        const dest = (i * width + j) * 4;
+        const grey = Number.parseInt(0.2125 * data.data[dest] + 0.7154 * data.data[dest + 1] + 0.0721 * data.data[dest + 2], 10);
         data.data[dest] += level * (grey - data.data[dest]);
         data.data[dest + 1] += level * (grey - data.data[dest + 1]);
         data.data[dest + 2] += level * (grey - data.data[dest + 2]);
@@ -85,8 +83,8 @@ module.exports = class CanvasUtil {
       for (let j = 0; j < height; j++) {
         const xs = Math.round(amplitude * Math.sin(2 * Math.PI * 3 * (j / height)));
         const ys = Math.round(amplitude * Math.cos(2 * Math.PI * 3 * (i / width)));
-        const dest = (j * stride) + (i * strideLevel);
-        const src = ((j + ys) * stride) + ((i + xs) * strideLevel);
+        const dest = j * stride + i * strideLevel;
+        const src = (j + ys) * stride + (i + xs) * strideLevel;
         data.data[dest] = temp.data[src];
         data.data[dest + 1] = temp.data[src + 1];
         data.data[dest + 2] = temp.data[src + 2];
@@ -104,10 +102,10 @@ module.exports = class CanvasUtil {
       const sy = Math.floor(i / 4 / frame.width);
       const dx = Math.floor(frame.width / 2) - sx;
       const dy = Math.floor(frame.height / 2) - sy;
-      const dist = Math.sqrt((dx * dx) + (dy * dy));
-      const x2 = Math.round((frame.width / 2) - (dx * Math.sin(dist / (level * Math.PI) / 2)));
-      const y2 = Math.round((frame.height / 2) - (dy * Math.sin(dist / (level * Math.PI) / 2)));
-      const i2 = ((y2 * frame.width) + x2) * 4;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const x2 = Math.round(frame.width / 2 - dx * Math.sin(dist / (level * Math.PI) / 2));
+      const y2 = Math.round(frame.height / 2 - dy * Math.sin(dist / (level * Math.PI) / 2));
+      const i2 = (y2 * frame.width + x2) * 4;
       frame.data[i] = source[i2];
       frame.data[i + 1] = source[i2 + 1];
       frame.data[i + 2] = source[i2 + 2];
@@ -160,7 +158,7 @@ module.exports = class CanvasUtil {
   }
 
   static wrapText(ctx, text, maxWidth) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (ctx.measureText(text).width < maxWidth) return resolve([text]);
       if (ctx.measureText('W').width > maxWidth) return resolve(null);
       const words = text.split(' ');
@@ -222,8 +220,26 @@ module.exports = class CanvasUtil {
       height = maxHeight;
       width *= ratio;
     }
-    const x = widthOffset + ((maxWidth / 2) - (width / 2));
-    const y = heightOffest + ((maxHeight / 2) - (height / 2));
+    const x = widthOffset + (maxWidth / 2 - width / 2);
+    const y = heightOffest + (maxHeight / 2 - height / 2);
     return { x, y, width, height };
   }
-};
+
+  static generateErrorImage(error) {
+    const canvas = createCanvas(512, 512);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#20C20E';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.font = '20px Consolas';
+    ctx.fillText('Error', 64, 64);
+    ctx.font = '16px Consolas';
+    ctx.fillText(error, 64, 80);
+    return {
+      attachment: canvas.toBuffer(),
+      name: 'error.png'
+    };
+  }
+}

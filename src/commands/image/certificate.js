@@ -1,55 +1,85 @@
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Command } = require('@sapphire/framework');
-const { UserOrMemberMentionRegex } = require('@sapphire/discord-utilities');
-const { createCanvas, loadImage, registerFont } = require('canvas');
-const moment = require('moment');
-const clientUtil = require('../../utils/clientutil');
-const path = require('path');
+import { Command } from '@sapphire/framework';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { createCanvas, loadImage, registerFont } from 'canvas';
+import moment from 'moment';
 
-module.exports = class CertificateCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'certificate',
-      aliases: ['certificate', 'certify'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: ['ATTACH_FILES'],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Send a custom award to anyone.',
-        usage: '<name> <reason>'
-      }
-    });
-  }
+registerFont('src/lib/assets/fonts/OLD.ttf', { family: 'Old English Text MT' });
 
-  async messageRun(message, args) {
-    let name = await args.pick('string').catch(() => args.pick('member').catch(() => message.author));
-    var reason = await args.rest('string').catch(() => null);
+export class CertificateCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'certificate',
+			aliases: ['certify'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Creates a certificate for a user.',
+			detailedDescription: '',
+			usage: '<user> [reason]',
+			examples: ['@user#1234', '@user#1234 being great']
+		});
+	}
 
-    try {
-      if (name.match(UserOrMemberMentionRegex)) {
-        name = clientUtil.resolveMember(name, message.guild.members.cache).nickname || clientUtil.resolveMember(name, message.guild.members.cache).user.username;
-      }
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addStringOption((option) => option.setName('name').setDescription('The name to put on the certificate.').setRequired(true))
+					.addStringOption((option) => option.setName('reason').setDescription('The text for the certificate.').setRequired(true));
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1063617434029928459'
+			}
+		);
+	}
 
-      registerFont(path.join(__dirname, '..', '..', 'utils', 'assets', 'fonts', 'OLD.ttf'), { family: 'Old English Text MT' });
-      const base = await loadImage(path.join(__dirname, '..', '..', 'utils', 'assets', 'images', 'certificate.png'));
+	async chatInputRun(interaction) {
+		let name = interaction.options.getString('name');
+		let reason = interaction.options.getString('reason');
 
-      const canvas = createCanvas(base.width, base.height);
-      const ctx = canvas.getContext('2d');
+		let result = await this.createImage(name, reason);
+		if (typeof result === 'string') return reply(interaction, result);
+		return reply(interaction, { files: [result] });
+	}
 
-      ctx.drawImage(base, 0, 0);
-      ctx.font = '30px Old English Text MT';
-      ctx.textBaseline = 'top';
-      ctx.textAlign = 'center';
-      ctx.fillText(reason, 518, 273);
-      ctx.fillText(name, 518, 419);
-      ctx.fillText(moment().format('MM/DD/YYYY'), 309, 503);
-      return reply( message, { files: [{ attachment: canvas.toBuffer(), name: 'certificate.png' }] });
-    } catch (error) {
-      return reply( message, `Something went wrong... \`${error.message}\``);
-    }
-  }
+	async messageRun(message, args) {
+		let name = await args.pick('string').catch(() => message.guild.members.cache.get(message.guild.ownerId).user.username);
+		let reason = await args.rest('string').catch(() => `Inviting ${this.container.client.user.username} to the server`);
+
+		let result = await this.createImage(name, reason);
+		if (typeof result === 'string') return reply(message, result);
+		return reply(message, { files: [result] });
+	}
+
+	async createImage(name, reason) {
+		try {
+			const base = await loadImage('src/lib/assets/images/certificate.png');
+
+			const canvas = createCanvas(base.width, base.height);
+			const ctx = canvas.getContext('2d');
+
+			ctx.drawImage(base, 0, 0);
+			ctx.font = '30px Old English Text MT';
+			ctx.textBaseline = 'top';
+			ctx.textAlign = 'center';
+			ctx.fillText(reason, 518, 273);
+			ctx.fillText(name, 518, 419);
+			ctx.fillText(moment().format('MM/DD/YYYY'), 309, 503);
+			let attachment = canvas.toBuffer();
+			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;
+			return {
+				attachment: attachment,
+				name: 'certificate.png'
+			};
+		} catch (err) {
+			console.log(err);
+			return `Something went wrong. Please try again later.`;
+		}
+	}
 }

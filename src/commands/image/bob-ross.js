@@ -1,47 +1,91 @@
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Command, Args, Resolvers, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { createCanvas, loadImage, registerFont } = require('canvas');
-const path = require('path');
+import { Command } from '@sapphire/framework';
+import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { createCanvas, loadImage, registerFont } from 'canvas';
+import { CanvasUtil } from '#lib/canvas';
 
-module.exports = class BobRossCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'bob-ross',
-      aliases: ['bobross', 'ross'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: ['ATTACH_FILES'],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Will make Bob Ross paint a picture.',
-        usage: '<imageUrl | member>',
-        examples: ['', 'https://i.imgur.com/w3DaR07.png', '@User#1234']
-      }
-    });
-  }
+export class RossCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'ross',
+			aliases: ['bob-ross', 'bobross'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [PermissionFlagsBits.AttachFiles],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Makes Bob Ross draw an image or an avatar.',
+			detailedDescription: '',
+			usage: '[user|image url]',
+			examples: ['@user#1234']
+		});
+	}
 
-  async messageRun(message, args) {
-    let image = await args.pick('member').catch(() => args.pick('image').catch(() => message.author.displayAvatarURL({ format: 'png', size: 512 })));
-    if (typeof image === 'object') {
-      image = image.displayAvatarURL({ format: 'png', size: 512 });
-    }
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
+					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1063617433065226351'
+			}
+		);
+	}
 
-    try {
-      const base = await loadImage(path.join(__dirname, '..', '..', 'utils', 'assets', 'images', 'bob-ross.png'));
-      const avatar = await loadImage(image);
+	async chatInputRun(interaction) {
+		let image =
+			(await interaction.options.getUser('user'))?.displayAvatarURL({ format: 'png', size: 512 }) ?? (await interaction.options.getString('url')) ?? interaction.user.displayAvatarURL({ format: 'png', size: 512 });
 
-      const canvas = createCanvas(base.width, base.height);
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#f0e8d3';
-      ctx.fillRect(0, 0, base.width, base.height);
-      ctx.drawImage(avatar, 15, 23, 440, 440);
-      ctx.drawImage(base, 0, 0);
-      return reply(message, { files: [{ attachment: canvas.toBuffer(), name: 'bob-ross.png' }] });
-    } catch (error) {
-      return reply(message, `Something went wrong... \`${error.message}\``);
-    }
-  }
+		let attachment = await this.createImage(image);
+
+		if (typeof attachment === 'string') {
+			return interaction.reply(attachment);
+		} else {
+			return interaction.reply({ files: [attachment] });
+		}
+	}
+
+	async messageRun(message, args) {
+		let image = await args.pick('member').catch(() => args.pick('image').catch((err) => message.author.displayAvatarURL({ format: 'png', size: 512 })));
+
+		if (typeof image === 'object') {
+			image = image.displayAvatarURL({ format: 'png', size: 512 });
+		}
+
+		let attachment = await this.createImage(image);
+
+		if (typeof attachment === 'string') {
+			return reply(message, attachment);
+		} else {
+			return reply(message, { files: [attachment] });
+		}
+	}
+
+	async createImage(image) {
+		try {
+			const base = await loadImage('src/lib/assets/images/bob-ross.png');
+			const data = await loadImage(image);
+
+			const canvas = createCanvas(base.width, base.height);
+			const ctx = canvas.getContext('2d');
+			ctx.fillStyle = '#f0e8d3';
+			ctx.fillRect(0, 0, base.width, base.height);
+			ctx.drawImage(data, 15, 23, 440, 440);
+			ctx.drawImage(base, 0, 0);
+			let attachment = canvas.toBuffer();
+			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;
+			return {
+				attachment: attachment,
+				name: 'bob-ross.png'
+			};
+		} catch (err) {
+			return `Error: Invalid image provided. Please make sure the image is a valid image url and has a valid file extension.\nValid file extensions: \`.png\`, \`.jpg\`, \`.jpeg\`, \`raw\`, \`.svg\``;
+		}
+	}
 }

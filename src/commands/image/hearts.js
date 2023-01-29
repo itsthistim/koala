@@ -1,46 +1,85 @@
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Command, Args, Resolvers, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { createCanvas, loadImage, registerFont } = require('canvas');
-const { drawImageWithTint, shortenText } = require('../../utils/canvas.js');
-const path = require('path');
+import { Command } from '@sapphire/framework';
+import { EmbedBuilder } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { createCanvas, loadImage, registerFont } from 'canvas';
+import { CanvasUtil } from '#lib/canvas';
 
-module.exports = class HeartsCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'hearts',
-      aliases: ['hearts', 'heart'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: ['ATTACH_FILES'],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Will draw hearts over a members profile picture or image.',
-        usage: '<image url | member>'
-      }
-    });
-  }
+export class HeartsCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'hearts',
+			aliases: ['heart'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Puts hearts on your avatar or an image.',
+			detailedDescription: '',
+			usage: '[user|image url]',
+			examples: ['@user#1234', 'https://example.com/image.png']
+		});
+	}
 
-  async messageRun(message, args) {
-    let image = await args.pick('member').catch(() => args.pick('image').catch(() => message.author.displayAvatarURL({ format: 'png', size: 512 })));
-    if (typeof image === 'object') {
-      image = image.displayAvatarURL({ format: 'png', size: 512 });
-    }
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
+					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1063617521615384666'
+			}
+		);
+	}
 
-    try {
-      const base = await loadImage(path.join(__dirname, '..', '..', 'utils', 'assets', 'images', 'hearts.png'));
-      const avatar = await loadImage(image);
+	async chatInputRun(interaction) {
+		let image =
+			(await interaction.options.getUser('user'))?.displayAvatarURL({ format: 'png', size: 512 }) ??
+			(await interaction.options.getString('url')) ??
+			interaction.user.displayAvatarURL({ format: 'png', size: 512 });
 
-      const canvas = createCanvas(avatar.width, avatar.height);
-      const ctx = canvas.getContext('2d');
-      drawImageWithTint(ctx, avatar, 'deeppink', 0, 0, avatar.width, avatar.height);
-      ctx.drawImage(base, 0, 0, avatar.width, avatar.height);
-      return reply( message, { files: [{ attachment: canvas.toBuffer(), name: 'hearts.png' }] });
+		let attachment = await this.createImage(image);
 
-    } catch (err) {
-      return reply( message, `Oh no, an error occurred: \`${err.message}\`. Try again later!`);
-    }
-  }
+		if (typeof attachment === 'string') {
+			return interaction.reply(attachment);
+		} else {
+			return interaction.reply({ files: [attachment] });
+		}
+	}
+
+	async messageRun(message, args) {
+		let image = await args.pick('member').catch(() => args.pick('image').catch((err) => message.author.displayAvatarURL({ format: 'png', size: 512 })));
+		if (typeof image === 'object') image = image.user.displayAvatarURL({ format: 'png', size: 512 });
+
+		const result = await this.createImage(image);
+		if (typeof result === 'string') return reply(message, result);
+		return message.channel.send({ files: [result] });
+	}
+
+	async createImage(image) {
+		try {
+			const base = await loadImage('src/lib/assets/images/hearts.png');
+			const data = await loadImage(image);
+
+			const canvas = createCanvas(data.width, data.height);
+			const ctx = canvas.getContext('2d');
+			CanvasUtil.drawImageWithTint(ctx, data, 'deeppink', 0, 0, data.width, data.height);
+			ctx.drawImage(base, 0, 0, data.width, data.height);
+			let attachment = canvas.toBuffer();
+			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;
+			return {
+				attachment: attachment,
+				name: 'hearts.png'
+			};
+		} catch (err) {
+			console.log(err);
+			return `Error: Invalid image provided. Please make sure the image is a valid image url and has a valid file extension.\nValid file extensions: \`.png\`, \`.jpg\`, \`.jpeg\`, \`raw\`, \`.svg\``;
+		}
+	}
 }

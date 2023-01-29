@@ -1,27 +1,26 @@
-const { Argument, Resolvers } = require("@sapphire/framework");
-const { loadImage } = require('canvas');
-const ClientUtil = require('../utils/clientutil.js');
+import { Argument } from '@sapphire/framework';
 
-module.exports = class ImageArgument extends Argument {
-  async run(parameter, context) {
-    if (this.validURL(parameter)) {
-      parameter = parameter.replace('<', '');
-      parameter = parameter.replace('>', '');
-      return this.ok(parameter);
-    }
+export class ImageArgument extends Argument {
+	async run(parameter, context) {
+		parameter = parameter.replace('<', '');
+		parameter = parameter.replace('>', '');
 
-    return this.error({
-      context,
-      parameter,
-      message: 'The provided argument could not be resolved to an image.',
-      identifier: 'InvalidImage'
-    });
-  }
+		if (this.validURL(parameter)) {
+			return this.ok(parameter);
+		}
 
-  validURL(str) {
-    var pattern = new RegExp('^<?https?:\/\/.*(jpe?g|png)>?$', 'i');
-    return pattern.test(str);
-  }
+		return this.error({
+			context,
+			parameter,
+			message: 'The provided argument could not be resolved to an image.',
+			identifier: 'InvalidImage'
+		});
+	}
+
+	validURL(str) {
+		const pattern = new RegExp('https?://\\S+', 'i');
+		return !!pattern.test(str);
+	}
 }
 
 //#region wip old

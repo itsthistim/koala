@@ -1,61 +1,54 @@
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { MessageEmbed } = require('discord.js');
-const { Time } = require('@sapphire/time-utilities');
-const { hyperlink, hideLinkEmbed } = require('@discordjs/builders');
+import { Command } from '@sapphire/framework';
+import { EmbedBuilder } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
 
-module.exports = class InviteCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'invite',
-      aliases: ['invite'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: [],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Gives you the invite link for the bot.',
-        usage: '',
-        examples: []
-      }
-    });
-  }
+export class InviteCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'invite',
+			aliases: [''],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Creates an invite link for the bot.',
+			detailedDescription: '',
+			usage: '',
+			examples: ['']
+		});
+	}
 
-  async messageRun(message, args) {
-    const embed = new MessageEmbed()
-      .setColor(COLORS.DEFAULT)
-      .setTitle("Invite Link")
-      .setDescription(`[Add me to your server!](${await this.fetchInvite()})`);
-    return reply(message, { embeds: [embed] });
-  }
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder.setName(this.name).setDescription(this.description);
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1069358864698462228'
+			}
+		);
+	}
 
-  async fetchInvite() {
-    if (this.invite) return this.invite;
-    const invite = this.container.client.generateInvite({
-      scopes: [
-        'bot',
-        'applications.commands'
-      ],
-      permissions: [
-        'ADMINISTRATOR',
-        'VIEW_CHANNEL',
-        'SEND_MESSAGES',
-        'READ_MESSAGE_HISTORY',
-        'MANAGE_MESSAGES',
-        'EMBED_LINKS',
-        'ATTACH_FILES',
-        'ADD_REACTIONS',
-        'CREATE_INSTANT_INVITE',
-        'VIEW_AUDIT_LOG',
-        'SEND_TTS_MESSAGES',
-        'MANAGE_WEBHOOKS'
-      ]
-    });
+	async chatInputRun(interaction) {
+        const embed = await this.createInviteEmbed();
+        return interaction.reply({ embeds: [embed] });
+    }
 
-    this.invite = invite;
-    return invite;
-  }
+	async messageRun(message, args) {
+        const embed = await this.createInviteEmbed();
+        return reply(message, { embeds: [embed] });
+    }
+
+    async createInviteEmbed() {
+        return new Promise(async (resolve, reject) => {
+            const embed = new EmbedBuilder()
+                .setTitle('Invite')
+                .setDescription('[Invite me to your server](https://discord.com/api/oauth2/authorize?client_id=1058725069481844796&permissions=8&scope=bot%20applications.commands)')
+                .setColor(global.COLORS.DEFAULT);
+            return resolve(embed);
+        });
+    }
 }

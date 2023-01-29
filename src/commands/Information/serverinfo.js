@@ -1,54 +1,70 @@
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { MessageEmbed } = require('discord.js');
-const { Time } = require('@sapphire/time-utilities');
-const moment = require('moment');
+import { Command } from '@sapphire/framework';
+import { EmbedBuilder } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
+import moment from 'moment';
 
-module.exports = class ServerInfoCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'serverinfo',
-      aliases: ['serverinfo', 'server'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: [],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Shows information about the server.',
-        usage: '',
-        examples: []
-      }
-    });
-  }
+export class ServerInfoCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'serverinfo',
+			aliases: ['serverinfo', 'server'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Shows information about the server.',
+			detailedDescription: '',
+			usage: '',
+			examples: ['']
+		});
+	}
 
-  async messageRun(message, args) {
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder.setName(this.name).setDescription(this.description);
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1069358866225172530'
+			}
+		);
+	}
 
-    let humans = message.guild.members.cache.filter(member => !member.user.bot).size;
-    let bots = message.guild.members.cache.filter(member => member.user.bot).size;
+	async chatInputRun(interaction) {}
 
-    const embed = new MessageEmbed()
-      .setColor(COLORS.DEFAULT)
-      .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL({ dynamic: true }) })
-      .setThumbnail(message.guild.iconURL({ dynamic: true }))
-      .addFields({
-        name: `Server Details`,
-        value: `Owner: <@${message.guild.ownerId}>` +
-          `\nRoles: ${message.guild.roles.cache.size}` +
-          `\nChannels: ${message.guild.channels.cache.size}` +
-          `\nBoosts: ${message.guild.premiumSubscriptionCount} (Level: ${message.guild.premiumTier == 'NONE' ? 0 : message.guild.premiumTier})`
-      }, true)
-      .addFields({
-        name: `\u200B`,
-        value: `Members: ${humans}🧑 ${bots}🤖 | ${message.guild.memberCount}` +
-          `\nEmojis: ${message.guild.emojis.cache.size}` +
-          `\nCreated: ${moment(message.guild.createdAt).format('MMM Do YYYY, hh:mm a')}` +
-          `\nID: \`${message.guild.id}\``
-      }, true)
-      .setThumbnail(message.guild.iconURL());
+	async messageRun(message, args) {
+		let embed = this.getInfoEmbed(message);
+		return reply(message, { embeds: [embed] });
+	}
 
-    return reply(message, { embeds: [embed] });
-  }
+	getInfoEmbed(interaction) {
+
+		return new EmbedBuilder()
+			.setColor(COLORS.DEFAULT)
+			.setAuthor({ name: interaction.guild.name, iconURL: interaction.guild.iconURL({ dynamic: true }) })
+			.setThumbnail(interaction.guild.iconURL({ dynamic: true }))
+			.addFields(
+				{
+					name: `Server Details`,
+					value: `**Owner:** <@${interaction.guild.ownerId}>` + `\n**Channels:** ${interaction.guild.channels.cache.size}` + `\n**Roles:** ${interaction.guild.roles.cache.size}`,
+					inline: true
+				},
+				{
+					name: `\u200B`,
+					value:
+						`**Members:** ${interaction.guild.members.cache.size} | ${interaction.guild.members.cache.filter((member) => !member.user.bot).size}🧑 ${interaction.guild.members.cache.filter((member) => member.user.bot).size}🤖` +
+						`\n**Boosts:** ${interaction.guild.premiumSubscriptionCount} | Level: ${interaction.guild.premiumTier === 'NONE' ? 0 : interaction.guild.premiumTier}` +
+						`\n**Emojis:** ${interaction.guild.emojis.cache.size}`,
+					inline: true
+				},
+				{
+					name: `\u200B`,
+					value: `Created at: ${moment(interaction.guild.createdAt).format('MMM Do YYYY, h:mm:ss a')}`,
+					inline: false
+				}
+			)
+	}
 }

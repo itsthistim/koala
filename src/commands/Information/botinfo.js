@@ -1,121 +1,71 @@
-const { Command, CommandOptionsRunTypeEnum, BucketScope, version: sappVersion } = require('@sapphire/framework');
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Time } = require('@sapphire/time-utilities');
-const { MessageEmbed, version: djsVersion } = require('discord.js');
+import { Command, version as sappVersion } from '@sapphire/framework';
+import { EmbedBuilder, version as djsVersion } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
+import moment from 'moment';
 
-module.exports = class BotInfoCommand extends Command {
+export class BotInfoCommand extends Command {
 	constructor(context, options) {
 		super(context, {
-			name: 'about',
-			aliases: ['botinfo', 'bot-info', 'stats', 'statistics', 'about', 'info'],
+			name: 'botinfo',
+			aliases: ['about', 'stats', 'ping', 'uptime'],
 			requiredUserPermissions: [],
 			requiredClientPermissions: [],
 			preconditions: [],
-			subCommands: [],
-			flags: ['uptime'],
+			flags: [],
 			options: [],
 			nsfw: false,
-			description: {
-				content: 'Shows some information about the bot.',
-				usage: '[--uptime]',
-				examples: ['', '--uptime']
-			}
+			description: "Shows information about the bot, including the bot's uptime, ping, and more.",
+			detailedDescription: '',
+			usage: '',
+			examples: ['']
 		});
 	}
 
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand(
 			(builder) => {
-				builder.setName(this.name);
-				builder.setDescription(this.description.content);
+				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				idHints: '995355165873934418'
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1069358863284965436'
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
-		const dev = this.container.client.users.cache.get('319183644331606016');
-
-		const embed = new MessageEmbed()
-			.setColor(global.COLORS.DEFAULT)
-			.setTitle('Statistics')
-			.addFields([
-				{
-					name: 'Technical',
-					value: `**Uptime**: ${this.formatMilliseconds(this.container.client.uptime)}\n` +
-                    `**Memory**: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n` +
-                    `**Discord.js**: v${djsVersion}\n` +
-                    `**Sapphire**: v${sappVersion}`,
-          inline: true
-				},
-				{
-					name: 'Discord',
-					value: `**Guilds**: ${this.container.client.guilds.cache.size}\n` +
-                  		   `**Channels**: ${this.container.client.channels.cache.size}\n` +
-                  		   `**Users**: ${this.container.client.users.cache.size}`,
-          inline: true
-				}
-			])
-			.setFooter({ text: `Created by ${dev.tag}`, iconURL: dev.displayAvatarURL() });
-
-		return interaction.reply({
-			embeds: [embed],
-			ephemeral: false,
-			fetchReply: true
-		});
+		const embed = await this.createInfoEmbed(interaction);
+		return interaction.reply({ embeds: [embed] });
 	}
 
 	async messageRun(message, args) {
+		const embed = await this.createInfoEmbed(message);
+		return reply(message, { embeds: [embed] });
+	}
+
+	async createInfoEmbed(interaction) {
 		const dev = this.container.client.users.cache.get('319183644331606016');
 
-		if (args.getFlags('uptime')) {
-			return reply(message, this.formatMilliseconds(this.container.client.uptime));
-		} else {
-			const embed = new MessageEmbed()
-				.setColor(global.COLORS.DEFAULT)
-				.setTitle('Statistics')
-				.addFields(
-          {
-            name: 'Technical',
-            value: `**Uptime**: ${this.formatMilliseconds(this.container.client.uptime)}\n` +
-					`**Memory**: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB\n` +
-					`**Discord.js**: v${djsVersion}\n` +
-					`**Sapphire**: v${sappVersion}`,
-            inline: true
-          },
-          {
-            name: 'Discord',
-            value: `**Guilds**: ${this.container.client.guilds.cache.size}\n` +
-					`**Channels**: ${this.container.client.channels.cache.size}\n` +
-					`**Users**: ${this.container.client.users.cache.size}`,
-            inline: true
-          }
-				)
-				.setFooter({ text: `Created by ${dev.tag}`, iconURL: dev.displayAvatarURL() });
-
-			return reply(message, { embeds: [embed] });
-		}
+		return new EmbedBuilder()
+			.setColor(COLORS.DEFAULT)
+			.setAuthor({ name: this.container.client.user.username, iconURL: this.container.client.user.displayAvatarURL({ dynamic: true }) })
+			.addFields(
+				{
+					name: 'Technical',
+					value: `**Uptime:** ${moment.duration(this.container.client.uptime).format('d[d], h[h], m[m], s[s]')}\n**Ping:** ${this.container.client.ws.ping}ms\n**Roundtrip:** ${Date.now() - interaction.createdTimestamp}ms`,
+					inline: true
+				},
+				{
+					name: 'Versions',
+					value: `**Node.js:** ${process.version}\n**Discord.js:** ${djsVersion}\n**Sapphire:** ${sappVersion}`,
+					inline: true
+				},
+				{
+					name: 'Discord',
+					value: `**Guilds:** ${this.container.client.guilds.cache.size}\n**Channels:** ${this.container.client.channels.cache.size}\n**Users:** ${this.container.client.users.cache.size}`,
+					inline: true
+				}
+			)
+			.setFooter({ text: `Made by ${dev.tag}`, iconURL: dev.displayAvatarURL({ dynamic: true }) });
 	}
-
-	formatMilliseconds(ms) {
-		let x = Math.floor(ms / 1000);
-		let seconds = x % 60;
-
-		x = Math.floor(x / 60);
-		let minutes = x % 60;
-
-		x = Math.floor(x / 60);
-		let hours = x % 24;
-
-		let days = Math.floor(x / 24);
-
-		seconds = `${'0'.repeat(2 - seconds.toString().length)}${seconds}`;
-		minutes = `${'0'.repeat(2 - minutes.toString().length)}${minutes}`;
-		hours = `${'0'.repeat(2 - hours.toString().length)}${hours}`;
-		days = `${'0'.repeat(Math.max(0, 2 - days.toString().length))}${days}`;
-
-		return `${days === '00' ? '' : `${days}:`}${hours}:${minutes}:${seconds}`;
-	}
-};
+}

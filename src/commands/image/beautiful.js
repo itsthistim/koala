@@ -1,92 +1,88 @@
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Command, Args, Resolvers, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { createCanvas, loadImage, registerFont } = require('canvas');
-const path = require('path');
+import { Command } from '@sapphire/framework';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { createCanvas, loadImage, registerFont } from 'canvas';
+import { CanvasUtil } from '#lib/canvas';
+import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-module.exports = class BeautifulCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'beautiful',
-      aliases: ['beautiful', 'bf'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: ['ATTACH_FILES'],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Gravity Falls\' "Oh, this? This is beautiful." meme.',
-        usage: '<imageUrl | member>'
-      },
-    });
-  }
+registerFont('src/lib/assets/fonts/MinecraftRegular-Bmg3.otf', { family: 'Minecraftia' });
 
-  async messageRun(message, args) {
-    let image = await args.pick('member').catch(() => args.pick('image').catch(() => message.author.displayAvatarURL({ format: 'png', size: 512 })));
-    if (typeof image === 'object') {
-      image = image.displayAvatarURL({ format: 'png', size: 512 });
-    }
+export class BeautifulCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'beautiful',
+			aliases: ['beauty'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [PermissionFlagsBits.AttachFiles],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Gravity Falls\' "Oh, this? This is beautiful." meme.',
+			detailedDescription: '',
+			usage: '[user|image url]',
+			examples: ['@user#1234']
+		});
+	}
 
-    try {
-      const base = await loadImage(path.join(__dirname, '..', '..', 'utils', 'assets', 'images', 'beautiful.png'));
-      const data = await loadImage(image);
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addStringOption((option) => option.setName('url').setDescription('The image url to use.').setRequired(false))
+					.addUserOption((option) => option.setName('user').setDescription('The user avatar to use.').setRequired(false));
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1063617431429460009'
+			}
+		);
+	}
 
-      const canvas = createCanvas(base.width, base.height);
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, base.width, base.height);
-      ctx.drawImage(data, 249, 24, 105, 105);
-      ctx.drawImage(data, 249, 223, 105, 105);
-      ctx.drawImage(base, 0, 0);
-      return reply(message, { files: [{ attachment: canvas.toBuffer(), name: 'beautiful.png' }] });
-    } catch (err) {
-      return reply(message, `Oh no, an error occurred: \`${err.message}\`.`);
-    }
-  }
+	async chatInputRun(interaction) {
+		let image =
+			(await interaction.options.getUser('user'))?.displayAvatarURL({ format: 'png', size: 512 }) ??
+			(await interaction.options.getString('url')) ??
+			interaction.user.displayAvatarURL({ format: 'png', size: 512 });
 
-  // static imageOrMember = Args.make((parameter, { argument }) => {
-  //   if (Number(parameter) || !isNullishOrEmpty(parameter)) {
-  //     return Args.ok(parameter);
-  //   }
+		let attachment = await this.createImage(image);
+		if (typeof attachment === 'string') return reply(interaction, attachment);
+		return interaction.reply({ files: [attachment] });
+	}
 
-  //   return Args.error({
-  //     argument,
-  //     parameter,
-  //     identifier: 'ImageOrMemberError',
-  //     message: 'The provided argument was neither an image nor a member.'
-  //   });
-  //  });
+	async messageRun(message, args) {
+		let image = await args.pick('member').catch(() => args.pick('image').catch(() => message.author.displayAvatarURL({ format: 'png', size: 512 })));
+		if (typeof image === 'object') {
+			image = image.displayAvatarURL({ format: 'png', size: 512 });
+		}
 
-  /**
-  * Validates a parameter.
-  * @param parameter The given parameter by the user.
-  * @returns Whether the parameter should be accepted.
-  */
-  // static imageOrMember = Args.make((parameter, { argument }) => {
-  //   parameter = parameter.replace('<', '');
-  //   parameter = parameter.replace('>', '');
+		let attachment = await this.createImage(image);
+		if (typeof attachment === 'string') return reply(message, attachment);
 
+		return reply(message, { files: [attachment] });
+	}
 
-  //   if (this.validURL(parameter) && allowedFileTypes.test(parameter.toLowerCase())) {
-  //     return Args.ok(parameter);
-  //   }
+	async createImage(image) {
+		try {
+			const base = await loadImage('src/lib/assets/images/beautiful.png');
+			const data = await loadImage(image);
 
-  //   if (Resolvers.resolveMember(parameter, '502208815937224715')) {
-  //     return Args.ok(parameter);
-  //   }
-
-  //   return Args.error({
-  //     argument,
-  //     parameter,
-  //     identifier: 'ImageOrMemberError',
-  //     message: 'The provided argument was neither an image url nor a member.'
-  //   });
-  // });
-
-  /**
-  * Checks if a string is a valid url.
-  * @param str The string to check.
-  * @returns Whether the string is valid or not.
-  */
+			const canvas = createCanvas(base.width, base.height);
+			const ctx = canvas.getContext('2d');
+			ctx.fillStyle = 'white';
+			ctx.fillRect(0, 0, base.width, base.height);
+			ctx.drawImage(data, 249, 24, 105, 105);
+			ctx.drawImage(data, 249, 223, 105, 105);
+			ctx.drawImage(base, 0, 0);
+			let attachment = canvas.toBuffer();
+			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;
+			return {
+				attachment: attachment,
+				name: 'beautiful.png'
+			};
+		} catch (err) {
+			return `Error: Invalid image provided. Please make sure the image is a valid image url and has a valid file extension.\nValid file extensions: \`.png\`, \`.jpg\`, \`.jpeg\`, \`raw\`, \`.svg\``;
+		}
+	}
 }

@@ -1,74 +1,91 @@
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Time } = require('@sapphire/time-utilities');
-const { PaginatedMessage } = require('@sapphire/discord.js-utilities');
-const { MessageEmbed } = require('discord.js');
-const wd = require('word-definition');
+import { Command } from '@sapphire/framework';
+import { EmbedBuilder } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { ClientUtil } from '#lib/functions';
+import axios from 'axios';
 
-module.exports = class DefineCommand extends Command {
-    constructor(context, options) {
-        super(context, {
-            name: 'define',
-            aliases: ['define'],
-            requiredUserPermissions: [],
-            requiredClientPermissions: [],
-            preconditions: [],
-            subCommands: [],
-            flags: [],
-            options: [],
-            nsfw: false,
-            description: {
-                content: 'Defines a word using Wiktionary.',
-                usage: '<word>',
-                examples: ['koala']
-            },
-            detailedDescription: ''
-        });
-    }
+export class DefineCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'define',
+			aliases: ['wiktionary', 'dictionary', 'dict', 'def', 'definition'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Defines a word using Wiktionary.',
+			detailedDescription: '',
+			usage: '<word>',
+			examples: ['koala']
+		});
+	}
 
-    async messageRun(msg, args) {
-        var word = await args.rest('string').catch(() => null);
-        if (!word) return reply(msg, "Please provide a word for me to define!")
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addStringOption((option) => option.setName('word').setDescription('The word to define.').setRequired(true));
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1063617604893290556'
+			}
+		);
+	}
 
-        // todo: add language flags
-        const german = false;
-        const french = false;
+	async chatInputRun(interaction) {
+		const word = await interaction.options.getString('word');
 
-        var embed = new MessageEmbed();
-        embed.setAuthor({ name: "Wiktionary", iconURL: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/06/Wiktionary-logo-v2.svg/1200px-Wiktionary-logo-v2.svg.png' })
+		const embed = await this.createInfoEmbed(word);
+		return interaction.reply({ embeds: [embed] });
+	}
 
-        if (german) {
-            wd.getDef(word, 'de', null, function (result) {
-                if (!result.err) {
-                    embed.addFields({ name: result.word, value: result.definition });
-                }
-                else {
-                    embed.setDescription(`I could not find a definition for ${result.word}.`);
-                }
-                reply(msg, { embeds: [embed] });
-            });
-        }
-        else if (french) {
-            wd.getDef(word, 'fr', null, function (result) {
-                if (!result.err) {
-                    embed.addFields({ name: result.word, value: result.definition });
-                }
-                else {
-                    embed.setDescription(`I could not find a definition for ${result.word}.`);
-                }
-                reply(msg, { embeds: [embed] });
-            });
-        }
-        else {
-            wd.getDef(word, 'en', null, function (result) {
-                if (!result.err) {
-                    embed.addFields({ name: result.word, value: result.definition });
-                }
-                else {
-                    embed.setDescription(`I could not find a definition for ${result.word}.`);
-                }
-                reply(msg, { embeds: [embed] });
-            });
-        }
-    }
+	async messageRun(message, args) {
+		const word = await args.rest('string');
+
+		const embed = await this.createInfoEmbed(word);
+		return reply(message, { embeds: [embed] });
+	}
+
+	async createInfoEmbed(word) {
+		return new Promise(async (resolve, reject) => {
+			const definition = await this.getDefinition(word);
+
+			if (!definition) {
+				return resolve(
+					new EmbedBuilder().setTitle(`${word}`).setColor(global.COLORS.DEFAULT).setDescription('No definition found.\nYou can try the search again at a later time or head to the web instead.')
+				);
+			}
+
+			const embed = new EmbedBuilder().setTitle(`Definition of ${word}`).setColor(global.COLORS.DEFAULT);
+
+			definition[0].meanings.forEach((meaning) => {
+				embed.addFields({ name: `As ${ClientUtil.getIndefiniteArticle(meaning.partOfSpeech)} ${meaning.partOfSpeech}`, value: meaning.definitions[0].definition });
+			});
+
+			return resolve(embed);
+		});
+	}
+
+	async getDefinition(word) {
+		try {
+			const response = await axios.get(
+				`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)
+					.replace(/!/g, '%21')
+					.replace(/'/g, '%27')
+					.replace(/\(/g, '%28')
+					.replace(/\)/g, '%29')
+					.replace(/\*/g, '%2A')
+					.replace(/%20/g, '+')}`
+			);
+			return response.data;
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
+	}
 }

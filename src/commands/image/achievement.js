@@ -1,51 +1,77 @@
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { Time } = require('@sapphire/time-utilities');
-const { createCanvas, loadImage, registerFont } = require('canvas');
-const { shortenText, drawImageWithTint } = require('../../utils/canvas.js');
-const path = require('path');
-registerFont(path.join(__dirname, '..', '..', 'utils', 'assets', 'fonts', 'MinecraftRegular-Bmg3.otf'), { family: 'Minecraftia' });
+import { Command } from '@sapphire/framework';
+import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { createCanvas, loadImage, registerFont } from 'canvas';
+import { CanvasUtil } from '#lib/canvas';
 
-class AchievementCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'advancement',
-      aliases: ['advancement', 'minecraft', 'achievement', 'minecraft-achievement', 'minecraftachievement'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: ['ATTACH_FILES'],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Send a minecraft advancement with any text.',
-        usage: '[text]'
-      }
-    });
-  }
+registerFont('src/lib/assets/fonts/MinecraftRegular-Bmg3.otf', { family: 'Minecraftia' });
 
-  async messageRun(msg, args) {
-    const text = await args.rest('string').catch(() => `Invite ${this.container.client.user.username}`);
+export class AchievementCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'achievement',
+			aliases: ['advancement'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [PermissionFlagsBits.AttachFiles],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Send a minecraft advancement with any text.',
+			detailedDescription: '',
+			usage: '[text]',
+			examples: ['Invite koala!']
+		});
+	}
 
-    try {
-      const base = await loadImage(path.join(__dirname, '..', '..', 'utils', 'assets', 'images', 'achievement.png'));
-      const canvas = createCanvas(base.width, base.height);
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addStringOption((option) => option.setName('text').setDescription('The text to put on the achievement').setRequired(true));
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1063617428749303888'
+			}
+		);
+	}
 
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(base, 0, 0);
-      ctx.font = '20px Minecraftia';
-      ctx.fillStyle = '#ffff00';
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(shortenText(ctx, text, 250), 60, 50);
-      return reply(msg, { files: [{ attachment: canvas.toBuffer(), name: 'achievement.png' }] });
-    } catch (error) {
-      return reply(msg, `Something went wrong... \`${error.message}\``);
-    }
-  }
+	async chatInputRun(interaction) {
+		const text = (await interaction.options.getString('text')) ?? `Invite ${this.container.client.user.username}!`;
+
+		let attachment = await this.createImage(text);
+		interaction.reply({ files: [attachment] });
+	}
+
+	async messageRun(message, args) {
+		const text = await args.rest('string').catch(() => `Invite ${this.container.client.user.username}!`);
+
+		let attachment = await this.createImage(text);
+		reply(message, { files: [attachment] });
+	}
+
+	async createImage(text) {
+		try {
+			const base = await loadImage('src/lib/assets/images/achievement.png');
+			const canvas = createCanvas(base.width, base.height);
+
+			const ctx = canvas.getContext('2d');
+			ctx.drawImage(base, 0, 0);
+			ctx.font = '20px Minecraftia';
+			ctx.fillStyle = '#ffff00';
+			ctx.fillStyle = '#ffffff';
+			ctx.fillText(CanvasUtil.shortenText(ctx, text, 250), 60, 50);
+			let attachment = canvas.toBuffer();
+			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;
+			return {
+				attachment: attachment,
+				name: 'achievement.png'
+			};
+		} catch (error) {
+			console.log(`Something went wrong... \`${error.message}\``);
+		}
+	}
 }
-
-module.exports = {
-  AchievementCommand
-};
-

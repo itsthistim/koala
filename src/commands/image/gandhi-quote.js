@@ -1,64 +1,89 @@
-const { send, reply } = require('@sapphire/plugin-editable-commands');
-const { Command, CommandOptionsRunTypeEnum, BucketScope } = require('@sapphire/framework');
-const { createCanvas, loadImage, registerFont } = require('canvas');
-const { wrapText } = require('../../utils/canvas.js');
-const path = require('path');
-//registerFont(path.join(__dirname, '..', '..', 'utils', 'assets', 'fonts', 'MinecraftRegular-Bmg3.otf'), { family: 'Minecraftia' });
+import { Command } from '@sapphire/framework';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { createCanvas, loadImage, registerFont } from 'canvas';
+import { CanvasUtil } from '#lib/canvas';
 
-class GandhiQuoteCommand extends Command {
-  constructor(context, options) {
-    super(context, {
-      name: 'gandhi-quote',
-      aliases: ['gandhi-quote', 'gandhiquote', 'gandhi', 'ghandi-quote', 'ghandiquote', 'ghandi'],
-      requiredUserPermissions: [],
-      requiredClientPermissions: ['ATTACH_FILES'],
-      preconditions: [],
-      subCommands: [],
-      flags: [],
-      options: [],
-      nsfw: false,
-      description: {
-        content: 'Will make Mahatma Gandhi say what you want.',
-        usage: '<text>'
-      }
-    });
-  }
+registerFont('src/lib/assets/fonts/LibreBaskerville-Italic.ttf', { family: 'Libre Baskerville Italic' });
 
-  async messageRun(message, args) {
-    const quote = await args.rest('string').catch(() => "Nothing to say there is.");
+export class GandhiCommand extends Command {
+	constructor(context, options) {
+		super(context, {
+			name: 'gandhi',
+			aliases: ['ghandi'],
+			requiredUserPermissions: [],
+			requiredClientPermissions: [],
+			preconditions: [],
+			flags: [],
+			options: [],
+			nsfw: false,
+			description: 'Makes Gandhi say something.',
+			detailedDescription: '',
+			usage: '<text>',
+			examples: ['Pee pee poo poo']
+		});
+	}
 
-    registerFont(path.join(__dirname, '../../utils/assets/fonts/LibreBaskerville-Italic.ttf'), { family: 'Libre Baskerville Italic' });
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addStringOption((option) => option.setName('text').setDescription('The text to put on the quote.').setRequired(true));
+			},
+			{
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1063617516238295130'
+			}
+		);
+	}
 
-    const base = await loadImage(path.join(__dirname, '..', '..', 'utils', 'assets', 'images', 'gandhi-quote.png'));
-    const canvas = createCanvas(base.width, base.height);
-    const ctx = canvas.getContext('2d');
+	async chatInputRun(interaction) {
+		let text = interaction.options.getString('text');
 
-    ctx.drawImage(base, 0, 0);
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    ctx.font = '50px Libre Baskerville Italic';
-    ctx.fillStyle = 'white';
+		const image = await this.createImage(text);
+		return interaction.reply({ files: [image] });
+	}
 
-    let fontSize = 50;
+	async messageRun(message, args) {
+		let text = await args.rest('string').catch(() => null);
+		if (!text) return reply(message, 'You need to provide some text to put on the quote.');
 
-    while (ctx.measureText(quote).width > 945) {
-      fontSize--;
-      ctx.font = `${fontSize}px Libre Baskerville Italic`;
-    }
+		const image = await this.createImage(text);
+		return reply(message, { files: [image] });
+	}
 
-    const lines = await wrapText(ctx, quote, 270);
-    const topMost = 180 - (((fontSize * lines.length) / 2) + ((20 * (lines.length - 1)) / 2));
+	async createImage(quote) {
+		const base = await loadImage('src/lib/assets/images/gandhi-quote.png');
+		const canvas = createCanvas(base.width, base.height);
+		const ctx = canvas.getContext('2d');
 
-    for (let i = 0; i < lines.length; i++) {
-      const height = topMost + ((fontSize + 20) * i);
-      ctx.fillText(lines[i], 395, height);
-    }
+		ctx.drawImage(base, 0, 0);
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'top';
+		ctx.font = '50px Libre Baskerville Italic';
+		ctx.fillStyle = 'white';
 
-    return reply(message, { files: [{ attachment: canvas.toBuffer(), name: 'gandhi-quote.png' }] });
-  }
+		let fontSize = 50;
+
+		while (ctx.measureText(quote).width > 945) {
+			fontSize--;
+			ctx.font = `${fontSize}px Libre Baskerville Italic`;
+		}
+
+		const lines = await CanvasUtil.wrapText(ctx, quote, 270);
+		const topMost = 180 - ((fontSize * lines.length) / 2 + (20 * (lines.length - 1)) / 2);
+
+		for (let i = 0; i < lines.length; i++) {
+			const height = topMost + (fontSize + 20) * i;
+			ctx.fillText(lines[i], 395, height);
+		}
+
+		let attachment = canvas.toBuffer();
+		if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;
+		return {
+			attachment: attachment,
+			name: 'gandhi.png'
+		};
+	}
 }
-
-module.exports = {
-  GandhiQuoteCommand
-};
-
