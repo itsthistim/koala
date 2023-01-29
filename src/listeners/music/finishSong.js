@@ -9,18 +9,12 @@ export default class AddSongListener extends Listener {
 	}
 
 	async run(queue, song) {
-		console.log('npmessage', queue.npmessage);
-
 		if (song.metadata && queue.npmessage) {
-			song.metadata.i.deleteReply().catch((err) => {
-				console.log(err);
-			});
+			song.metadata.i.deleteReply().catch((err) => {});
 		}
 
 		if (!song.metadata && queue.npmessage) {
-			queue.npmessage.delete().catch((err) => {
-				console.log(err);
-			});
+			queue.npmessage.delete().catch((err) => {});
 		}
 	}
 }

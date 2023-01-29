@@ -70,8 +70,8 @@ export class AchievementCommand extends Command {
 				attachment: attachment,
 				name: 'achievement.png'
 			};
-		} catch (error) {
-			console.log(`Something went wrong... \`${error.message}\``);
+		} catch (err) {
+			console.log(err);
 		}
 	}
 }

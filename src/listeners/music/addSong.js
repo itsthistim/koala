@@ -9,10 +9,8 @@ export default class AddSongListener extends Listener {
 	}
 
 	async run(queue, song) {
-		console.log('addsong: already replied?', song.metadata?.i?.replied);
 		if (song.metadata) {
 			if (song.metadata.i.replied) {
-				console.log('addsong: follow up!');
 				song.metadata.i.followUp({
 					embeds: [
 						{
@@ -26,7 +24,6 @@ export default class AddSongListener extends Listener {
 					]
 				});
 			} else {
-				console.log('addsong: reply!');
 				song.metadata.i.reply({
 					embeds: [
 						{
@@ -41,7 +38,6 @@ export default class AddSongListener extends Listener {
 				});
 			}
 		} else {
-			console.log('addsong: send!');
 			queue.textChannel.send({
 				embeds: [
 					{
