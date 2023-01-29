@@ -27,7 +27,7 @@ export class InviteCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069358864698462228'
+				// idHints: '1069358864698462228'
 			}
 		);
 	}

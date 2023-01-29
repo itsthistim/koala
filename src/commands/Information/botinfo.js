@@ -28,7 +28,7 @@ export class BotInfoCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069358863284965436'
+				// idHints: '1069358863284965436'
 			}
 		);
 	}

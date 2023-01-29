@@ -18,8 +18,8 @@ export class TestCommand extends Command {
 				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'], // guilds for the command to be registered in; global if empty
-				idHints: '1063617609263755324' // commandId, define after registering (id will be in log after first run)
+				guildIds: ['502208815937224715', '628122911449808896'],
+				// idHints: '1063617609263755324'
 			}
 		);
 	}

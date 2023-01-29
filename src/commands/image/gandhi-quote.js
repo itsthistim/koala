@@ -33,7 +33,7 @@ export class GandhiCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1063617516238295130'
+				// idHints: '1063617516238295130'
 			}
 		);
 	}
