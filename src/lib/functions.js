@@ -1,4 +1,3 @@
-import { RandomLoadingMessage } from '#lib/constants';
 import { container } from '@sapphire/framework';
 import { EmbedBuilder } from 'discord.js';
 import { isNullish, isNullishOrZero } from '@sapphire/utilities';
@@ -416,9 +415,11 @@ export async function pickRandom(array) {
  * @param Message The message to send the random response with.
  */
 export async function sendLoadingMessage(interaction) {
+	const randomLoadingMessage = ['Computing...', 'Thinking...', 'Cooking some food', 'Give me a moment', 'Loading...'];
+
 	return interaction.reply({
 		content: 'Successfully unregistered all **guild** application commands.\nYou will need to update the idHints after the next start.',
-		embeds: [new EmbedBuilder().setDescription(pickRandom(RandomLoadingMessage)).setColor(container.color.GREYPLE)],
+		embeds: [new EmbedBuilder().setDescription(pickRandom(randomLoadingMessage)).setColor(container.color.GREYPLE)],
 		ephemeral: true,
 		fetchReply: false
 	});
