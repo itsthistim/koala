@@ -76,6 +76,7 @@ export class UserInfoCommand extends Command {
 				MENTION_EVERYONE: 'Mention Everyone'
 			};
 
+
 			let embed = new EmbedBuilder()
 				.setColor(COLORS.DEFAULT)
 				.setAuthor({
@@ -87,12 +88,12 @@ export class UserInfoCommand extends Command {
 				.addFields(
 					{
 						name: 'Joined Server',
-						value: `${moment(member.joinedAt).format('MMM Do YYYY, hh:mm:ss a')}\n(<t:${Math.floor(member.joinedAt / 1000)}:R>)`,
+						value: `<t:${Math.floor(member.joinedAt / 1000)}:f>\n<t:${Math.floor(member.joinedAt / 1000)}:R>`,
 						inline: true
 					},
 					{
 						name: 'Joined Discord',
-						value: `${moment(member.user.createdAt).format('MMM Do YYYY, hh:mm:ss a')}\n(<t:${Math.floor(member.user.createdAt / 1000)}:R>)`,
+						value: `<t:${Math.floor(member.user.createdAt / 1000)}:f>\n<t:${Math.floor(member.user.createdAt / 1000)}:R>`,
 						inline: true
 					},
 					{

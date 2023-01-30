@@ -3,7 +3,7 @@ import '#lib/setup';
 import { BucketScope, LogLevel, SapphireClient } from '@sapphire/framework';
 import { Time } from '@sapphire/time-utilities';
 
-import { GatewayIntentBits  } from 'discord.js';
+import { GatewayIntentBits } from 'discord.js';
 
 import '@sapphire/plugin-subcommands/register';
 import '@sapphire/plugin-editable-commands/register';
@@ -20,7 +20,7 @@ import momentDurationFormat from 'moment-duration-format';
 momentDurationFormat(moment);
 
 let prefixes = [];
-if (!process.env.DEV) {
+if (process.env.NODE_ENV === 'PRODUCTION') {
 	prefixes = ['-'];
 } else {
 	prefixes = ['+'];
