@@ -28,7 +28,7 @@ export class BotInfoCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1069358863284965436'
+				idHints: '1069392993255178322'
 			}
 		);
 	}
@@ -48,11 +48,16 @@ export class BotInfoCommand extends Command {
 
 		return new EmbedBuilder()
 			.setColor(COLORS.DEFAULT)
-			.setAuthor({ name: this.container.client.user.username, iconURL: this.container.client.user.displayAvatarURL({ dynamic: true }) })
+			.setAuthor({
+				name: this.container.client.user.username,
+				iconURL: this.container.client.user.displayAvatarURL({ dynamic: true })
+			})
 			.addFields(
 				{
 					name: 'Technical',
-					value: `**Uptime:** ${moment.duration(this.container.client.uptime).format('d[d], h[h], m[m], s[s]')}\n**Ping:** ${this.container.client.ws.ping}ms\n**Roundtrip:** ${Date.now() - interaction.createdTimestamp}ms`,
+					value: `**Uptime:** ${moment.duration(this.container.client.uptime).format('d[d], h[h], m[m], s[s]')}\n**Ping:** ${this.container.client.ws.ping}ms\n**Roundtrip:** ${
+						Date.now() - interaction.createdTimestamp
+					}ms`,
 					inline: true
 				},
 				{
@@ -66,6 +71,9 @@ export class BotInfoCommand extends Command {
 					inline: true
 				}
 			)
-			.setFooter({ text: `Made by ${dev.tag}`, iconURL: dev.displayAvatarURL({ dynamic: true }) });
+			.setFooter({
+				text: `Made by ${dev.tag}`,
+				iconURL: dev.displayAvatarURL({ dynamic: true })
+			});
 	}
 }

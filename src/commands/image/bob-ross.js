@@ -33,14 +33,19 @@ export class RossCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063617433065226351'
+				idHints: '1069393257353715856'
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
 		let image =
-			(await interaction.options.getUser('user'))?.displayAvatarURL({ format: 'png', size: 512 }) ?? (await interaction.options.getString('url')) ?? interaction.user.displayAvatarURL({ format: 'png', size: 512 });
+			(await interaction.options.getUser('user'))?.displayAvatarURL({
+				format: 'png',
+				size: 512
+			}) ??
+			(await interaction.options.getString('url')) ??
+			interaction.user.displayAvatarURL({ format: 'png', size: 512 });
 
 		let attachment = await this.createImage(image);
 

@@ -33,7 +33,7 @@ export class UrbanCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1069358868020338761'
+				idHints: '1069392999706009651'
 			}
 		);
 	}
@@ -60,18 +60,23 @@ export class UrbanCommand extends Command {
 		}
 
 		return new Promise(async (resolve, reject) => {
-
 			const embed = new EmbedBuilder()
 				.setColor(global.COLORS.DEFAULT)
 				.setTitle(definition.word)
 				.setURL(definition.permalink)
 				.setDescription(cutTo(definition.definition.replace(/\[|\]/g, ''), 0, 4093))
 				.addFields(
-					{ name: 'Example', value: `${cutTo(definition.example.replace(/\[|\]/g, ''), 0, 1021)}\u200B`, inline: false },
+					{
+						name: 'Example',
+						value: `${cutTo(definition.example.replace(/\[|\]/g, ''), 0, 1021)}\u200B`,
+						inline: false
+					},
 					{ name: '👍', value: `${definition.thumbs_up}\u200B`, inline: true },
 					{ name: '👎', value: `${definition.thumbs_down}\u200B`, inline: true }
 				)
-				.setFooter({ text: `${definition.author}  •  ${moment(definition.written_on).format('MMM Do YYYY, h:mm a')}` });
+				.setFooter({
+					text: `${definition.author}  •  ${moment(definition.written_on).format('MMM Do YYYY, h:mm a')}`
+				});
 
 			return resolve(embed);
 		});

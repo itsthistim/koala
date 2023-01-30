@@ -26,21 +26,24 @@ export class GunCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-                    .setName(this.name)
-                    .setDescription(this.description)
-                    .addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
-                    .addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
+					.setName(this.name)
+					.setDescription(this.description)
+					.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
+					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063617518457073744'
+				idHints: '1069393339985694740'
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
 		let image =
-			(await interaction.options.getUser('user'))?.displayAvatarURL({ format: 'png', size: 512 }) ??
+			(await interaction.options.getUser('user'))?.displayAvatarURL({
+				format: 'png',
+				size: 512
+			}) ??
 			(await interaction.options.getString('url')) ??
 			interaction.user.displayAvatarURL({ format: 'png', size: 512 });
 
@@ -80,7 +83,7 @@ export class GunCommand extends Command {
 				name: 'gun.png'
 			};
 		} catch (err) {
-            console.log(err)
+			console.log(err);
 			return `Error: Invalid image provided. Please make sure the image is a valid image url and has a valid file extension.\nValid file extensions: \`.png\`, \`.jpg\`, \`.jpeg\`, \`raw\`, \`.svg\``;
 		}
 	}

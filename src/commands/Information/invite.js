@@ -27,28 +27,28 @@ export class InviteCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1069358864698462228'
+				idHints: '1069392996807741571'
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
-        const embed = await this.createInviteEmbed();
-        return interaction.reply({ embeds: [embed] });
-    }
+		const embed = await this.createInviteEmbed();
+		return interaction.reply({ embeds: [embed] });
+	}
 
 	async messageRun(message, args) {
-        const embed = await this.createInviteEmbed();
-        return reply(message, { embeds: [embed] });
-    }
+		const embed = await this.createInviteEmbed();
+		return reply(message, { embeds: [embed] });
+	}
 
-    async createInviteEmbed() {
-        return new Promise(async (resolve, reject) => {
-            const embed = new EmbedBuilder()
-                .setTitle('Invite')
-                .setDescription('[Invite me to your server](https://discord.com/api/oauth2/authorize?client_id=1058725069481844796&permissions=8&scope=bot%20applications.commands)')
-                .setColor(global.COLORS.DEFAULT);
-            return resolve(embed);
-        });
-    }
+	async createInviteEmbed() {
+		return new Promise(async (resolve, reject) => {
+			const embed = new EmbedBuilder()
+				.setTitle('Invite')
+				.setDescription('[Invite me to your server](https://discord.com/api/oauth2/authorize?client_id=1058725069481844796&permissions=8&scope=bot%20applications.commands)')
+				.setColor(global.COLORS.DEFAULT);
+			return resolve(embed);
+		});
+	}
 }

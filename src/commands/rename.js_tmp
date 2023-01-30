@@ -1,0 +1,182 @@
+/*
+
+botinfo.js               '\/\/ idHints:.+\s+}'       idHints: '1069392993255178322' 
+define.js                '\/\/ idHints:.+\s+}'       idHints: '1069392994911916084' 
+invite.js                '\/\/ idHints:.+\s+}'       idHints: '1069392996807741571' 
+serverinfo.js            '\/\/ idHints:.+\s+}'       idHints: '1069392998279958528' 
+urban.js                 '\/\/ idHints:.+\s+}'       idHints: '1069392999706009651' 
+userinfo.js              '\/\/ idHints:.+\s+}'       idHints: '1069393079041261749' 
+ban.js                   '\/\/ idHints:.+\s+}'       idHints: '1069393080555417691' 
+unban.js                 '\/\/ idHints:.+\s+}'       idHints: '1069393082182811758' 
+play.js                  '\/\/ idHints:.+\s+}'       idHints: '1069393083759865938' 
+queue.js                 '\/\/ idHints:.+\s+}'       idHints: '1069393085383065660' 
+skip.js                  '\/\/ idHints:.+\s+}'       idHints: '1069393164890292296' 
+stop.js                  '\/\/ idHints:.+\s+}'       idHints: '1069393166433796187' 
+nowplaying.js            '\/\/ idHints:.+\s+}'       idHints: '1069393167805329418' 
+eval.js                  '\/\/ idHints:.+\s+}'       idHints: '1069393169499816067' 
+setup.js                 '\/\/ idHints:.+\s+}'       idHints: '1069393171068485652' 
+test.js                  '\/\/ idHints:.+\s+}'       idHints: '1069393251171307580' 
+achievement.js           '\/\/ idHints:.+\s+}'       idHints: '1069393252421214310' 
+avatar.js                '\/\/ idHints:.+\s+}'       idHints: '1069393254115708998' 
+beautiful.js             '\/\/ idHints:.+\s+}'       idHints: '1069393255764078703' 
+ross.js                  '\/\/ idHints:.+\s+}'       idHints: '1069393257353715856' 
+certificate.js           '\/\/ idHints:.+\s+}'       idHints: '1069393336894509087' 
+gandhi.js                '\/\/ idHints:.+\s+}'       idHints: '1069393338454777896' 
+gun.js                   '\/\/ idHints:.+\s+}'       idHints: '1069393339985694740' 
+hands.js                 '\/\/ idHints:.+\s+}'       idHints: '1069393341495652502' 
+hearts.js                '\/\/ idHints:.+\s+}'       idHints: '1069393343223701674' 
+rainbow.js               '\/\/ idHints:.+\s+}'       idHints: '1069393425981526166' 
+steamnowplaying.js       '\/\/ idHints:.+\s+}'       idHints: '1069393427617292298' 
+
+*/
+
+import { readFileSync, writeFileSync } from 'fs';
+
+const files = [
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Information/botinfo.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069392993255178322'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Information/define.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069392994911916084'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Information/invite.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069392996807741571'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Information/serverinfo.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069392998279958528'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Information/urban.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069392999706009651'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Information/userinfo.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393079041261749'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Moderation/ban.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393080555417691'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Moderation/unban.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393082182811758'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Music/play.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393083759865938'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Music/queue.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393085383065660'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Music/skip.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393164890292296'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Music/stop.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393166433796187'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Music/nowplaying.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393167805329418'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/_Dev/eval.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393169499816067'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/_Dev/setup.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393171068485652'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/_Dev/test.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393251171307580'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/achievement.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393252421214310'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/avatar.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393254115708998'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/beautiful.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393255764078703'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/bob-ross.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393257353715856'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/certificate.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393336894509087'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/gandhi-quote.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393338454777896'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/gun.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393339985694740'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/hands.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393341495652502'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/hearts.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393343223701674'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/rainbow.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393425981526166'"
+	},
+	{
+		file: 'C:/Dev/discord/Bots/koala/koala/src/commands/Image/steamnowplaying.js',
+		regex: '//.+idHints:.+',
+		replacement: "idHints: '1069393427617292298'"
+	}
+];
+
+files.forEach(({ file, regex, replacement }) => {
+	try {
+		const fileContent = readFileSync(file, 'utf8');
+		const newContent = fileContent.replace(new RegExp(regex), replacement);
+		writeFileSync(file, newContent);
+		console.log(`Updated ${file}: ${regex} -> ${replacement}`);
+	} catch (error) {
+		console.error(`Error updating ${file}: ${error}`);
+	}
+});

@@ -33,14 +33,17 @@ export class HeartsCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063617521615384666'
+				idHints: '1069393343223701674'
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
 		let image =
-			(await interaction.options.getUser('user'))?.displayAvatarURL({ format: 'png', size: 512 }) ??
+			(await interaction.options.getUser('user'))?.displayAvatarURL({
+				format: 'png',
+				size: 512
+			}) ??
 			(await interaction.options.getString('url')) ??
 			interaction.user.displayAvatarURL({ format: 'png', size: 512 });
 

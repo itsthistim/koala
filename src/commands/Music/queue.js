@@ -88,8 +88,8 @@ export class QueueCommand extends Subcommand {
 					);
 			},
 			{
-				guildIds: ['502208815937224715']
-				// idHints: '123456789012345678'
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1069393085383065660'
 			}
 		);
 	}
@@ -131,10 +131,15 @@ export class QueueCommand extends Subcommand {
 	//#region Clear
 	async slashClear(interaction) {
 		const queue = this.container.client.distube.getQueue(interaction.guild);
-		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
+		if (!queue)
+			return interaction.reply({
+				content: `There is nothing in the queue right now!`
+			});
 
 		queue.songs = [];
-		return interaction.reply({ content: `There is nothing in the queue right now!` });
+		return interaction.reply({
+			content: `There is nothing in the queue right now!`
+		});
 	}
 
 	async msgClear(message) {
@@ -149,13 +154,18 @@ export class QueueCommand extends Subcommand {
 	//#region Remove
 	async slashRemove(interaction) {
 		const queue = this.container.client.distube.getQueue(interaction.guild);
-		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
+		if (!queue)
+			return interaction.reply({
+				content: `There is nothing in the queue right now!`
+			});
 
 		const song = interaction.options.getInteger('song');
 		if (song < 1 || song > queue.songs.length) return interaction.reply({ content: `That song is not in the queue!` });
 
 		queue.songs.splice(song, 1);
-		return interaction.reply({ content: `Removed **${song}** from the queue!` });
+		return interaction.reply({
+			content: `Removed **${song}** from the queue!`
+		});
 	}
 
 	async msgRemove(message) {
@@ -173,7 +183,10 @@ export class QueueCommand extends Subcommand {
 	//#region SkipTo
 	async slashSkipTo(interaction) {
 		const queue = this.container.client.distube.getQueue(interaction.guild);
-		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
+		if (!queue)
+			return interaction.reply({
+				content: `There is nothing in the queue right now!`
+			});
 
 		const song = interaction.options.getInteger('song');
 		if (song < 1 || song > queue.songs.length) return interaction.reply({ content: `That song is not in the queue!` });
@@ -191,7 +204,7 @@ export class QueueCommand extends Subcommand {
 		if (song < 1 || song > queue.songs.length) return reply(message, `That song is not in the queue!`);
 
 		queue.filter((_, i) => i < song - 1).forEach((song) => queue.removeSong(song));
-        
+
 		return reply(message, `Skipped to **${song}**!`);
 	}
 	//#endregion

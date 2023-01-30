@@ -4,7 +4,9 @@ import { reply } from '@sapphire/plugin-editable-commands';
 import { createCanvas, loadImage, registerFont } from 'canvas';
 import { CanvasUtil } from '#lib/canvas';
 
-registerFont('src/lib/assets/fonts/MinecraftRegular-Bmg3.otf', { family: 'Minecraftia' });
+registerFont('src/lib/assets/fonts/MinecraftRegular-Bmg3.otf', {
+	family: 'Minecraftia'
+});
 
 export class AchievementCommand extends Command {
 	constructor(context, options) {
@@ -34,7 +36,7 @@ export class AchievementCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063617428749303888'
+				idHints: '1069393252421214310'
 			}
 		);
 	}

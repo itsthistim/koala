@@ -26,14 +26,17 @@ export class SkipCommand extends Command {
 				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715']
-				// idHints: '123456789012345678'
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1069393164890292296'
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
-		if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice voice channel to run this command!' });
+		if (!interaction.member.voice.channel)
+			return interaction.reply({
+				content: 'You need to be in a voice voice channel to run this command!'
+			});
 
 		const queue = this.container.client.distube.getQueue(interaction.guild);
 		if (queue) queue.skip();

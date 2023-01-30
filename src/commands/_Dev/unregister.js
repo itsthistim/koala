@@ -110,7 +110,11 @@ export class UnregisterCommand extends Subcommand {
 	}
 
 	async unregisterAll(guildId) {
-		rest.put(Routes.applicationGuildCommands(this.container.client.id, guildId), { body: [] }).catch(console.error);
+		rest
+			.put(Routes.applicationGuildCommands(this.container.client.id, guildId), {
+				body: []
+			})
+			.catch(console.error);
 		rest.put(Routes.applicationCommands(this.container.client.id), { body: [] }).catch(console.error);
 	}
 }

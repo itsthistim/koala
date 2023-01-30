@@ -27,7 +27,7 @@ export class NowPlayingCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1069358869593202878'
+				idHints: '1069393167805329418'
 			}
 		);
 	}
@@ -41,8 +41,7 @@ export class NowPlayingCommand extends Command {
 			embeds: [
 				{
 					title: `Now playing`,
-					description:
-						`**[${song.name}](${song.url})** \`(${song.formattedDuration})\` - ${song.user}\n` + `${this.progressBar(queue)} \`[${queue.formattedCurrentTime}/${song.formattedDuration}]\``,
+					description: `**[${song.name}](${song.url})** \`(${song.formattedDuration})\` - ${song.user}\n` + `${this.progressBar(queue)} \`[${queue.formattedCurrentTime}/${song.formattedDuration}]\``,
 					thumbnail: {
 						url: `${song.thumbnail}`
 					},
@@ -62,7 +61,8 @@ export class NowPlayingCommand extends Command {
 				{
 					title: `Now playing`,
 					description:
-						`**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}\n` + `${this.progressBar(queue)} \`[${queue.formattedCurrentTime}/${song.formattedDuration}]\``,
+						`**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}\n` +
+						`${this.progressBar(queue)} \`[${queue.formattedCurrentTime}/${song.formattedDuration}]\``,
 					thumbnail: {
 						url: `${song.thumbnail}`
 					},

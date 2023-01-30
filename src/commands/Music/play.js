@@ -29,8 +29,8 @@ export class PlayCommand extends Command {
 					.addStringOption((option) => option.setName('query').setDescription('The song to play.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715']
-				// idHints: '123456789012345678'
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1069393083759865938'
 			}
 		);
 	}
@@ -38,10 +38,13 @@ export class PlayCommand extends Command {
 	async chatInputRun(interaction) {
 		let query = interaction.options.getString('query');
 
-		if (!interaction.member.voice.channel) return interaction.reply({ content: 'You need to be in a voice voice channel to run this command!' });
-		
+		if (!interaction.member.voice.channel)
+			return interaction.reply({
+				content: 'You need to be in a voice voice channel to run this command!'
+			});
+
 		this.container.client.distube.play(interaction.member.voice.channel, query, {
-			metadata: { i: interaction},
+			metadata: { i: interaction },
 			member: interaction.member,
 			textChannel: interaction.channel
 		});

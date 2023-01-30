@@ -30,8 +30,8 @@ export class UnbanCommand extends Command {
 					.addStringOption((option) => option.setName('reason').setDescription('The reason for the unban.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715']
-				// idHints: '123456789012345678'
+				guildIds: ['502208815937224715', '628122911449808896'],
+				idHints: '1069393082182811758'
 			}
 		);
 	}
@@ -41,7 +41,9 @@ export class UnbanCommand extends Command {
 		var reason = await interaction.options.getString('reason', false);
 
 		if (!user) {
-			return reply(interaction, { embeds: [new EmbedBuilder().setColor(COLORS.RED).setTitle('User Not Found').setDescription('Please specify a user to ban.')] });
+			return reply(interaction, {
+				embeds: [new EmbedBuilder().setColor(COLORS.RED).setTitle('User Not Found').setDescription('Please specify a user to ban.')]
+			});
 		}
 
 		if (!reason) {
@@ -61,7 +63,9 @@ export class UnbanCommand extends Command {
 		var reason = await args.rest('string').catch(() => null);
 
 		if (!user) {
-			return reply(message, { embeds: [new EmbedBuilder().setColor(COLORS.RED).setTitle('User Not Found').setDescription('Please specify a user to unban.')] });
+			return reply(message, {
+				embeds: [new EmbedBuilder().setColor(COLORS.RED).setTitle('User Not Found').setDescription('Please specify a user to unban.')]
+			});
 		}
 
 		if (!reason) {

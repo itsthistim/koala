@@ -68,7 +68,7 @@ export class ServerListCommand extends Subcommand {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'], // guilds for the command to be registered in; global if empty
-				// idHints: '1063617607711858819' // commandId, define after registering (id will be in log after first run)
+				idHints: '1069393171068485652'
 			}
 		);
 	}
@@ -89,9 +89,18 @@ export class ServerListCommand extends Subcommand {
 		return new EmbedBuilder()
 			.setTitle('Setup Command')
 			.addFields(
-				{ name: 'Botrole', value: 'Takes a role and sets it as the bot role. All bots will be given this role.' },
-				{ name: 'Muterole', value: 'Takes a role and sets it as the mute role. All channels will be updated with the mute role.' },
-				{ name: 'Syncchannels', value: 'Syncs all channels with their respective parent channel.' }
+				{
+					name: 'Botrole',
+					value: 'Takes a role and sets it as the bot role. All bots will be given this role.'
+				},
+				{
+					name: 'Muterole',
+					value: 'Takes a role and sets it as the mute role. All channels will be updated with the mute role.'
+				},
+				{
+					name: 'Syncchannels',
+					value: 'Syncs all channels with their respective parent channel.'
+				}
 			)
 			.setColor(global.COLORS.DEFAULT);
 	}
@@ -100,7 +109,11 @@ export class ServerListCommand extends Subcommand {
 	//#region Mute Role
 	async chatInputRunMuterole(interaction) {
 		const role = interaction.options.getRole('role');
-		if (!role) return interaction.reply({ content: 'You must provide a role.', ephemeral: true });
+		if (!role)
+			return interaction.reply({
+				content: 'You must provide a role.',
+				ephemeral: true
+			});
 
 		this.processMuterole(role, interaction.guild);
 
@@ -149,7 +162,11 @@ export class ServerListCommand extends Subcommand {
 	//#region Bot Role
 	async chatInputRunBotrole(interaction) {
 		const role = interaction.options.getRole('role');
-		if (!role) return interaction.reply({ content: 'You must provide a role.', ephemeral: true });
+		if (!role)
+			return interaction.reply({
+				content: 'You must provide a role.',
+				ephemeral: true
+			});
 
 		this.processBotrole(role, interaction.guild);
 
@@ -177,13 +194,13 @@ export class ServerListCommand extends Subcommand {
 	//#endregion
 
 	//#region Sync Channels
-async chatInputRunSyncchannels(interaction) {
-	this.syncChannels(interaction.guild);
-	return await interaction.reply({
-		content: `All channels have been synced with their respective parent channel.`,
-		ephemeral: true
-	});
-}
+	async chatInputRunSyncchannels(interaction) {
+		this.syncChannels(interaction.guild);
+		return await interaction.reply({
+			content: `All channels have been synced with their respective parent channel.`,
+			ephemeral: true
+		});
+	}
 
 	async messageRunSyncchannels(message) {
 		this.syncChannels(message.guild);

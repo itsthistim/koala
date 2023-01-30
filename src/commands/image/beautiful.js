@@ -4,7 +4,9 @@ import { createCanvas, loadImage, registerFont } from 'canvas';
 import { CanvasUtil } from '#lib/canvas';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 
-registerFont('src/lib/assets/fonts/MinecraftRegular-Bmg3.otf', { family: 'Minecraftia' });
+registerFont('src/lib/assets/fonts/MinecraftRegular-Bmg3.otf', {
+	family: 'Minecraftia'
+});
 
 export class BeautifulCommand extends Command {
 	constructor(context, options) {
@@ -35,14 +37,17 @@ export class BeautifulCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063617431429460009'
+				idHints: '1069393255764078703'
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
 		let image =
-			(await interaction.options.getUser('user'))?.displayAvatarURL({ format: 'png', size: 512 }) ??
+			(await interaction.options.getUser('user'))?.displayAvatarURL({
+				format: 'png',
+				size: 512
+			}) ??
 			(await interaction.options.getString('url')) ??
 			interaction.user.displayAvatarURL({ format: 'png', size: 512 });
 

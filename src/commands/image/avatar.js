@@ -30,7 +30,7 @@ export class AvatarCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063617429932085258'
+				idHints: '1069393254115708998'
 			}
 		);
 	}
@@ -39,7 +39,10 @@ export class AvatarCommand extends Command {
 		const member = (await interaction.options.getMember('user')) ?? interaction.guild.members.cache.get(interaction.user.id);
 
 		const embed = new EmbedBuilder()
-			.setAuthor({ name: member.user.username + '#' + member.user.discriminator, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+			.setAuthor({
+				name: member.user.username + '#' + member.user.discriminator,
+				iconURL: member.user.displayAvatarURL({ dynamic: true })
+			})
 			.setImage(member.user.displayAvatarURL({ dynamic: true, size: 1024 }));
 
 		await interaction.reply({ embeds: [embed] });
@@ -49,7 +52,10 @@ export class AvatarCommand extends Command {
 		var member = await args.pick('member').catch(() => message.member);
 
 		const embed = new EmbedBuilder()
-			.setAuthor({ name: member.user.username + '#' + member.user.discriminator, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+			.setAuthor({
+				name: member.user.username + '#' + member.user.discriminator,
+				iconURL: member.user.displayAvatarURL({ dynamic: true })
+			})
 			.setImage(member.user.displayAvatarURL({ dynamic: true, size: 1024 }));
 
 		await reply(message, { embeds: [embed] });

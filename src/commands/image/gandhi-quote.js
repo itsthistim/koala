@@ -3,7 +3,9 @@ import { reply } from '@sapphire/plugin-editable-commands';
 import { createCanvas, loadImage, registerFont } from 'canvas';
 import { CanvasUtil } from '#lib/canvas';
 
-registerFont('src/lib/assets/fonts/LibreBaskerville-Italic.ttf', { family: 'Libre Baskerville Italic' });
+registerFont('src/lib/assets/fonts/LibreBaskerville-Italic.ttf', {
+	family: 'Libre Baskerville Italic'
+});
 
 export class GandhiCommand extends Command {
 	constructor(context, options) {
@@ -33,7 +35,7 @@ export class GandhiCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063617516238295130'
+				idHints: '1069393338454777896'
 			}
 		);
 	}

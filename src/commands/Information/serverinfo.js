@@ -28,7 +28,7 @@ export class ServerInfoCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1069358866225172530'
+				idHints: '1069392998279958528'
 			}
 		);
 	}
@@ -41,10 +41,12 @@ export class ServerInfoCommand extends Command {
 	}
 
 	getInfoEmbed(interaction) {
-
 		return new EmbedBuilder()
 			.setColor(COLORS.DEFAULT)
-			.setAuthor({ name: interaction.guild.name, iconURL: interaction.guild.iconURL({ dynamic: true }) })
+			.setAuthor({
+				name: interaction.guild.name,
+				iconURL: interaction.guild.iconURL({ dynamic: true })
+			})
 			.setThumbnail(interaction.guild.iconURL({ dynamic: true }))
 			.addFields(
 				{
@@ -55,7 +57,9 @@ export class ServerInfoCommand extends Command {
 				{
 					name: `\u200B`,
 					value:
-						`**Members:** ${interaction.guild.members.cache.size} | ${interaction.guild.members.cache.filter((member) => !member.user.bot).size}🧑 ${interaction.guild.members.cache.filter((member) => member.user.bot).size}🤖` +
+						`**Members:** ${interaction.guild.members.cache.size} | ${interaction.guild.members.cache.filter((member) => !member.user.bot).size}🧑 ${
+							interaction.guild.members.cache.filter((member) => member.user.bot).size
+						}🤖` +
 						`\n**Boosts:** ${interaction.guild.premiumSubscriptionCount} | Level: ${interaction.guild.premiumTier === 'NONE' ? 0 : interaction.guild.premiumTier}` +
 						`\n**Emojis:** ${interaction.guild.emojis.cache.size}`,
 					inline: true
@@ -65,6 +69,6 @@ export class ServerInfoCommand extends Command {
 					value: `Created at: ${moment(interaction.guild.createdAt).format('MMM Do YYYY, h:mm:ss a')}`,
 					inline: false
 				}
-			)
+			);
 	}
 }

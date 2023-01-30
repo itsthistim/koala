@@ -31,7 +31,7 @@ export class UserInfoCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063619917447958561'
+				idHints: '1069393079041261749'
 			}
 		);
 	}
@@ -44,7 +44,7 @@ export class UserInfoCommand extends Command {
 
 	async messageRun(message, args) {
 		const user = await args.pick('user').catch(() => message.author);
-		
+
 		let embed = await this.getInfoEmbed(message, user);
 		reply(message, { embeds: [embed] });
 	}
@@ -78,7 +78,10 @@ export class UserInfoCommand extends Command {
 
 			let embed = new EmbedBuilder()
 				.setColor('#0099ff')
-				.setAuthor({ name: `${member.user.tag}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
+				.setAuthor({
+					name: `${member.user.tag}`,
+					iconURL: user.displayAvatarURL({ dynamic: true })
+				})
 				.setThumbnail(member.displayAvatarURL({ dynamic: true }))
 				.setDescription(`${member.presence ? status[member.presence.status] : ''}${member}`)
 				.addFields(
@@ -114,7 +117,10 @@ export class UserInfoCommand extends Command {
 		} else {
 			return new EmbedBuilder()
 				.setColor('#0099ff')
-				.setAuthor({ name: `${user.username}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
+				.setAuthor({
+					name: `${user.username}`,
+					iconURL: user.displayAvatarURL({ dynamic: true })
+				})
 				.setThumbnail(user.displayAvatarURL({ dynamic: true }))
 				.setDescription(`${user}`)
 				.addFields({

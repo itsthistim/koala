@@ -32,7 +32,7 @@ export class DefineCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				// idHints: '1063617604893290556'
+				idHints: '1069392994911916084'
 			}
 		);
 	}
@@ -64,7 +64,10 @@ export class DefineCommand extends Command {
 			const embed = new EmbedBuilder().setTitle(`Definition of ${word}`).setColor(global.COLORS.DEFAULT);
 
 			definition[0].meanings.forEach((meaning) => {
-				embed.addFields({ name: `As ${ClientUtil.getIndefiniteArticle(meaning.partOfSpeech)} ${meaning.partOfSpeech}`, value: meaning.definitions[0].definition });
+				embed.addFields({
+					name: `As ${ClientUtil.getIndefiniteArticle(meaning.partOfSpeech)} ${meaning.partOfSpeech}`,
+					value: meaning.definitions[0].definition
+				});
 			});
 
 			return resolve(embed);
