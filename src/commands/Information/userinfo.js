@@ -77,7 +77,7 @@ export class UserInfoCommand extends Command {
 			};
 
 			let embed = new EmbedBuilder()
-				.setColor('#0099ff')
+				.setColor(COLORS.DEFAULT)
 				.setAuthor({
 					name: `${member.user.tag}`,
 					iconURL: user.displayAvatarURL({ dynamic: true })
@@ -87,12 +87,12 @@ export class UserInfoCommand extends Command {
 				.addFields(
 					{
 						name: 'Joined Server',
-						value: `${moment(member.joinedAt).format('MMM Do YYYY, hh:mm:ss a')}\n(${moment(member.joinedAt).fromNow()})`,
+						value: `${moment(member.joinedAt).format('MMM Do YYYY, hh:mm:ss a')}\n(<t:${Math.floor(member.joinedAt / 1000)}:R>)`,
 						inline: true
 					},
 					{
 						name: 'Joined Discord',
-						value: `${moment(member.createdAt).format('MMM Do YYYY, hh:mm:ss a')}\n(${moment(member.createdAt).fromNow()})`,
+						value: `${moment(member.user.createdAt).format('MMM Do YYYY, hh:mm:ss a')}\n(<t:${Math.floor(member.user.createdAt / 1000)}:R>)`,
 						inline: true
 					},
 					{
@@ -116,7 +116,7 @@ export class UserInfoCommand extends Command {
 			return embed;
 		} else {
 			return new EmbedBuilder()
-				.setColor('#0099ff')
+				.setColor(COLORS.DEFAULT)
 				.setAuthor({
 					name: `${user.username}`,
 					iconURL: user.displayAvatarURL({ dynamic: true })
@@ -125,7 +125,7 @@ export class UserInfoCommand extends Command {
 				.setDescription(`${user}`)
 				.addFields({
 					name: 'Joined Discord',
-					value: `${moment(user.createdAt).format('MMM Do YYYY, hh:mm:ss a')}\n(${moment(user.createdAt).fromNow()})`,
+					value: `${moment(user.createdAt).format('MMM Do YYYY, hh:mm:ss a')}\n(<t:${Math.floor(user.createdAt / 1000)}:R>)`,
 					inline: true
 				});
 		}
