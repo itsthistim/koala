@@ -95,12 +95,13 @@ export class QueueCommand extends Subcommand {
 	}
 
 	//#region View
-	async slashView(interaction) {
-		const queue = this.container.client.distube.getQueue(interaction.guild);
-		if (!queue) return reply(interaction, `There is nothing in the queue right now!`);
+	async msgView(message) {
+		const queue = this.container.client.distube.getQueue(message);
+
+		if (!queue) return reply(message, `There is nothing in the queue right now!`);
 
 		const q = queue.songs.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${song.name}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`).join('\n');
-		return interaction.reply({
+		return reply(message, {
 			embeds: [
 				{
 					title: `Queue`,
@@ -111,12 +112,12 @@ export class QueueCommand extends Subcommand {
 		});
 	}
 
-	async msgView(message) {
-		const queue = this.container.client.distube.getQueue(message);
-		if (!queue) return reply(message, `There is nothing in the queue right now!`);
+	async slashView(interaction) {
+		const queue = this.container.client.distube.getQueue(interaction.guild);
+		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
 
 		const q = queue.songs.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${song.name}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`).join('\n');
-		return reply(message, {
+		return interaction.reply({
 			embeds: [
 				{
 					title: `Queue`,
@@ -136,9 +137,9 @@ export class QueueCommand extends Subcommand {
 				content: `There is nothing in the queue right now!`
 			});
 
-		queue.songs = [];
+		queue.stop();
 		return interaction.reply({
-			content: `There is nothing in the queue right now!`
+			content: `Cleared the queue!`
 		});
 	}
 
@@ -146,66 +147,62 @@ export class QueueCommand extends Subcommand {
 		const queue = this.container.client.distube.getQueue(message);
 		if (!queue) return reply(message, `There is nothing in the queue right now!`);
 
-		queue.songs = [];
+		queue.stop();
 		return reply(message, `Cleared the queue!`);
 	}
 	//#endregion
 
 	//#region Remove
 	async slashRemove(interaction) {
-		const queue = this.container.client.distube.getQueue(interaction.guild);
-		if (!queue)
-			return interaction.reply({
-				content: `There is nothing in the queue right now!`
-			});
-
 		const song = interaction.options.getInteger('song');
+		const queue = this.container.client.distube.getQueue(interaction.guild);
+		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
+
 		if (song < 1 || song > queue.songs.length) return interaction.reply({ content: `That song is not in the queue!` });
 
 		queue.songs.splice(song, 1);
 		return interaction.reply({
-			content: `Removed **${song}** from the queue!`
+			content: `Removed **${queue.songs[song - 1].name}** from the queue!`
 		});
 	}
 
-	async msgRemove(message) {
+	async msgRemove(message, args) {
+		var song = await args.rest('number').catch(() => null);
+		if (!song) return reply(message, `Please provide a song to remove!`);
+
 		const queue = this.container.client.distube.getQueue(message);
 		if (!queue) return reply(message, `There is nothing in the queue right now!`);
 
-		const song = message.args[0];
 		if (song < 1 || song > queue.songs.length) return reply(message, `That song is not in the queue!`);
 
 		queue.songs.splice(song, 1);
-		return reply(message, `Removed **${song}** from the queue!`);
+		return reply(message, `Removed **${queue.songs[song - 1].name}** from the queue!`);
 	}
 	//#endregion
 
 	//#region SkipTo
 	async slashSkipTo(interaction) {
-		const queue = this.container.client.distube.getQueue(interaction.guild);
-		if (!queue)
-			return interaction.reply({
-				content: `There is nothing in the queue right now!`
-			});
-
 		const song = interaction.options.getInteger('song');
+		const queue = this.container.client.distube.getQueue(interaction.guild);
+		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
+
 		if (song < 1 || song > queue.songs.length) return interaction.reply({ content: `That song is not in the queue!` });
 
-		queue.filter((_, i) => i < song - 1).forEach((song) => queue.removeSong(song));
-
-		return interaction.reply({ content: `Skipped to **${song}**!` });
+		queue.jump(song);
+		
+		return interaction.reply({ content: `Skipped to **${queue.songs[song].name}**!` });
 	}
 
-	async msgSkipTo(message) {
+	async msgSkipTo(message, args) {
+		const song = await args.rest('number').catch(() => null);
 		const queue = this.container.client.distube.getQueue(message);
 		if (!queue) return reply(message, `There is nothing in the queue right now!`);
 
-		const song = message.args[0];
 		if (song < 1 || song > queue.songs.length) return reply(message, `That song is not in the queue!`);
 
-		queue.filter((_, i) => i < song - 1).forEach((song) => queue.removeSong(song));
+		queue.jump(song);
 
-		return reply(message, `Skipped to **${song}**!`);
+		return reply(message, `Skipped to **${queue.songs[song - 1].name}**!`);
 	}
 	//#endregion
 
