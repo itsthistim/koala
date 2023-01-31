@@ -29,6 +29,7 @@
     "@sapphire/plugin-logger": "latest",
     "@sapphire/plugin-subcommands": "latest",
     "@sapphire/time-utilities": "latest",
+    "@sapphire/timestamp": "^1.0.0",
     "axios": "^1.2.2",
     "canvas": "^2.11.0",
     "common-tags": "^1.8.2",
