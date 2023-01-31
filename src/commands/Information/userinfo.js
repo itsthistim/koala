@@ -86,9 +86,10 @@ export class UserInfoCommand extends Command {
 				.setDescription(`${user}`)
 				.addFields({
 					name: 'Joined Discord',
-					value: `${moment(user.createdAt).format('MMM Do YYYY, hh:mm:ss a')}\n(${this.durationAgo(user.createdAt)})`,
+					value: `${moment.utc(user.createdAt).format('MMM Do YYYY, HH:mm:ss')}\n(${this.durationAgo(user.createdAt)})`,
 					inline: true
-				});
+				})
+				.setFooter({ text: `All times are UTC!` });
 		}
 
 		let embed = new EmbedBuilder()
@@ -102,12 +103,12 @@ export class UserInfoCommand extends Command {
 			.addFields(
 				{
 					name: 'Joined Server',
-					value: `${moment(member.joinedAt).format('MMM Do YYYY, hh:mm:ss a')}\n(${this.durationAgo(member.joinedAt)})`,
+					value: `${moment.utc(member.joinedAt).format('MMM Do YYYY, HH:mm:ss')}\n(${this.durationAgo(member.joinedAt)})`,
 					inline: true
 				},
 				{
 					name: 'Joined Discord',
-					value: `${moment(member.user.createdAt).format('MMM Do YYYY, hh:mm:ss a')}\n(${this.durationAgo(member.user.createdAt)})`,
+					value: `${moment.utc(member.user.createdAt).format('MMM Do YYYY, HH:mm:ss')}\n(${this.durationAgo(member.user.createdAt)})`,
 					inline: true
 				},
 				{
@@ -128,36 +129,41 @@ export class UserInfoCommand extends Command {
 			});
 		}
 
+		embed.setFooter({ text: `All times are UTC!` });
+
 		return embed;
 	}
 
 	durationAgo(date) {
-		// If the duration is less than an hour, return the minutes
+
+		date = moment.utc(date).valueOf();
+
+		// If the duration is less than an hour, return the minutes and seconds
 		if (Date.now() - date < 3600000) {
-			return moment.duration(Date.now() - date).format('m [minutes ago]');
+			return moment.duration(Date.now() - date).format('m [minutes and] s [seconds ago]');
 		}
 
-		// If the duration is less than a day, return the hours
+		// If the duration is less than a day, return the hours and minutes
 		if (Date.now() - date < 86400000) {
-			return moment.duration(Date.now() - date).format('H [hours] and m [minutes ago]');
+			return moment.duration(Date.now() - date).format('H [hours and] m [minutes ago]');
 		}
 
-		// If the duration is less than a week, return the days
+		// If the duration is less than a week, return the days and hours
 		if (Date.now() - date < 604800000) {
-			return moment.duration(Date.now() - date).format('D [days] and H [hours ago]');
+			return moment.duration(Date.now() - date).format('D [days and] H [hours ago]');
 		}
 
-		// If the duration is less than a month, return the weeks
+		// If the duration is less than a month, return the weeks and days
 		if (Date.now() - date < 2592000000) {
 			return moment.duration(Date.now() - date).format('w [weeks] and d [days ago]');
 		}
 
-		// If the duration is less than a year, return the months
+		// If the duration is less than a year, return the months and weeks
 		if (Date.now() - date < 31536000000) {
-			return moment.duration(Date.now() - date).format('M [months] and w [weeks ago]');
+			return moment.duration(Date.now() - date).format('M [months and] w [weeks ago]');
 		}
 
-		// If the duration is any longer, return the years
+		// If the duration is any longer, return the years and months
 		return moment.duration(Date.now() - date).format('y [years and] M [months ago]');
 	}
 
