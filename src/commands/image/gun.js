@@ -26,7 +26,7 @@ export class GunCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env === 'production' ? this.name : this.name + '-dev')
+					.setName(process.env == 'PRODUCTION' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
 					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));

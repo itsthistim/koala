@@ -30,7 +30,7 @@ export class AchievementCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env === 'production' ? this.name : this.name + '-dev')
+					.setName(process.env == 'PRODUCTION' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('text').setDescription('The text to put on the achievement').setRequired(true));
 			},

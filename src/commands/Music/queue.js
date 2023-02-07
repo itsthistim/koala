@@ -57,7 +57,7 @@ export class QueueCommand extends Subcommand {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env === 'production' ? this.name : this.name + '-dev')
+					.setName(process.env == 'PRODUCTION' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addSubcommand((command) => command.setName('view').setDescription('Shows the queue.'))
 					.addSubcommand((command) => command.setName('clear').setDescription('Clears the queue.'))
