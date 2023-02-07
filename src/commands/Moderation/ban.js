@@ -24,7 +24,7 @@ export class BanCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(this.name)
+					.setName(process.env === 'production' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addUserOption((option) => option.setName('user').setDescription('The user to ban.').setRequired(true))
 					.addStringOption((option) => option.setName('reason').setDescription('The reason for the ban.').setRequired(false));

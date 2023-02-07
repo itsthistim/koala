@@ -27,7 +27,7 @@ export class CertificateCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(this.name)
+					.setName(process.env === 'production' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('name').setDescription('The name to put on the certificate.').setRequired(true))
 					.addStringOption((option) => option.setName('reason').setDescription('The text for the certificate.').setRequired(true));

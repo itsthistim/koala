@@ -24,7 +24,7 @@ export class AvatarCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(this.name)
+					.setName(process.env === 'production' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addUserOption((option) => option.setName('user').setDescription('The user to show the avatar of.').setRequired(false));
 			},

@@ -57,7 +57,7 @@ export class QueueCommand extends Subcommand {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(this.name)
+					.setName(process.env === 'production' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addSubcommand((command) => command.setName('view').setDescription('Shows the queue.'))
 					.addSubcommand((command) => command.setName('clear').setDescription('Clears the queue.'))
@@ -230,6 +230,8 @@ export class QueueCommand extends Subcommand {
 		if (!queue) return reply(interaction, `There is nothing in the queue right now!`);
 
 		const mode = interaction.options.getInteger('mode');
+		console.log(mode);
+
 		if (mode < 0 || mode > 2) return reply(interaction, `That is not a valid mode!`);
 
 		queue.setRepeatMode(mode);

@@ -23,7 +23,7 @@ export class Eval extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(this.name)
+					.setName(process.env === 'production' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('code').setDescription('The code to evaluate.').setRequired(true))
 					.addBooleanOption((option) => option.setName('async').setDescription('Whether the code should be evaluated asynchronously.').setRequired(false));

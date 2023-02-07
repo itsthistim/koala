@@ -30,7 +30,7 @@ export class BeautifulCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(this.name)
+					.setName(process.env === 'production' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('url').setDescription('The image url to use.').setRequired(false))
 					.addUserOption((option) => option.setName('user').setDescription('The user avatar to use.').setRequired(false));
