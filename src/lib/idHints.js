@@ -2,6 +2,8 @@ export function getIdHints() {
 	const commandNameRegex = /\[(.*?)\]/;
 	const idRegex = /"\d+"/;
 
+	// test
+
 	let logs = `2023-02-07 22:18:31 - INFO  - ApplicationCommandRegistry[achievement] Successfully created chat input guild command "achievement-dev" with id "1072627426003267664". You should add the id to the "idHints" property of the register method you used!
 	2023-02-07 22:18:31 - INFO  - ApplicationCommandRegistry[avatar] Successfully created chat input guild command "avatar-dev" with id "1072627427475456131". You should add the id to the "idHints" property of the register method you used!
 	2023-02-07 22:18:32 - INFO  - ApplicationCommandRegistry[beautiful] Successfully created chat input guild command "beautiful-dev" with id "1072627429249646664". You should add the id to the "idHints" property of the register method you used!
