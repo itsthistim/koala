@@ -47,7 +47,13 @@ export class SkipCommand extends Command {
 		if (!message.member.voice.channel) return reply(message, 'You need to be in a voice voice channel to run this command!');
 
 		const queue = this.container.client.distube.getQueue(message.guild);
-		if (queue) queue.skip();
+		if (queue) {
+			try {
+				await queue.skip();
+			} catch (err) {
+				queue.stop();
+			}
+		}
 		return;
 	}
 }
