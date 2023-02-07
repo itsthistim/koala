@@ -7,7 +7,7 @@ export class BotInfoCommand extends Command {
 	constructor(context, options) {
 		super(context, {
 			name: 'botinfo',
-			aliases: ['about', 'stats', 'ping', 'uptime'],
+			aliases: ['about', 'stats', 'ping', 'uptime', 'status'],
 			requiredUserPermissions: [],
 			requiredClientPermissions: [],
 			preconditions: [],
