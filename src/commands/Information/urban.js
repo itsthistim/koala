@@ -27,7 +27,7 @@ export class UrbanCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('word').setDescription('The word to look up.').setRequired(true));
 			},

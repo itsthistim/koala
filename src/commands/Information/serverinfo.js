@@ -24,7 +24,7 @@ export class ServerInfoCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand(
 			(builder) => {
-				builder.setName(process.env == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
+				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],

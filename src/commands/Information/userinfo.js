@@ -25,7 +25,7 @@ export class UserInfoCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addUserOption((option) => option.setName('user').setDescription('The user or the id of the user to get information about.'));
 			},

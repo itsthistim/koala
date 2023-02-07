@@ -46,7 +46,7 @@ export class UnregisterCommand extends Subcommand {
 	// 	registry.registerChatInputCommand(
 	// 		(builder) => {
 	// 			builder
-	// 				.setName(process.env == 'PRODUCTION' ? this.name : this.name + '-dev')
+	// 				.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
 	// 				.setDescription(this.description)
 	// 				.addSubcommand((command) => command.setName('all').setDescription('Unregister all application commands.'))
 	// 				.addSubcommand((command) => command.setName('global').setDescription('Unregister all global application commands.'))

@@ -49,7 +49,7 @@ export class ServerListCommand extends Subcommand {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
 					.addSubcommand((command) => command.setName('info').setDescription('Get info about the setup command.'))
 					.addSubcommand((command) =>
