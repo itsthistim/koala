@@ -2,11 +2,11 @@ import { container } from '@sapphire/framework';
 import { EmbedBuilder } from 'discord.js';
 import { isNullish, isNullishOrZero } from '@sapphire/utilities';
 import { getIdHints } from '#lib/idHints';
+import * as fs from 'fs';
 
 import globPkg from 'glob';
 const { glob } = globPkg;
 
-import * as fs from 'fs';
 export class ClientUtil {
 	/**
 	 * Resolves a user from a string, such as an ID, a name, or a mention.
