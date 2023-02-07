@@ -34,7 +34,7 @@ export class CertificateCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069393336894509087'
+				idHints: '1072627431216791663'
 			}
 		);
 	}

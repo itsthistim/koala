@@ -28,7 +28,7 @@ export class ServerInfoCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069392998279958528'
+				idHints: '1072627605737586820'
 			}
 		);
 	}

@@ -37,7 +37,7 @@ export class BeautifulCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069393255764078703'
+				idHints: '1072627429249646664'
 			}
 		);
 	}

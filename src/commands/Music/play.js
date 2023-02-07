@@ -30,7 +30,7 @@ export class PlayCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069393083759865938'
+				idHints: '1072627771190288486'
 			}
 		);
 	}

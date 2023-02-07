@@ -33,7 +33,7 @@ export class RossCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069393257353715856'
+				idHints: '1072627519431393290'
 			}
 		);
 	}

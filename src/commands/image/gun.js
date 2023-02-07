@@ -33,7 +33,7 @@ export class GunCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069393339985694740'
+				idHints: '1072627512196218910'
 			}
 		);
 	}

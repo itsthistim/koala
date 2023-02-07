@@ -68,7 +68,7 @@ export class ServerListCommand extends Subcommand {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'], // guilds for the command to be registered in; global if empty
-				idHints: '1069393171068485652'
+				idHints: '1072627861019709561'
 			}
 		);
 	}

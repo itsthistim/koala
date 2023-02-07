@@ -89,7 +89,7 @@ export class QueueCommand extends Subcommand {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069393085383065660'
+				idHints: '1072627772951887912'
 			}
 		);
 	}

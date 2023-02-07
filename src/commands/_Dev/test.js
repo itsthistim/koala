@@ -19,7 +19,7 @@ export class TestCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715', '628122911449808896'],
-				idHints: '1069393251171307580'
+				idHints: '1072627863293014086'
 			}
 		);
 	}

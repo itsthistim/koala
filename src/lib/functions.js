@@ -1,7 +1,12 @@
 import { container } from '@sapphire/framework';
 import { EmbedBuilder } from 'discord.js';
 import { isNullish, isNullishOrZero } from '@sapphire/utilities';
+import { getIdHints } from '#lib/idHints';
 
+import globPkg from 'glob';
+const { glob } = globPkg;
+
+import * as fs from 'fs';
 export class ClientUtil {
 	/**
 	 * Resolves a user from a string, such as an ID, a name, or a mention.
@@ -418,7 +423,6 @@ export async function sendLoadingMessage(interaction) {
 	const randomLoadingMessage = ['Computing...', 'Thinking...', 'Cooking some food', 'Give me a moment', 'Loading...'];
 
 	return interaction.reply({
-		content: 'Successfully unregistered all **guild** application commands.\nYou will need to update the idHints after the next start.',
 		embeds: [new EmbedBuilder().setDescription(pickRandom(randomLoadingMessage)).setColor(container.color.GREYPLE)],
 		ephemeral: true,
 		fetchReply: false
@@ -491,4 +495,33 @@ export async function contrast(ctx, x, y, width, height, multiplier = 10) {
 	}
 	ctx.putImageData(data, x, y);
 	return ctx;
+}
+
+export function updateIdHints() {
+	let hints = getIdHints();
+
+	let errCnt = 0;
+	let sucCnt = 0;
+
+	hints.forEach(([cmd, id]) => {
+		let regex = new RegExp(`idHints: .+`);
+		let replacement = `idHints: '${id}'`;
+
+		try {
+			let file = glob.sync(`./src/commands/*/${cmd}.js`)[0];
+			let fileContent = fs.readFileSync(file, 'utf8');
+
+			let newContent = fileContent.replace(regex, replacement);
+
+			fs.writeFileSync(file, newContent, 'utf8');
+
+			console.log(`Updated ${file}: ${regex} -> ${replacement}`);
+			sucCnt++;
+		} catch (error) {
+			console.error(`Error updating ${cmd}\n${error}`);
+			errCnt++;
+		}
+	});
+
+	console.log(`Updated ${sucCnt} commands, ${errCnt} errors`);
 }
