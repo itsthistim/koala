@@ -60,7 +60,7 @@ export class ImageArgument extends Argument {
 //     // if its not an url check if its a member. if it is return the members pfp url to the command
 //     try {
 //       const member = ClientUtil.resolveMember(parameter, msg.guild);
-//       return this.ok(member.user.displayAvatarURL({ format: 'png', size: 512 }));
+//       return this.ok(member.user.displayAvatarURL({ extension: 'png', size: 512 }));
 //     } catch (err) {
 //       return this.error({
 //         context,
