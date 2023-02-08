@@ -102,10 +102,7 @@ export class QueueCommand extends Subcommand {
 
 		const q = queue.songs.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${song.name}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`).join('\n');
 
-		const embed = new EmbedBuilder()
-		.setTitle(`Queue`)
-		.setDescription(q)
-		.setColor(COLORS.DEFAULT);
+		const embed = new EmbedBuilder().setTitle(`Queue`).setDescription(q).setColor(COLORS.DEFAULT);
 
 		if (queue.repeatMode != 0 && queue.autoplay == false) embed.setFooter({ text: `Looping ${queue.repeatMode == 2 ? 'queue' : 'song'}.` });
 		else if (queue.autoplay == true) embed.setFooter({ text: `Auto-Play enabled.` });
@@ -224,25 +221,6 @@ export class QueueCommand extends Subcommand {
 	//#endregion
 
 	//#region Loop
-	async slashLoop(interaction) {
-		const mode = interaction.options.getInteger('mode');
-		const queue = this.container.client.distube.getQueue(interaction.guild);
-		if (!queue) return interaction.reply({ content: `There is nothing playing right now!` });
-
-		if (mode == 1 || mode == 2) {
-			queue.setRepeatMode(mode);
-			return interaction.reply({ content: `Now looping **${mode == 1 ? 'this song' : 'the queue'}**!` });
-		} else if (mode == 0) {
-			queue.setRepeatMode(mode);
-			return interaction.reply({ content: `No longer looping!` });
-		} else if (mode == 3) {
-			queue.toggleAutoplay();
-			return interaction.reply({ content: `${queue.autoplay == true ? 'Enabled' : 'Disabled'} auto play!` });
-		} else {
-			return interaction.reply({ content: `Please provide a valid mode!` });
-		}
-	}
-
 	async msgLoop(message, args) {
 		let mode = await args.rest('number').catch(async () => await args.rest('string').catch(() => null));
 		let queue = this.container.client.distube.getQueue(message);
@@ -271,10 +249,10 @@ export class QueueCommand extends Subcommand {
 		if (mode == 1 || mode == 2) {
 			queue.setRepeatMode(mode);
 			return reply(message, `Now looping ${mode == 1 ? 'this **song**' : 'the **queue**'}!`);
-		} else if ((mode = 0)) {
+		} else if (mode == 0) {
 			queue.setRepeatMode(mode);
 			return reply(message, `No longer looping!`);
-		} else if ((mode = 3)) {
+		} else if (mode == 3) {
 			queue.toggleAutoplay();
 			queue.setRepeatMode(0);
 			return reply(message, `${queue.autoplay == true ? 'Enabled' : 'Disabled'} Auto-Play!`);
@@ -282,18 +260,53 @@ export class QueueCommand extends Subcommand {
 			switch (queue.repeatMode) {
 				case 0:
 					reply(message, `Currently not looping!`);
-				break;
+					break;
 				case 1:
 					reply(message, `Currently looping the **current song**!`);
-				break;
+					break;
 				case 2:
 					reply(message, `Currently looping the **queue**!`);
-				break;
+					break;
 				case 3:
 					reply(message, `Currently **auto-playing**!`);
-				break;
+					break;
 			}
 		}
 	}
+
+	async slashLoop(interaction) {
+		let mode = interaction.options.getInteger('mode');
+		let queue = this.container.client.distube.getQueue(interaction.guild);
+
+		if (!queue) return interaction.reply({ content: `There is nothing playing right now!` });
+
+		if (mode == 1 || mode == 2) {
+			queue.setRepeatMode(mode);
+			return interaction.reply({ content: `Now looping ${mode == 1 ? 'this **song**' : 'the **queue**'}!` });
+		} else if (mode == 0) {
+			queue.setRepeatMode(mode);
+			return interaction.reply({ content: `No longer looping!` });
+		} else if (mode == 3) {
+			queue.toggleAutoplay();
+			queue.setRepeatMode(0);
+			return interaction.reply({ content: `${queue.autoplay == true ? 'Enabled' : 'Disabled'} Auto-Play!` });
+		} else {
+			switch (queue.repeatMode) {
+				case 0:
+					interaction.reply({ content: `Currently not looping!` });
+					break;
+				case 1:
+					interaction.reply({ content: `Currently looping the **current song**!` });
+					break;
+				case 2:
+					interaction.reply({ content: `Currently looping the **queue**!` });
+					break;
+				case 3:
+					interaction.reply({ content: `Currently **auto-playing**!` });
+					break;
+			}
+		}
+	}
+
 	//#endregion
 }
