@@ -37,11 +37,11 @@ export class SteamNowPlayingCommand extends Command {
 	async chatInputRun(interaction) {
 		let image =
 			(await interaction.options.getUser('user'))?.displayAvatarURL({
-				format: 'png',
+				extension: 'png',
 				size: 512
 			}) ??
 			(await interaction.options.getString('url')) ??
-			interaction.user.displayAvatarURL({ format: 'png', size: 512 });
+			interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
 
 		let attachment = await this.createImage(image);
 
@@ -53,8 +53,8 @@ export class SteamNowPlayingCommand extends Command {
 	}
 
 	async messageRun(message, args) {
-		let image = await args.pick('member').catch(() => args.pick('image').catch((err) => message.author.displayAvatarURL({ format: 'png', size: 512 })));
-		if (typeof image === 'object') image = image.user.displayAvatarURL({ format: 'png', size: 512 });
+		let image = await args.pick('member').catch(() => args.pick('image').catch((err) => message.author.displayAvatarURL({ extension: 'png', size: 512 })));
+		if (typeof image === 'object') image = image.user.displayAvatarURL({ extension: 'png', size: 512 });
 
 		const result = await this.createImage(image);
 		if (typeof result === 'string') return reply(message, result);
