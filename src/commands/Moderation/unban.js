@@ -30,7 +30,7 @@ export class UnbanCommand extends Command {
 					.addStringOption((option) => option.setName('reason').setDescription('The reason for the unban.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627690747736224'
 			}
 		);

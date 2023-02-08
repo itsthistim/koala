@@ -28,7 +28,7 @@ export class SteamNowPlayingCommand extends Command {
 				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627598414327869'
 			}
 		);

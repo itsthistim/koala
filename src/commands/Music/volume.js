@@ -29,7 +29,7 @@ export class VolumeCommand extends Command {
 					.addIntegerOption((option) => option.setName('volume').setDescription('The volume in percent.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072960337797722162'
 			}
 		);

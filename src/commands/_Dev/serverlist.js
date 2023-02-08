@@ -28,7 +28,7 @@ export class ServerListCommand extends Command {
 	// 			builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
 	// 		},
 	// 		{
-	// 			guildIds: ['502208815937224715', '628122911449808896'], // guilds for the command to be registered in; global if empty
+	// 			guildIds: [], // guilds for the command to be registered in; global if empty
 	// 			idHints: '1058004861502890014' // commandId, define after registering (id will be in log after first run)
 	// 		}
 	// 	);

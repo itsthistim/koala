@@ -36,7 +36,7 @@ export class BeautifulCommand extends Command {
 					.addUserOption((option) => option.setName('user').setDescription('The user avatar to use.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627429249646664'
 			}
 		);

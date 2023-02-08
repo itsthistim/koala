@@ -30,7 +30,7 @@ export class BanCommand extends Command {
 					.addStringOption((option) => option.setName('reason').setDescription('The reason for the ban.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627689187459113'
 			}
 		);

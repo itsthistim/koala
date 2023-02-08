@@ -29,7 +29,7 @@ export class AvatarCommand extends Command {
 					.addUserOption((option) => option.setName('user').setDescription('The user to show the avatar of.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627427475456131'
 			}
 		);

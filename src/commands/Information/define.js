@@ -31,7 +31,7 @@ export class DefineCommand extends Command {
 					.addStringOption((option) => option.setName('word').setDescription('The word to define.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627602205978704'
 			}
 		);

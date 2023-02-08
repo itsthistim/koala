@@ -33,7 +33,7 @@ export class CertificateCommand extends Command {
 					.addStringOption((option) => option.setName('reason').setDescription('The text for the certificate.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627431216791663'
 			}
 		);

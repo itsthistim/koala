@@ -43,6 +43,11 @@ export class QueueCommand extends Subcommand {
 					name: 'shuffle',
 					chatInputRun: 'slashShuffle',
 					messageRun: 'msgShuffle'
+				},
+				{
+					name: 'loop',
+					chatInputRun: 'slashLoop',
+					messageRun: 'msgLoop'
 				}
 			]
 		});
@@ -72,7 +77,7 @@ export class QueueCommand extends Subcommand {
 					.addSubcommand((command) => command.setName('loop').setDescription('Loops or unloops the queue.'));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627772951887912'
 			}
 		);
@@ -99,15 +104,13 @@ export class QueueCommand extends Subcommand {
 		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
 
 		const q = queue.songs.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${song.name}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`).join('\n');
-		return interaction.reply({
-			embeds: [
-				{
-					title: `Queue`,
-					description: q,
-					color: COLORS.DEFAULT
-				}
-			]
-		});
+
+		const embed = new EmbedBuilder().setTitle(`Queue`).setDescription(q).setColor(COLORS.DEFAULT);
+
+		if (queue.repeatMode != 0 && queue.autoplay == false) embed.setFooter({ text: `Looping ${queue.repeatMode == 2 ? 'queue' : 'song'}.` });
+		else if (queue.autoplay == true) embed.setFooter({ text: `Auto-Play enabled.` });
+
+		return interaction.reply({ embeds: [embed] });
 	}
 	//#endregion
 

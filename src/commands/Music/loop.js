@@ -26,12 +26,12 @@ export class LoopCommand extends Command {
 				builder
 					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
 					.setDescription(this.description)
-					.addStringOption((option) =>
-						option.setName('mode').setDescription('The loop mode.').setRequired(true).addChoices({ name: 'Off', value: '0' }, { name: 'Song', value: '1' }, { name: 'Queue', value: '2' })
+					.addIntegerOption((option) =>
+						option.setName('mode').setDescription('The loop mode.').setRequired(true).addChoices({ name: 'Off', value: 0 }, { name: 'Song', value: 1 }, { name: 'Queue', value: 2 }, { name: 'Auto Play', value: 3 })
 					);
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072960328347942932'
 			}
 		);
@@ -54,20 +54,10 @@ export class LoopCommand extends Command {
 			queue.setRepeatMode(0);
 			return interaction.reply({ content: `${queue.autoplay == true ? 'Enabled' : 'Disabled'} Auto-Play!` });
 		} else {
-			switch (queue.repeatMode) {
-				case 0:
-					interaction.reply({ content: `Currently not looping!` });
-					break;
-				case 1:
-					interaction.reply({ content: `Currently looping the **current song**!` });
-					break;
-				case 2:
-					interaction.reply({ content: `Currently looping the **queue**!` });
-					break;
-				case 3:
-					interaction.reply({ content: `Currently **auto-playing**!` });
-					break;
-			}
+			if (queue.autoplay) return interaction.reply({ content: `Currently **auto-playing**!` });
+			if (queue.repeatMode = 0) return interaction.reply({ content: `Currently not looping!` });
+			if (queue.repeatMode = 1) return interaction.reply({ content: `Currently looping the **current song**!` });
+			if (queue.repeatMode = 2) return interaction.reply({ content: `Currently looping the **queue**!` });
 		}
 	}
 

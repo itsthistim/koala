@@ -30,7 +30,7 @@ export class UserInfoCommand extends Command {
 					.addUserOption((option) => option.setName('user').setDescription('The user or the id of the user to get information about.'));
 			},
 			{
-				guildIds: ['502208815937224715', '628122911449808896'],
+				guildIds: [],
 				idHints: '1072627687413256203'
 			}
 		);
