@@ -111,7 +111,9 @@ global.EMOJIS = {
 	POSITIVE: '<:positive:856277382926827520>',
 	NEGATIVE: '<:negative:856277382816858182>',
 	NEUTRAL: '<:neutral:856277382896812042>',
-	HOURGLASS: '⌛'
+	DURATION: '<:duration:1073379927149269012>',
+	VIEWS: '<:views:1073381816335073300>',
+	LIKES: '<:likes:1073379931075117066>'
 };
 
 global.dbPool = pool.promise();
