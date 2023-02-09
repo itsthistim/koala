@@ -31,7 +31,7 @@ export class UnbanCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627690747736224'
+				idHints: '1072971730924077167'
 			}
 		);
 	}

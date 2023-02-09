@@ -33,7 +33,7 @@ export class UrbanCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627685177692200'
+				idHints: '1072971726276804659'
 			}
 		);
 	}

@@ -27,7 +27,7 @@ export class PauseCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072968725055160330'
+				idHints: '1072971819180625932'
 			}
 		);
 	}

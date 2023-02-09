@@ -33,7 +33,7 @@ export class HeartsCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627515476152351'
+				idHints: '1072971557414125638'
 			}
 		);
 	}

@@ -30,7 +30,7 @@ export class VolumeCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072960337797722162'
+				idHints: '1072971901460291745'
 			}
 		);
 	}

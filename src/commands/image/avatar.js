@@ -30,7 +30,7 @@ export class AvatarCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627427475456131'
+				idHints: '1072971469207904359'
 			}
 		);
 	}

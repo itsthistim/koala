@@ -29,7 +29,7 @@ export class SteamNowPlayingCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627598414327869'
+				idHints: '1072971640272588850'
 			}
 		);
 	}

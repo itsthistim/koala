@@ -33,7 +33,7 @@ export class HandsCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627513945235517'
+				idHints: '1072971555841265709'
 			}
 		);
 	}

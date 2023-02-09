@@ -33,7 +33,7 @@ export class RainbowCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627517892067358'
+				idHints: '1072971558643056751'
 			}
 		);
 	}

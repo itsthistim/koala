@@ -31,7 +31,7 @@ export class BanCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627689187459113'
+				idHints: '1072971729405747202'
 			}
 		);
 	}

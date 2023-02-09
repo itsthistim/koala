@@ -30,7 +30,7 @@ export class Eval extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627778920386680'
+				idHints: '1072971902676647946'
 			}
 		);
 	}

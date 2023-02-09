@@ -32,7 +32,7 @@ export class DefineCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627602205978704'
+				idHints: '1072971643401543691'
 			}
 		);
 	}

@@ -31,7 +31,7 @@ export class UserInfoCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627687413256203'
+				idHints: '1072971727967092736'
 			}
 		);
 	}

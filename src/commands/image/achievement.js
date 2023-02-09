@@ -36,7 +36,7 @@ export class AchievementCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627426003267664'
+				idHints: '1072971468230623302'
 			}
 		);
 	}

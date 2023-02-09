@@ -27,7 +27,7 @@ export class SkipCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072627774625435728'
+				idHints: '1072971897937068103'
 			}
 		);
 	}

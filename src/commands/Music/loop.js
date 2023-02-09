@@ -32,7 +32,7 @@ export class LoopCommand extends Command {
 			},
 			{
 				guildIds: [],
-				idHints: '1072960328347942932'
+				idHints: '1072971812398444554'
 			}
 		);
 	}

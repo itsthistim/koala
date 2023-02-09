@@ -112,7 +112,7 @@ export class FilterCommand extends Subcommand {
 			},
 			{
 				guildIds: [],
-				idHints: '1072852898888822794'
+				idHints: '1072971732450811925'
 			}
 		);
 	}
