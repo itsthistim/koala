@@ -28,10 +28,8 @@ export default class AddSongListener extends Listener {
 					embeds: [
 						{
 							title: `Added to queue`,
-							description: `**[${song.name}](${song.url})** \`(${song.formattedDuration})\` - ${song.user}`,
-							thumbnail: {
-								url: `${song.thumbnail}`
-							},
+							description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
+							thumbnail: { url: `${song.thumbnail}` },
 							color: COLORS.GREEN
 						}
 					]
@@ -42,7 +40,7 @@ export default class AddSongListener extends Listener {
 				embeds: [
 					{
 						title: `Added to queue`,
-						description: `**[${song.name}](${song.url})** \`(${song.formattedDuration})\` - ${song.user}`,
+						description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
 						thumbnail: {
 							url: `${song.thumbnail}`
 						},

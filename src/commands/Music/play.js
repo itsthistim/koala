@@ -37,6 +37,7 @@ export class PlayCommand extends Command {
 
 	async chatInputRun(interaction) {
 		let query = interaction.options.getString('query');
+		query = query.replace('<', '').replace('>', '')
 
 		if (!interaction.member.voice.channel)
 			return interaction.reply({
@@ -52,6 +53,7 @@ export class PlayCommand extends Command {
 
 	async messageRun(message, args) {
 		var query = await args.rest('string').catch(() => null);
+		query = query.replace('<', '').replace('>', '')
 
 		if (!query) return reply(message, 'You need to specify a song!');
 		if (!message.member.voice.channel) return reply(message, 'You need to be in a voice voice channel to run this command!');

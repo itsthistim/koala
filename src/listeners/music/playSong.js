@@ -16,11 +16,11 @@ export default class PlaySongListener extends Listener {
 						embeds: [
 							{
 								title: `Now playing`,
-								description: `**[${song.name}](${song.url})** \`(${song.formattedDuration})\` - ${song.user}`,
+								description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
 								thumbnail: {
 									url: `${song.thumbnail}`
 								},
-								color: COLORS.GREEN
+								color: COLORS.DEFAULT
 							}
 						]
 					})
@@ -33,11 +33,11 @@ export default class PlaySongListener extends Listener {
 						embeds: [
 							{
 								title: `Now playing`,
-								description: `**[${song.name}](${song.url})** \`(${song.formattedDuration})\` - ${song.user}`,
+								description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
 								thumbnail: {
 									url: `${song.thumbnail}`
 								},
-								color: COLORS.GREEN
+								color: COLORS.DEFAULT
 							}
 						]
 					})
@@ -51,11 +51,11 @@ export default class PlaySongListener extends Listener {
 					embeds: [
 						{
 							title: `Now playing`,
-							description: `**[${song.name}](${song.url})** \`(${song.formattedDuration})\` - ${song.user}`,
+							description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
 							thumbnail: {
 								url: `${song.thumbnail}`
 							},
-							color: COLORS.GREEN
+							color: COLORS.DEFAULT
 						}
 					]
 				})

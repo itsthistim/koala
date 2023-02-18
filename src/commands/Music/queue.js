@@ -1,6 +1,7 @@
 import { Subcommand } from '@sapphire/plugin-subcommands';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { EmbedBuilder, Emoji, PermissionFlagsBits } from 'discord.js';
 import { reply } from '@sapphire/plugin-editable-commands';
+import moment from 'moment';
 
 export class QueueCommand extends Subcommand {
 	constructor(context, options) {
@@ -83,18 +84,39 @@ export class QueueCommand extends Subcommand {
 		);
 	}
 
+	/*
+	
+	<:views:1073379929732960367> - Views
+	<:likes:1073379931075117066> - Likes
+	<:duration:1073379927149269012> - Duration
+
+	*/
+
 	//#region View
 	async msgView(message) {
 		const queue = this.container.client.distube.getQueue(message);
 
 		if (!queue) return reply(message, `There is nothing in the queue right now!`);
 
-		const q = queue.songs.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${song.name}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`).join('\n');
+		const q = queue.songs
+			.map(
+				(song, i) =>
+					`${i === 0 ? `Playing:` : `**${i}.** `}` +
+					`**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})**\n` +
+					`${EMOJIS.DURATION + song.formattedDuration}   ${EMOJIS.VIEWS + song.views}   ${EMOJIS.LIKES + song.likes}   ${song.user}${i === 0 ? '\n' : ''}`
+			)
+			.join('\n');
 
-		const embed = new EmbedBuilder().setTitle(`Queue`).setDescription(q).setColor(COLORS.DEFAULT);
+		let footer = this.getTotalDuration(queue.songs);
+		if (queue.repeatMode != 0 && queue.autoplay == false) footer += ` • Looping ${queue.repeatMode == 2 ? 'queue' : 'song'}.`;
+		else if (queue.autoplay == true) footer += ` • Auto-Play enabled.`;
 
-		if (queue.repeatMode != 0 && queue.autoplay == false) embed.setFooter({ text: `Looping ${queue.repeatMode == 2 ? 'queue' : 'song'}.` });
-		else if (queue.autoplay == true) embed.setFooter({ text: `Auto-Play enabled.` });
+		const embed = new EmbedBuilder();
+		embed.setTitle(`Queue`);
+		embed.setDescription(q);
+		embed.setColor(COLORS.DEFAULT);
+		embed.setThumbnail(queue.songs[0].thumbnail);
+		embed.setFooter({ text: footer });
 
 		return reply(message, { embeds: [embed] });
 	}
@@ -111,6 +133,14 @@ export class QueueCommand extends Subcommand {
 		else if (queue.autoplay == true) embed.setFooter({ text: `Auto-Play enabled.` });
 
 		return interaction.reply({ embeds: [embed] });
+	}
+
+	getTotalDuration(songs) {
+		let duration = songs.reduce((acc, cur) => acc + cur.duration, 0);
+
+		if (duration >= 86400) return moment.duration(duration, 'seconds').format('d:hh:mm:ss'); // 1 day or more
+		else if (duration >= 3600) return moment.duration(duration, 'seconds').format('hh:mm:ss'); // 1 hour or more
+		else return moment.duration(duration, 'seconds').format('mm:ss'); // 1 minute or more
 	}
 	//#endregion
 
