@@ -118,7 +118,7 @@ global.EMOJIS = {
 	REPEATONE: '<:white_repeatone:1082029001306034287>',
 	SHUFFLE: '<:white_shuffle:1082029006746030120>',
 	REWIND: '<:white_rewind:1082029003814219980>',
-	SPEED: '<:white_speed:1082029015738617896>',
+	FORWARD: '<:white_speed:1082029015738617896>',
 	SKIPBACK: '<:white_skipback:1082029009614930022>',
 	SKIPFORWARD: '<:white_skipforward:1082029010839687269>',
 	SUBTRACT: '<:white_subtract:1082028839024205964>',
