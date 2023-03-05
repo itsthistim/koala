@@ -39,19 +39,21 @@ export class PlayCommand extends Command {
 			});
 
 		const queue = this.container.client.distube.getQueue(interaction.guild);
+		const vc = queue?.voiceChannel;
+		
 		if (queue) queue.stop();
+		if(this.container.client.distube.voices.get(vc)) this.container.client.distube.voices.leave(interaction.guild);
 		return;
 	}
 
 	async messageRun(message, args) {
 		if (!message.member.voice.channel) return reply(message, 'You need to be in a voice voice channel to run this command!');
+		
 		const queue = this.container.client.distube.getQueue(message.guild);
-
 		const vc = queue?.voiceChannel;
 
 		if (queue) queue.stop();
-		if(this.container.client.distube.voices.get(vc)) this.container.client.distube.voices.leave(vc);
-
+		if(this.container.client.distube.voices.get(vc)) this.container.client.distube.voices.leave(message.guild);
 		return;
 	}
 }
