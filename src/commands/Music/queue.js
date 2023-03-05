@@ -99,12 +99,7 @@ export class QueueCommand extends Subcommand {
 		if (!queue) return reply(message, `There is nothing in the queue right now!`);
 
 		const q = queue.songs
-			.map(
-				(song, i) =>
-					`${i === 0 ? `Playing:` : `**${i}.** `}` +
-					`**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})**\n` +
-					`${EMOJIS.DURATION + song.formattedDuration}   ${EMOJIS.VIEWS + song.views}   ${EMOJIS.LIKES + song.likes}   ${song.user}${i === 0 ? '\n' : ''}`
-			)
+			.map((song, i) => `${i === 0 ? `Playing: ` : `**${i}.** `}` + `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user} ${i === 0 ? '\n' : ''}`)
 			.join('\n');
 
 		let footer = this.getTotalDuration(queue.songs);
@@ -175,9 +170,9 @@ export class QueueCommand extends Subcommand {
 
 		if (song < 1 || song > queue.songs.length) return interaction.reply({ content: `That song is not in the queue!` });
 
-		queue.songs.splice(song, 1);
+		let removed = queue.songs.splice(song, 1);
 		return interaction.reply({
-			content: `Removed **${queue.songs[song - 1].name}** from the queue!`
+			content: `Removed **${removed[0].name}** from the queue!`
 		});
 	}
 
@@ -190,8 +185,8 @@ export class QueueCommand extends Subcommand {
 
 		if (song < 1 || song > queue.songs.length) return reply(message, `That song is not in the queue!`);
 
-		queue.songs.splice(song, 1);
-		return reply(message, `Removed **${queue.songs[song - 1].name}** from the queue!`);
+		let removed = queue.songs.splice(song, 1);
+		return reply(message, `Removed **${removed[0].name}** from the queue!`);
 	}
 	//#endregion
 
