@@ -79,10 +79,9 @@ client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
 	leaveOnStop: false,
 	leaveOnEmpty: true,
-	emptyCooldown: 10,
 	leaveOnFinish: false,
 	savePreviousSongs: true,
-	searchSongs: 1, // 1 -> play first result; 0 -> play all results
+	searchSongs: 0, // 1 <= 0, play first result
 	searchCooldown: 60,
 	emptyCooldown: 60,
 	nsfw: false,
