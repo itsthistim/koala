@@ -28,7 +28,7 @@ export class ServerInfoCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? null : '1081716127408865430'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728862599254077' : '1081716127408865430'
 			}
 		);
 	}

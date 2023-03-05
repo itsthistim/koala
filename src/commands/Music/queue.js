@@ -79,7 +79,7 @@ export class QueueCommand extends Subcommand {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710782863126720' : '1081716299907989586'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729031386439760' : '1081716299907989586'
 			}
 		);
 	}

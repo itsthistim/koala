@@ -33,7 +33,7 @@ export class RainbowCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081711043513946132' : '1081716046542667936'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729287817809960' : '1081716046542667936'
 			}
 		);
 	}

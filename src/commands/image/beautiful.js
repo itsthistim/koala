@@ -37,7 +37,7 @@ export class BeautifulCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710955500679329' : '1081715952544125008'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729201264148660' : '1081715952544125008'
 			}
 		);
 	}

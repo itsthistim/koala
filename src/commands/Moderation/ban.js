@@ -31,7 +31,7 @@ export class BanCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710694417846273' : '1081716212356108338'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728945231241227' : '1081716212356108338'
 			}
 		);
 	}

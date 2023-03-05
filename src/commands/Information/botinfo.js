@@ -28,7 +28,7 @@ export class BotInfoCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: '1081716123730464890'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728859277365298' : null
 			}
 		);
 	}

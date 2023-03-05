@@ -36,7 +36,7 @@ export class AchievementCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710952862462005' : '1081715950262427779'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729119286460478' : '1081715950262427779'
 			}
 		);
 	}

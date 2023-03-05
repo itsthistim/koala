@@ -35,7 +35,7 @@ export class GandhiCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710958470234192' : '1081715955702448198'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729202954440785' : '1081715955702448198'
 			}
 		);
 	}

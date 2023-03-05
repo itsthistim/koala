@@ -31,7 +31,7 @@ export class UnbanCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710695760015390' : '1081716213819899934'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728945990418442' : '1081716213819899934'
 			}
 		);
 	}

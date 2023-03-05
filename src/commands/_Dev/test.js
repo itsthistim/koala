@@ -19,7 +19,7 @@ export class TestCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710872147267654' : '1081716467562721371'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729118338564176' : '1081716467562721371'
 			}
 		);
 	}

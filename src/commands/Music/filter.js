@@ -112,7 +112,7 @@ export class FilterCommand extends Subcommand {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710696892485632' : '1081716215371800726'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728946791526461' : '1081716215371800726'
 			}
 		);
 	}

@@ -27,7 +27,7 @@ export class PlayCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710864752717936' : '1081716382749692024'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729033299034112' : '1081716382749692024'
 			}
 		);
 	}

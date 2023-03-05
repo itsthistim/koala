@@ -31,7 +31,7 @@ export class UserInfoCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710693427982357' : '1081716210539962378'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728944371413013' : '1081716210539962378'
 			}
 		);
 	}

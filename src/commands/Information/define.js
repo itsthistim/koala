@@ -32,7 +32,7 @@ export class DefineCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? null : '1081716124837761094'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728860762157056' : '1081716124837761094'
 			}
 		);
 	}

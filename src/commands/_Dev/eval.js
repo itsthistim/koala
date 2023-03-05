@@ -30,7 +30,7 @@ export class Eval extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710867562909782' : '1081716385215954974'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729115587104830' : '1081716385215954974'
 			}
 		);
 	}

@@ -33,7 +33,7 @@ export class HandsCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081711040682795088' : '1081716042889441301'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729285737418913' : '1081716042889441301'
 			}
 		);
 	}

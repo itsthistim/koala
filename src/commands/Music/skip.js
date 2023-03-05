@@ -27,7 +27,7 @@ export class SkipCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710783932674138' : '1081716381009068049'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729032359514113' : '1081716381009068049'
 			}
 		);
 	}

@@ -34,7 +34,7 @@ export class CertificateCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710957132255292' : '1081715954062458910'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729202207867021' : '1081715954062458910'
 			}
 		);
 	}

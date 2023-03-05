@@ -33,7 +33,7 @@ export class HeartsCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081711042217910442' : '1081716044508430366'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729286882476144' : '1081716044508430366'
 			}
 		);
 	}

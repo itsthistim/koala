@@ -32,7 +32,7 @@ export class LoopCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710698352103504' : '1081716295000653864'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728947655553044' : '1081716295000653864'
 			}
 		);
 	}

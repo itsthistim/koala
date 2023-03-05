@@ -29,7 +29,7 @@ export class SteamNowPlayingCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081711127605555310' : '1081716122241474670'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729289696849930' : '1081716122241474670'
 			}
 		);
 	}

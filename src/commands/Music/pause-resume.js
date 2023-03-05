@@ -27,7 +27,7 @@ export class PauseCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710780325580830' : '1081716297483702332'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729030530809976' : '1081716297483702332'
 			}
 		);
 	}

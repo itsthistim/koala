@@ -68,7 +68,7 @@ export class ServerListCommand extends Subcommand {
 			},
 			{
 				guildIds: ['502208815937224715'], // guilds for the command to be registered in; global if empty
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710869790064790' : '1081716386675572746'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729117147365427' : '1081716386675572746'
 			}
 		);
 	}

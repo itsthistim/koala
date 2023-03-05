@@ -30,7 +30,7 @@ export class VolumeCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710866271051776' : '1081716384054136913'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729114802757663' : '1081716384054136913'
 			}
 		);
 	}

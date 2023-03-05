@@ -33,7 +33,7 @@ export class RossCommand extends Command {
 			},
 			{
 				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081711048337391767' : '1081716048534966403'
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729288715378788' : '1081716048534966403'
 			}
 		);
 	}
