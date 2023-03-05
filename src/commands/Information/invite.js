@@ -26,8 +26,8 @@ export class InviteCommand extends Command {
 				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
 			},
 			{
-				guildIds: [],
-				idHints: '1072971648086593697'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? null : '1081716124837761094'
 			}
 		);
 	}

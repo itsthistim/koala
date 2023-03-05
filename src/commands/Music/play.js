@@ -29,8 +29,8 @@ export class PlayCommand extends Command {
 					.addStringOption((option) => option.setName('query').setDescription('The song to play.').setRequired(true));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971820787052614'
+				guildIds: process.env.NODE_ENV == 'PRODUCTION' ? [] : ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081716298918133770' : '1081710781554499594'
 			}
 		);
 	}

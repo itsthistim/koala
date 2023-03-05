@@ -26,8 +26,8 @@ export class SkipCommand extends Command {
 				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
 			},
 			{
-				guildIds: [],
-				idHints: '1072971897937068103'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710783932674138' : '1081716381009068049'
 			}
 		);
 	}

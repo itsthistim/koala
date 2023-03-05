@@ -27,8 +27,8 @@ export class BotInfoCommand extends Command {
 				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
 			},
 			{
-				guildIds: [],
-				idHints: '1072971641723813968'
+				guildIds: ['502208815937224715'],
+				idHints: '1081716123730464890'
 			}
 		);
 	}

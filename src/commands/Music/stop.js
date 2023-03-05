@@ -26,8 +26,8 @@ export class PlayCommand extends Command {
 				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
 			},
 			{
-				guildIds: [],
-				idHints: '1072971899354742898'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710864752717936' : '1081716382749692024'
 			}
 		);
 	}

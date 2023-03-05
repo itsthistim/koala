@@ -26,8 +26,8 @@ export class NowPlayingCommand extends Command {
 				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
 			},
 			{
-				guildIds: [],
-				idHints: '1072971814155849848'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710779243438251' : '1081716295898243253'
 			}
 		);
 	}

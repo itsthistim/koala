@@ -78,8 +78,8 @@ export class QueueCommand extends Subcommand {
 					.addSubcommand((command) => command.setName('loop').setDescription('Loops or unloops the queue.'));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971822162788464'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710782863126720' : '1081716299907989586'
 			}
 		);
 	}

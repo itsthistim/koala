@@ -67,8 +67,8 @@ export class ServerListCommand extends Subcommand {
 					.addSubcommand((command) => command.setName('syncchannels').setDescription('Sync channels with parent channel.'));
 			},
 			{
-				guildIds: [], // guilds for the command to be registered in; global if empty
-				idHints: '1072971904463425617'
+				guildIds: ['502208815937224715'], // guilds for the command to be registered in; global if empty
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710869790064790' : '1081716386675572746'
 			}
 		);
 	}

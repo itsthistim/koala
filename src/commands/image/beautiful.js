@@ -36,8 +36,8 @@ export class BeautifulCommand extends Command {
 					.addUserOption((option) => option.setName('user').setDescription('The user avatar to use.').setRequired(false));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971471284093021'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710955500679329' : '1081715952544125008'
 			}
 		);
 	}

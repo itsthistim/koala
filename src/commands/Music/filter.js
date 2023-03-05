@@ -111,8 +111,8 @@ export class FilterCommand extends Subcommand {
 					.addSubcommand((command) => command.setName('clear').setDescription('Removes all active filters.'));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971732450811925'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710696892485632' : '1081716215371800726'
 			}
 		);
 	}

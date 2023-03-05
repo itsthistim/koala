@@ -32,8 +32,8 @@ export class RossCommand extends Command {
 					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971559809060914'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081711048337391767' : '1081716048534966403'
 			}
 		);
 	}

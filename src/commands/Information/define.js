@@ -31,8 +31,8 @@ export class DefineCommand extends Command {
 					.addStringOption((option) => option.setName('word').setDescription('The word to define.').setRequired(true));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971643401543691'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? null : '1081716124837761094'
 			}
 		);
 	}

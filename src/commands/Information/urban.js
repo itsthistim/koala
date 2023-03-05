@@ -32,8 +32,8 @@ export class UrbanCommand extends Command {
 					.addStringOption((option) => option.setName('word').setDescription('The word to look up.').setRequired(true));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971726276804659'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? null : '1081716208967110746'
 			}
 		);
 	}

@@ -32,8 +32,8 @@ export class HeartsCommand extends Command {
 					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971557414125638'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081711042217910442' : '1081716044508430366'
 			}
 		);
 	}

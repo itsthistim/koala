@@ -30,8 +30,8 @@ export class UserInfoCommand extends Command {
 					.addUserOption((option) => option.setName('user').setDescription('The user or the id of the user to get information about.'));
 			},
 			{
-				guildIds: [],
-				idHints: '1072971727967092736'
+				guildIds: ['502208815937224715'],
+				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081710693427982357' : '1081716210539962378'
 			}
 		);
 	}
