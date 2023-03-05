@@ -42,14 +42,12 @@ export class NowPlayingCommand extends Command {
 				{
 					title: `Now playing`,
 					description:
-						`**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
+						`**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}\n` +
+						`${EMOJIS.YOUTUBE} ${this.progressBar(queue)} [${queue.formattedCurrentTime}/${song.formattedDuration}]`,
 					thumbnail: {
 						url: `${song.thumbnail}`
 					},
-					color: COLORS.DEFAULT,
-					footer: {
-						text: `[${queue.formattedCurrentTime}/${song.formattedDuration}] ${this.progressBar(queue)}`
-					}
+					color: COLORS.DEFAULT
 				}
 			]
 		});
@@ -65,23 +63,23 @@ export class NowPlayingCommand extends Command {
 				{
 					title: `Now playing`,
 					description:
-						`**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
+						`**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}\n` +
+						`${EMOJIS.YOUTUBE} ${this.progressBar(queue)} [${queue.formattedCurrentTime}/${song.formattedDuration}]`,
 					thumbnail: {
 						url: `${song.thumbnail}`
 					},
-					color: COLORS.DEFAULT,
-					footer: {
-						text: `[${queue.formattedCurrentTime}/${song.formattedDuration}] ${this.progressBar(queue)}`
-					}
+					color: COLORS.DEFAULT
 				}
 			]
 		});
 	}
 
 	progressBar(queue) {
+		let length = 12;
+
 		const current = queue.currentTime;
 		const total = queue.songs[0].duration;
-		const progress = Math.round((current / total) * 15);
-		return `${'▬'.repeat(progress)}${'┉'.repeat(15 - progress)}`;
+		const progress = Math.round((current / total) * length);
+		return `${'▬'.repeat(progress)}${'┉'.repeat(length - progress)}`;
 	}
 }

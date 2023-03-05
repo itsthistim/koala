@@ -41,7 +41,7 @@
     "moment": "^2.29.4",
     "moment-duration-format": "^2.3.2",
     "mysql2": "^2.3.3",
-    "parse-duration": "^1.0.2",
+    "parse-duration": "^1.0.3",
     "paste.gg": "^1.0.5",
     "table": "^6.8.1",
     "ytdl-core": "^4.11.0"
