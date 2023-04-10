@@ -46,7 +46,7 @@ export class InviteCommand extends Command {
 		return new Promise(async (resolve, reject) => {
 			const embed = new EmbedBuilder()
 				.setTitle('Invite')
-				.setDescription('[Invite me to your server](https://discord.com/api/oauth2/authorize?client_id=1058725069481844796&permissions=8&scope=bot%20applications.commands)')
+				.setDescription('[Invite me to your server](https://discord.com/api/oauth2/authorize?client_id=796034058740170813&permissions=387136&scope=bot%20applications.commands)')
 				.setColor(global.COLORS.DEFAULT);
 			return resolve(embed);
 		});
