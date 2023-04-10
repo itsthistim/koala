@@ -59,8 +59,8 @@ ${environmentType ? `${blc('</>') + llc(` ${process.env.NODE_ENV} ENVIRONMENT`)}
 ${llc(`v${process.env.VERSION}`)}`.trim()
 		);
 
-		const connectionSuccess = `Connected to database ${green(process.env.DB_DATABASE)} on ${llc(process.env.DB_HOST)}:${blc(process.env.DB_PORT)}`;
-		const connectionFailure = `Failed to connect to database ${redBright(process.env.DB_DATABASE)} on ${redBright(process.env.DB_HOST)}:${red(process.env.DB_PORT)}`;
+		const connectionSuccess = `Connected to database ${green(process.env.DB_NAME)} on ${llc(process.env.DB_HOST)}:${blc(process.env.DB_PORT)}`;
+		const connectionFailure = `Failed to connect to database ${redBright(process.env.DB_NAME)} on ${redBright(process.env.DB_HOST)}:${red(process.env.DB_PORT)}`;
 		const statusString = await dbPool
 			.getConnection()
 			.then(() => connectionSuccess)
