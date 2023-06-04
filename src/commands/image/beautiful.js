@@ -30,14 +30,14 @@ export class BeautifulCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('url').setDescription('The image url to use.').setRequired(false))
 					.addUserOption((option) => option.setName('user').setDescription('The user avatar to use.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729201264148660' : '1081715952544125008'
+				guildIds: []
+				, idHints: '1115020563413487616'
 			}
 		);
 	}

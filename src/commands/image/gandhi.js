@@ -29,13 +29,13 @@ export class GandhiCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('text').setDescription('The text to put on the quote.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729202954440785' : '1081715955702448198'
+				guildIds: []
+				, idHints: '1115020565841989642'
 			}
 		);
 	}

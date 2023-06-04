@@ -24,13 +24,13 @@ export class PlayCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('query').setDescription('The song to play.').setRequired(true));
 			},
 			{
-				guildIds: process.env.NODE_ENV == 'PRODUCTION' ? [] : ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081716298918133770' : '1081710781554499594'
+				guildIds: []
+				, idHints: '1115020989433139280'
 			}
 		);
 	}

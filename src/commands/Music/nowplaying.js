@@ -23,11 +23,11 @@ export class NowPlayingCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand(
 			(builder) => {
-				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
+				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729029494816899' : '1081716295898243253'
+				guildIds: []
+				, idHints: '1115020906868265010'
 			}
 		);
 	}

@@ -28,8 +28,8 @@ export class MemeCommand extends Command {
 				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: '1115004986141712435'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}
@@ -49,7 +49,6 @@ export class MemeCommand extends Command {
 		const subreddits = ['memes', 'dankmemes'];
 		const subreddit = subreddits[Math.floor(Math.random() * subreddits.length)];
 		const { data } = await axios.get(`https://www.reddit.com/r/${subreddit}/top/.json?t=month`);
-		// https://www.reddit.com/r/memes/randomrising/.json?t=month
 
 		const is_over_18 = interaction.channel.nsfw;
 		const min_ups = 1;
@@ -60,13 +59,11 @@ export class MemeCommand extends Command {
 			.filter((post) => post.data.post_hint === 'image')
 			.filter((post) => !post.data.stickied)
 			.filter((post) => post.data.ups > min_ups);
-
-		console.log(posts.length);
 		
-		const post = posts[Math.floor(Math.random() * posts.length)]?.data;
+		// TODO: improve randomization of posts by using a better algorithm
+		const post = posts[~~(Math.random() * posts.length)]?.data;
 
 		if (!post) return await interaction.editReply({ content: 'No memes found.' });
-		
 
 		const embed = this.buildEmbed(post.title, post.ups, post.permalink, post.created, post.author, post.url, interaction);
 		return embed;

@@ -25,11 +25,11 @@ export class SteamNowPlayingCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand(
 			(builder) => {
-				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
+				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729289696849930' : '1081716122241474670'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

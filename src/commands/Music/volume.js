@@ -24,13 +24,13 @@ export class VolumeCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addIntegerOption((option) => option.setName('volume').setDescription('The volume in percent.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729114802757663' : '1081716384054136913'
+				guildIds: []
+				, idHints: '1115020994944446497'
 			}
 		);
 	}

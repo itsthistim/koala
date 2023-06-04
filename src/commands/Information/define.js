@@ -26,13 +26,13 @@ export class DefineCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('word').setDescription('The word to define.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728860762157056' : '1081716124837761094'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

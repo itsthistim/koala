@@ -27,13 +27,13 @@ export class UrbanCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('word').setDescription('The word to look up.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728863136120864' : '1081716208967110746'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

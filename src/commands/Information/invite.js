@@ -23,11 +23,11 @@ export class InviteCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand(
 			(builder) => {
-				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
+				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728861605203979' : '1081716124837761094'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

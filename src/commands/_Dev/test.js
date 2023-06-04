@@ -15,11 +15,11 @@ export class TestCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand(
 			(builder) => {
-				builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
+				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729118338564176' : '1081716467562721371'
+				guildIds: ['502208815937224715']
+				, idHints: '1115021077861634098'
 			}
 		);
 	}

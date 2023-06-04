@@ -24,13 +24,13 @@ export class AvatarCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addUserOption((option) => option.setName('user').setDescription('The user to show the avatar of.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729200232345610' : '1081715951327789216'
+				guildIds: []
+				, idHints: '1115020561962242138'
 			}
 		);
 	}

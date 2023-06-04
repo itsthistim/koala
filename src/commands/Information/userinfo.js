@@ -25,13 +25,13 @@ export class UserInfoCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addUserOption((option) => option.setName('user').setDescription('The user or the id of the user to get information about.'));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728944371413013' : '1081716210539962378'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

@@ -49,7 +49,7 @@ export class ServerListCommand extends Subcommand {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addSubcommand((command) => command.setName('info').setDescription('Get info about the setup command.'))
 					.addSubcommand((command) =>
@@ -67,8 +67,8 @@ export class ServerListCommand extends Subcommand {
 					.addSubcommand((command) => command.setName('syncchannels').setDescription('Sync channels with parent channel.'));
 			},
 			{
-				guildIds: ['502208815937224715'], // guilds for the command to be registered in; global if empty
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729117147365427' : '1081716386675572746'
+				guildIds: []
+				, idHints: '1115021076129390605'
 			}
 		);
 	}

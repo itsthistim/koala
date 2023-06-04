@@ -26,14 +26,14 @@ export class RossCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
 					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729288715378788' : '1081716048534966403'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

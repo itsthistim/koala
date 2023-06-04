@@ -27,14 +27,14 @@ export class CertificateCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('name').setDescription('The name to put on the certificate.').setRequired(true))
 					.addStringOption((option) => option.setName('reason').setDescription('The text for the certificate.').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729202207867021' : '1081715954062458910'
+				guildIds: []
+				, idHints: '1115020564420100118'
 			}
 		);
 	}

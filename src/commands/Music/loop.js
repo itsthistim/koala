@@ -24,15 +24,15 @@ export class LoopCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addIntegerOption((option) =>
 						option.setName('mode').setDescription('The loop mode.').setRequired(true).addChoices({ name: 'Off', value: 0 }, { name: 'Song', value: 1 }, { name: 'Queue', value: 2 }, { name: 'Auto Play', value: 3 })
 					);
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728947655553044' : '1081716295000653864'
+				guildIds: []
+				, idHints: '1115020905672888380'
 			}
 		);
 	}

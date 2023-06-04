@@ -24,14 +24,14 @@ export class BanCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addUserOption((option) => option.setName('user').setDescription('The user to ban.').setRequired(true))
 					.addStringOption((option) => option.setName('reason').setDescription('The reason for the ban.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728945231241227' : '1081716212356108338'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

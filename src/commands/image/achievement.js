@@ -30,13 +30,13 @@ export class AchievementCommand extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('text').setDescription('The text to put on the achievement').setRequired(true));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729119286460478' : '1081715950262427779'
+				guildIds: []
+				, idHints: '1115020559928016996'
 			}
 		);
 	}

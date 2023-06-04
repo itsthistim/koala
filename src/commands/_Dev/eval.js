@@ -23,14 +23,14 @@ export class Eval extends Command {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addStringOption((option) => option.setName('code').setDescription('The code to evaluate.').setRequired(true))
 					.addBooleanOption((option) => option.setName('async').setDescription('Whether the code should be evaluated asynchronously.').setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081729115587104830' : '1081716385215954974'
+				guildIds: []
+				, idHints: '1115021074984353883'
 			}
 		);
 	}

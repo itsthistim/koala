@@ -49,7 +49,7 @@ export class FilterCommand extends Subcommand {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addSubcommand((command) => command.setName('view').setDescription('Shows the current and available filters.'))
 					.addSubcommand((command) =>
@@ -111,8 +111,8 @@ export class FilterCommand extends Subcommand {
 					.addSubcommand((command) => command.setName('clear').setDescription('Removes all active filters.'));
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? '1081728946791526461' : '1081716215371800726'
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

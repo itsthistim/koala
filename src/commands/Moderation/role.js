@@ -49,7 +49,7 @@ export class RoleCommand extends Subcommand {
 		registry.registerChatInputCommand(
 			(builder) => {
 				builder
-					.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev')
+					.setName(this.name)
 					.setDescription(this.description)
 					.addSubcommand((command) =>
 						command
@@ -78,8 +78,8 @@ export class RoleCommand extends Subcommand {
 					);
 			},
 			{
-				guildIds: ['502208815937224715'],
-				idHints: process.env.NODE_ENV == 'PRODUCTION' ? null : null
+				guildIds: []
+				// , idHints: ''
 			}
 		);
 	}

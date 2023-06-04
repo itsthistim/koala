@@ -25,7 +25,7 @@ export class ServerListCommand extends Command {
 	// registerApplicationCommands(registry) {
 	// 	registry.registerChatInputCommand(
 	// 		(builder) => {
-	// 			builder.setName(process.env.NODE_ENV == 'PRODUCTION' ? this.name : this.name + '-dev').setDescription(this.description);
+	// 			builder.setName(this.name).setDescription(this.description);
 	// 		},
 	// 		{
 	// 			guildIds: [], // guilds for the command to be registered in; global if empty

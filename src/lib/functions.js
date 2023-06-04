@@ -503,9 +503,18 @@ export function updateIdHints() {
 	let errCnt = 0;
 	let sucCnt = 0;
 
+	/*
+	
+		{
+			guildIds: []
+			// , idHints: ''
+		}
+
+	*/
+
 	hints.forEach(([cmd, id]) => {
-		let regex = new RegExp(`idHints: .+`);
-		let replacement = `idHints: '${id}'`;
+		let regex = new RegExp(`// , idHints: .+`);
+		let replacement = `, idHints: '${id}'`;
 
 		try {
 			let file = glob.sync(`./src/commands/*/${cmd}.js`)[0];
