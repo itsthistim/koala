@@ -1,4 +1,3 @@
 .env
 node_modules
 not_node_modules
-# **/lib/idHints.js
