@@ -72,7 +72,7 @@ export class BotInfoCommand extends Command {
 				}
 			)
 			.setFooter({
-				text: `Made by ${dev.tag}`,
+				text: `Made by ${dev.username}`,
 				iconURL: dev.displayAvatarURL({ dynamic: true })
 			});
 	}
