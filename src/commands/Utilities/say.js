@@ -21,7 +21,7 @@ export class SayCommand extends Command {
 				`\`-tts\` - Enabled Text To Speech for the message.\n` +
 				`\`-owo\` - OWOifys the message.\n` +
 				`\`-delete\` - Deletes the message that invoked the command.\n` +
-				`\`-silent\` - Same as \`-delete\`\n` +
+				`\`-silent\` - Same as \`-delete\`.\n` +
 				`\`-embed\` - Embeds the message.`,
 			usage: '',
 			examples: ['']
@@ -31,7 +31,13 @@ export class SayCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand(
 			(builder) => {
-				builder.setName(this.name).setDescription(this.description);
+				builder //
+					.setName(this.name)
+					.setDescription(this.description)
+					.addStringOption((option) => option.setName('text').setDescription('The text to say.').setRequired(true))
+					.addBooleanOption((option) => option.setName('tts').setDescription('Enable Text To Speech for the message.').setRequired(false))
+					.addBooleanOption((option) => option.setName('owo').setDescription('OWOifys the message.').setRequired(false))
+					.addBooleanOption((option) => option.setName('embed').setDescription('Embeds the message.').setRequired(false));
 			},
 			{
 				guildIds: []
@@ -41,7 +47,31 @@ export class SayCommand extends Command {
 	}
 
 	async chatInputRun(interaction) {
-		
+		var text = await interaction.options.getString('text', true);
+
+		const tts = await interaction.options.getBoolean('tts', false);
+		const doTTS = tts && interaction.member.permissions.has(PermissionFlagsBits.SendTTSMessages);
+
+		const owo = await interaction.options.getBoolean('owo', false);
+		const isEmbed = await interaction.options.getBoolean('embed', false);
+
+		if (!text) {
+			return interaction.reply({ content: 'You did not provide anything for me to say!', ephemeral: true });
+		}
+
+		if (owo) {
+			text = uwuify(text);
+		}
+
+		if (isEmbed) {
+			const embed = new EmbedBuilder();
+			embed.setColor(COLORS.GREYPLE);
+			embed.setDescription(text);
+
+			return interaction.reply({ embeds: [embed], allowedMentions: { parse: [], repliedUser: true } });
+		} else {
+			return interaction.reply({ content: text, tts: doTTS, allowedMentions: { parse: [], repliedUser: true } });
+		}
 	}
 
 	async messageRun(message, args) {
@@ -53,7 +83,6 @@ export class SayCommand extends Command {
 		const owo = args.getFlags('owo', 'uwu', 'uvu');
 		const del = args.getFlags('delete', 'del', 'd', 'silent', 's');
 		const isEmbed = args.getFlags('embed', 'e');
-
 
 		if (!text) return reply(message, 'You did not provide anything for me to say!');
 		if (text.length > 2000) return reply(message, 'Your text is too long!');
