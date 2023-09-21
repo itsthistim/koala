@@ -40,6 +40,11 @@ export class RoleCommand extends Subcommand {
 					name: 'edit',
 					chatInputRun: 'slashEdit',
 					messageRun: 'msgEdit'
+				},
+				{
+					name: 'assign',
+					chatInputRun: 'slashAssign',
+					messageRun: 'msgAssign'
 				}
 			]
 		});
@@ -75,6 +80,15 @@ export class RoleCommand extends Subcommand {
 							.setName('delete')
 							.setDescription('Delete a role.')
 							.addRoleOption((option) => option.setName('role').setDescription('The role to delete.').setRequired(true))
+					)
+					.addSubcommand((command) =>
+						command
+							.setName('assign')
+							.setDescription('Assign a role to users, bots or everyone.')
+							.addRoleOption((option) => option.setName('role').setDescription('The role to assign.').setRequired(true))
+							.addUserOption((option) => option.setName('user').setDescription('The user to assign the role to.').setRequired(false))
+							.addBooleanOption((option) => option.setName('bots').setDescription('Whether or not to assign the role to all bots.').setRequired(false))
+							.addBooleanOption((option) => option.setName('everyone').setDescription('Whether or not to assign the role to everyone.').setRequired(false))
 					);
 			},
 			{
@@ -86,23 +100,19 @@ export class RoleCommand extends Subcommand {
 
 	//#region Missing Args
 	async msgMissingArgs(message, args) {
-		return reply(message, 'You need to specify a subcommand!\nValid subcommands: `create`, `delete`, `edit`');
+		return reply(message, 'You need to specify a subcommand!\nValid subcommands: `create`, `delete`, `edit`, `assign`.');
 	}
 	//#endregion
 
 	//#region Create
 	async slashCreate(interaction) {
 		const name = interaction.options.getString('name');
-		const color = interaction.options.getString('color');
+		let color = interaction.options.getString('color');
 		const hoist = interaction.options.getBoolean('hoist');
 		const mentionable = interaction.options.getBoolean('mentionable');
 
-		let validColor =
-			/^(#?([0-9a-f]{3}){1,2}|\bgreen|\bwhite|\baqua|\bgreen|\bblue|\byellow|\bpurple|\bluminousvividpink|\bfuchsia|\bgold|\borange|\bred|\bgrey|\bnavy|\bdarkaqua|\bdarkgreen|\bdarkblue|\bdarkpurple|\bdarkvividpink|\bdarkgold|\bdarkorange|\bdarkred|\bdarkgrey|\bdarkergrey|\blightgrey|\bdarknavy|\bblurple|\bgreyple|\bdarkbutnotblack|\bnotquiteblack|\brandom)$/i;
-
-		if (!validColor.test(color)) {
-			color = null;
-		}
+		color = this.validateColor(color);
+		if (color) color = resolveColor(color);
 
 		console.log(name, color, hoist, mentionable);
 
@@ -115,7 +125,7 @@ export class RoleCommand extends Subcommand {
 			}
 		});
 
-		const embed = new EmbedBuilder().setTitle('Role Created').setDescription(`Role ${role} created.`).setColor('GREEN').setTimestamp();
+		const embed = new EmbedBuilder().setTitle('Role Created').setDescription(`Role ${role} created.`).setColor(this.container.color.PASTEL_GREEN).setTimestamp();
 
 		await interaction.reply({ embeds: [embed] });
 	}
@@ -126,20 +136,13 @@ export class RoleCommand extends Subcommand {
 		const hoist = await args.pick('boolean').catch(() => false);
 		const mentionable = await args.pick('boolean').catch(() => false);
 
-		// let validHex = /^(#?([0-9a-f]{3}){1,2}|\bgreen|\bwhite|\baqua|\bgreen|\bblue|\byellow|\bpurple|\bluminousvividpink|\bfuchsia|\bgold|\borange|\bred|\bgrey|\bnavy|\bdarkaqua|\bdarkgreen|\bdarkblue|\bdarkpurple|\bdarkvividpink|\bdarkgold|\bdarkorange|\bdarkred|\bdarkgrey|\bdarkergrey|\blightgrey|\bdarknavy|\bblurple|\bgreyple|\bdarkbutnotblack|\bnotquiteblack|\brandom)$/i;
-		// let validColor = /^(\bgreen|\bwhite|\baqua|\bgreen|\bblue|\byellow|\bpurple|\bluminousvividpink|\bfuchsia|\bgold|\borange|\bred|\bgrey|\bnavy|\bdarkaqua|\bdarkgreen|\bdarkblue|\bdarkpurple|\bdarkvividpink|\bdarkgold|\bdarkorange|\bdarkred|\bdarkgrey|\bdarkergrey|\blightgrey|\bdarknavy|\bblurple|\bgreyple|\bdarkbutnotblack|\bnotquiteblack)$/i;
-		// if (color === 'RANDOM') color = Math.floor(Math.random() * (0xffffff + 1));
-		// else if (color === 'DEFAULT') color = 0;
-		// else if (validHex.test(color)) {
-		// 	color = parseInt(color.replace('#', ''), 16);
-		// }
-		// else if (validColor.test(color)) {
-		// 	color = color.toUpperCase();
-		// }
+		console.log("validating color", color, '...');
+		color = this.validateColor(color);
+		console.log("validated color", color);
+		console.log("resolving color ...");
+		if (color) color = resolveColor(color);
+		console.log("resolved color", color);
 
-		color = resolveColor(color);
-
-		console.log(name, color, hoist, mentionable);
 
 		const role = await message.guild.roles.create({
 			name: name,
@@ -149,8 +152,154 @@ export class RoleCommand extends Subcommand {
 			reason: `Role created by ${message.author.tag}`
 		});
 
-		const embed = new EmbedBuilder().setTitle('Role Created').setDescription(`Role ${role} created.`).setColor('Green').setTimestamp();
+		const embed = new EmbedBuilder().setTitle('Role Created').setDescription(`Role ${role} created.`).setColor(this.container.color.PASTEL_GREEN).setTimestamp();
 
+		await reply(message, { embeds: [embed] });
+	}
+	//#endregion
+
+	//#region Delete
+	async slashDelete(interaction) {
+		const role = interaction.options.getRole('role');
+
+		if (!role) {
+			const embed = new EmbedBuilder().setTitle('Role Not Found').setDescription(`Role could not be found.`).setColor(this.container.color.CHERRY_RED).setTimestamp();
+			await interaction.reply({ embeds: [embed] });
+			return;
+		} else if (!interaction.guild.roles.cache.get(role.id)) {
+			const embed = new EmbedBuilder().setTitle('Role Not Found').setDescription(`Role could not be found.`).setColor(this.container.color.CHERRY_RED).setTimestamp();
+			await interaction.reply({ embeds: [embed] });
+			return;
+		} else if (role.managed) {
+			const embed = new EmbedBuilder().setTitle('Role Not Found').setDescription(`Role could not be deleted.`).setColor(this.container.color.CHERRY_RED).setTimestamp();
+			await interaction.reply({ embeds: [embed] });
+			return;
+		}
+
+		await role.delete();
+
+		const embed = new EmbedBuilder().setTitle('Role Deleted').setDescription(`Role ${role} deleted.`).setColor(this.container.color.CHERRY_RED).setTimestamp();
+		await interaction.reply({ embeds: [embed] });
+	}
+
+	async msgDelete(message, args) {
+		const role = await args.pick('role').catch(() => null);
+
+		// check if role exists
+		if (!role) {
+			const embed = new EmbedBuilder().setTitle('Role Not Found').setDescription(`Role could not be found.`).setColor(this.container.color.CHERRY_RED).setTimestamp();
+			await reply(message, { embeds: [embed] });
+			return;
+		} else if (!message.guild.roles.cache.get(role.id)) {
+			const embed = new EmbedBuilder().setTitle('Role Not Found').setDescription(`Role could not be found.`).setColor(this.container.color.CHERRY_RED).setTimestamp();
+			await reply(message, { embeds: [embed] });
+			return;
+		} else if (role.managed) {
+			const embed = new EmbedBuilder().setTitle('Role Not Found').setDescription(`Role could not be deleted.`).setColor(this.container.color.CHERRY_RED).setTimestamp();
+			await reply(message, { embeds: [embed] });
+			return;
+		}
+
+		await role.delete();
+
+		const embed = new EmbedBuilder().setTitle('Role Deleted').setDescription(`Role ${role} deleted.`).setColor(this.container.color.CHERRY_RED).setTimestamp();
+		await reply(message, { embeds: [embed] });
+	}
+	//#endregion
+
+	//#region Edit
+	async slashEdit(interaction) {
+		const role = interaction.options.getRole('role');
+		const name = interaction.options.getString('name');
+		let color = interaction.options.getString('color');
+		const hoist = interaction.options.getBoolean('hoist');
+		const mentionable = interaction.options.getBoolean('mentionable');
+
+		color = this.validateColor(color);
+		if (color) color = resolveColor(color);
+
+		await role.edit({
+			name: name,
+			color: color,
+			hoist: hoist,
+			mentionable: mentionable
+		});
+
+		const embed = new EmbedBuilder().setTitle('Role Edited').setDescription(`Role ${role} edited.`).setColor(this.container.color.PASTEL_GREEN).setTimestamp();
+		await interaction.reply({ embeds: [embed] });
+	}
+
+	async msgEdit(message, args) {
+		const role = await args.pick('role');
+		const name = await args.pick('string').catch(() => null);
+		let color = await args.pick('string').catch(() => null);
+		const hoist = await args.pick('boolean').catch(() => false);
+		const mentionable = await args.pick('boolean').catch(() => false);
+
+		color = this.validateColor(color);
+		if (color) color = resolveColor(color);
+
+		await role.edit({
+			name: name,
+			color: color,
+			hoist: hoist,
+			mentionable: mentionable
+		});
+
+		const embed = new EmbedBuilder().setTitle('Role Edited').setDescription(`Role ${role} edited.`).setColor(this.container.color.PASTEL_GREEN).setTimestamp();
+		await reply(message, { embeds: [embed] });
+	}
+
+	validateColor(color) {
+		let validColor = /^(#?([0-9a-f]{3}){1,2})$/i; // |\bgreen|\bwhite|\baqua|\bgreen|\bblue|\byellow|\bpurple|\bluminousvividpink|\bfuchsia|\bgold|\borange|\bred|\bgrey|\bnavy|\bdarkaqua|\bdarkgreen|\bdarkblue|\bdarkpurple|\bdarkvividpink|\bdarkgold|\bdarkorange|\bdarkred|\bdarkgrey|\bdarkergrey|\blightgrey|\bdarknavy|\bblurple|\bgreyple|\bdarkbutnotblack|\bnotquiteblack|\brandom
+
+		if (!validColor.test(color)) {
+			color = null;
+		}
+
+		return color;
+	}
+	//#endregion
+
+	//#region Assign
+	async slashAssign(interaction) {
+		const role = interaction.options.getRole('role');
+		const user = interaction.options.getUser('user');
+		const bots = interaction.options.getBoolean('bots');
+		const everyone = interaction.options.getBoolean('everyone');
+
+		if (user) {
+			await user.roles.add(role);
+		} else if (bots) {
+			await interaction.guild.members.cache.filter((member) => member.user.bot).forEach((member) => member.roles.add(role));
+		} else if (everyone) {
+			await interaction.guild.members.cache.forEach((member) => member.roles.add(role));
+		}
+
+		const embed = new EmbedBuilder().setTitle('Role Assigned').setDescription(`Role ${role} assigned.`).setColor(this.container.color.PASTEL_GREEN).setTimestamp();
+		await interaction.reply({ embeds: [embed] });
+	}
+
+	async msgAssign(message, args) {
+		const role = await args.pick('role');
+		const target = await args.pick('user').catch(() => args.pick('string').catch(() => null));
+
+		if (typeof target === 'string') {
+			switch (target) {
+				case 'bots':
+					await message.guild.members.cache.filter((member) => member.user.bot).forEach((member) => member.roles.add(role));
+					break;
+				case 'everyone':
+					await message.guild.members.cache.forEach((member) => member.roles.add(role));
+					break;
+				default:
+					break;
+			}
+		} else if (target?.id) {
+			await target.roles.add(role);
+		}
+
+		const embed = new EmbedBuilder().setTitle('Role Assigned').setDescription(`Role ${role} assigned.`).setColor(this.container.color.PASTEL_GREEN).setTimestamp();
 		await reply(message, { embeds: [embed] });
 	}
 }
