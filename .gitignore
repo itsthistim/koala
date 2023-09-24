@@ -1,3 +1,5 @@
 .env
+.vscode
+.idea
 node_modules
 not_node_modules
