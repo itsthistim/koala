@@ -18,7 +18,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.8.0",
     "@discordjs/rest": "^1.1.0",
-    "@discordjs/voice": "^0.14.0",
+    "@discordjs/voice": "^0.16.0",
     "@distube/yt-dlp": "^1.1.3",
     "@sapphire/discord-utilities": "latest",
     "@sapphire/discord.js-utilities": "latest",
