@@ -93,7 +93,7 @@ client.distube = new DisTube(client, {
 });
 
 //#region Globals
-client.colors = {
+global.COLORS = {
 	DEFAULT: 0x9bacb4,
 	RED: 0xef4948,
 	GREEN: 0x2ecc71,
@@ -106,7 +106,7 @@ client.colors = {
 	NOT_QUITE_BLACK: 0x23272a
 };
 
-client.emojis = {
+global.EMOJIS = {
 	BIN: '<:white_bin:1082028834657935390>',
 	INFO: '<:white_info:1082028836843163719>',
 	CHECK: '<:white_check:1082028833156374649>',
@@ -128,7 +128,7 @@ client.emojis = {
 	YOUTUBE: '<:white_youtube:1082029019500908574>'
 };
 
-client.dbPool = pool.promise();
+global.dbPool = pool.promise();
 global.client = client;
 
 parse['mo'] = parse['month'];
