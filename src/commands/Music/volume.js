@@ -36,11 +36,9 @@ export class VolumeCommand extends Command {
 	}
 
 	async messageRun(message, args) {
-		let volume = await args.rest('integer').catch(() => {
-			return reply(message, 'You need to specify a volume!');
-		});
+		let volume = await args.rest('integer').catch(() => { return null; });
 
-		if (!volume && volume != 0) return reply(message, 'You need to specify a volume!');
+		if(!volume) return reply(message, `The current volume is ${this.container.client.distube.queues.get(message.channel.guild).volume}%`);
 		if (volume > 100) return reply(message, 'The volume can not be higher than 100%');
 		if (volume < 0) return reply(message, 'The volume can not be lower than 0%');
 
