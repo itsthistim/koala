@@ -9,6 +9,6 @@ export default class InitQueueListener extends Listener {
 	}
 
 	async run(queue) {
-		queue.volume = 100;
+		queue.volume = 75;
 	}
 }
