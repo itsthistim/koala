@@ -1,5 +1,6 @@
 import { Subcommand } from '@sapphire/plugin-subcommands';
 import { EmbedBuilder, Emoji, PermissionFlagsBits } from 'discord.js';
+import { cutTo } from '#lib/functions';
 import { reply } from '@sapphire/plugin-editable-commands';
 import moment from 'moment';
 
@@ -78,19 +79,11 @@ export class QueueCommand extends Subcommand {
 					.addSubcommand((command) => command.setName('loop').setDescription('Loops or unloops the queue.'));
 			},
 			{
-				guildIds: []
-				, idHints: '1115020991077302363'
+				guildIds: [],
+				idHints: '1115020991077302363'
 			}
 		);
 	}
-
-	/*
-	
-	<:views:1073379929732960367> - Views
-	<:likes:1073379931075117066> - Likes
-	<:duration:1073379927149269012> - Duration
-
-	*/
 
 	//#region View
 	async msgView(message) {
@@ -99,7 +92,7 @@ export class QueueCommand extends Subcommand {
 		if (!queue) return reply(message, `There is nothing in the queue right now!`);
 
 		const q = queue.songs
-			.map((song, i) => `${i === 0 ? `Playing: ` : `**${i}.** `}` + `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user} ${i === 0 ? '\n' : ''}`)
+			.map((song, i) => `${i === 0 ? `Playing: ` : `**${i}.** `}` + `**[${cutTo(song.name.toString(), 0, 30, true)}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user} ${i === 0 ? '\n' : ''}`)
 			.join('\n');
 
 		let footer = this.getTotalDuration(queue.songs);
@@ -120,7 +113,7 @@ export class QueueCommand extends Subcommand {
 		const queue = this.container.client.distube.getQueue(interaction.guild);
 		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
 
-		const q = queue.songs.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${song.name}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`).join('\n');
+		const q = queue.songs.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${cutTo(song.name.toString(), 0, 30, true)}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`).join('\n');
 
 		const embed = new EmbedBuilder().setTitle(`Queue`).setDescription(q).setColor(COLORS.DEFAULT);
 
