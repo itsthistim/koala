@@ -131,7 +131,11 @@ export class FilterCommand extends Subcommand {
 			})
 			.join('\n');
 
-		const embed = new EmbedBuilder().setTitle('Filters').setDescription(filterList).setColor(COLORS.DEFAULT);
+		const embed = new EmbedBuilder() //
+			.setTitle('Filters')
+			.setDescription(filterList)
+			.setFooter({ text: `${this.container.client.fetchPrefix()[0]}filter add <filter>, ${this.container.client.fetchPrefix()[0]}filter remove <filter>, ${this.container.client.fetchPrefix()[0]}filter clear` })
+			.setColor(COLORS.DEFAULT);
 
 		return reply(message, { embeds: [embed] });
 	}
@@ -155,27 +159,27 @@ export class FilterCommand extends Subcommand {
 	}
 	//#endregion
 
-    //#region Add
-    async msgAdd(message, args) {
-        let filter = await args.rest('string').catch(() => null);
-        const queue = container.client.distube.getQueue(message);
-        if (!queue) return reply(message, 'There is nothing playing right now!');
+	//#region Add
+	async msgAdd(message, args) {
+		let filter = await args.rest('string').catch(() => null);
+		const queue = container.client.distube.getQueue(message);
+		if (!queue) return reply(message, 'There is nothing playing right now!');
 
 		let validFilters = Object.getOwnPropertyNames(container.client.distube.filters);
 
-        if (!filter) return reply(message, `Please provide a filter to add. Use \`${message.prefix}filters\` to see all filters.`);
+		if (!filter) return reply(message, `Please provide a filter to add. Use \`${message.prefix}filters\` to see all filters.`);
 		if (!validFilters.includes(filter)) return reply(message, `Invalid filter! Use \`${message.prefix}filters\` to see all filters.`);
 		if (queue.filters.names.includes(filter)) return reply(message, `The filter \`${filter}\` is already active.`);
 
 		queue.filters.add(filter);
 
-        return reply(message, `Applied \`${filter}\` to the queue.`);
-    }
+		return reply(message, `Applied \`${filter}\` to the queue.`);
+	}
 
-    async slashAdd(interaction) {
-        const filter = interaction.options.getString('filter');
-        const queue = container.client.distube.getQueue(interaction);
-        if (!queue) return interaction.reply('There is nothing playing right now.');
+	async slashAdd(interaction) {
+		const filter = interaction.options.getString('filter');
+		const queue = container.client.distube.getQueue(interaction);
+		if (!queue) return interaction.reply('There is nothing playing right now.');
 
 		let validFilters = Object.getOwnPropertyNames(container.client.distube.filters);
 
@@ -186,7 +190,7 @@ export class FilterCommand extends Subcommand {
 		queue.filters.add(filter);
 
 		return interaction.reply(`Applied \`${filter}\` to the queue.`);
-    }
+	}
 
 	//#endregion
 
@@ -229,7 +233,7 @@ export class FilterCommand extends Subcommand {
 	async msgClear(message) {
 		const queue = container.client.distube.getQueue(message);
 		if (!queue) return reply(message, 'There is nothing playing right now!');
-		
+
 		queue.filters.clear();
 
 		return reply(message, 'Cleared all active filters.');
