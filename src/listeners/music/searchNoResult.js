@@ -9,7 +9,6 @@ export default class SearchNoResultListener extends Listener {
 	}
 
 	async run(message, query) {
-
 		message.channel.send({
 			embeds: [
 				{
