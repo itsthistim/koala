@@ -1,5 +1,6 @@
 import { Listener, container } from '@sapphire/framework';
 import { blue, gray, green, magenta, magentaBright, white, yellow, redBright, red } from 'colorette';
+import { ActivityType } from 'discord.js';
 
 const environmentType = process.env.NODE_ENV === 'DEVELOPMENT';
 const llc = environmentType ? magentaBright : white;
@@ -40,12 +41,7 @@ export class ReadyEvent extends Listener {
 	 * Sets the bot's status.
 	 */
 	async setStatus() {
-		// Change the status every 60s because it can reset whenever discord feels like it
-		// Uncomment the setTimeout below to change the status, if the default online isnt what we settle on
-		/* setTimeout(() => {
-            client.user.setStatus('dnd'); // dnd, idle, online, invisible
-        }, Time.Second * 60); */
-		await client.user.setActivity('/help', { type: 'WATCHING' });
+		client.user.setPresence({ activities: [{ name: 'eucalyptus grow.', type: ActivityType.Watching }], status: 'online' }); // dnd, idle, online, invisible
 	}
 
 	/**
@@ -53,19 +49,16 @@ export class ReadyEvent extends Listener {
 	 */
 	async printBanner() {
 		client.logger.info(
-			String.raw`
-[${green('+')}] Gateway online
-${environmentType ? `${blc('</>') + llc(` ${process.env.NODE_ENV} ENVIRONMENT`)}` : 'PRODUCTION ENVIRONMENT'}
-${llc(`v${process.env.VERSION}`)}`.trim()
+			`[${green('+')}] Gateway online\n` +
+			`${environmentType ? `${blc('</>') + llc(` ${process.env.NODE_ENV} ENVIRONMENT`)}` : 'PRODUCTION ENVIRONMENT'}\n` +
+			`${llc(`v${process.env.VERSION}`)}`
 		);
 
-		const connectionSuccess = `Connected to database ${green(process.env.DB_NAME)} on ${llc(process.env.DB_HOST)}:${blc(process.env.DB_PORT)}`;
-		const connectionFailure = `Failed to connect to database ${redBright(process.env.DB_NAME)} on ${redBright(process.env.DB_HOST)}:${red(process.env.DB_PORT)}`;
-		const statusString = await dbPool
+		const dbStatus = await dbPool
 			.getConnection()
-			.then(() => connectionSuccess)
-			.catch(() => connectionFailure);
-		this.container.logger.info(statusString);
+			.then(() => `Connected to database ${green(process.env.DB_NAME)} on ${llc(process.env.DB_HOST)}:${blc(process.env.DB_PORT)}`)
+			.catch(() => `Failed to connect to database ${redBright(process.env.DB_NAME)} on ${redBright(process.env.DB_HOST)}:${red(process.env.DB_PORT)}`);
+		this.container.logger.info(dbStatus);
 	}
 
 	/**
