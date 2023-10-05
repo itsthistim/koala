@@ -1,3 +1,4 @@
+console.log("Starting...");
 import '#lib/setup';
 
 import { BucketScope, LogLevel, SapphireClient } from '@sapphire/framework';
