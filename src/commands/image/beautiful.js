@@ -36,16 +36,17 @@ export class BeautifulCommand extends Command {
 					.addUserOption((option) => option.setName('user').setDescription('The user avatar to use.').setRequired(false));
 			},
 			{
-				guildIds: []
-				, idHints: '1115020563413487616'
+				guildIds: [],
+				idHints: '1115020563413487616'
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
-		let image = (await interaction.options.getUser('user'))?.displayAvatarURL({ extension: 'png', size: 512 }) ??
-					(await interaction.options.getString('url')) ??
-					interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
+		let image =
+			(await interaction.options.getUser('user'))?.displayAvatarURL({ extension: 'png', size: 512 }) ??
+			(await interaction.options.getString('url')) ??
+			interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
 
 		let attachment = await this.createImage(image);
 		if (typeof attachment === 'string') return reply(interaction, attachment);
