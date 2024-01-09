@@ -78,7 +78,7 @@ const pool = mysql.createPool({
 
 client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
-	leaveOnStop: false,
+	leaveOnStop: true,
 	leaveOnFinish: false,
 	leaveOnEmpty: true,
 	emptyCooldown: 3,
