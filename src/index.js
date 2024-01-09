@@ -1,4 +1,4 @@
-console.log("Starting...");
+console.log('Starting...');
 import '#lib/setup';
 
 import { BucketScope, LogLevel, SapphireClient } from '@sapphire/framework';
@@ -83,14 +83,13 @@ client.distube = new DisTube(client, {
 	leaveOnEmpty: true,
 	emptyCooldown: 3,
 	savePreviousSongs: true,
-	searchSongs: 0, // 1 <= 0, play first result
+	searchSongs: 0,
 	searchCooldown: 60,
 	nsfw: false,
 	emitAddSongWhenCreatingQueue: false,
 	emitAddListWhenCreatingQueue: false,
 	youtubeCookie: process.env.YT_COOKIE,
 	plugins: [new YtDlpPlugin()]
-	// customFilters: []
 });
 
 //#region Globals
