@@ -18,8 +18,8 @@ export class TestCommand extends Command {
 				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715']
-				, idHints: '1115021077861634098'
+				guildIds: ['502208815937224715'],
+				idHints: '1115021077861634098'
 			}
 		);
 	}

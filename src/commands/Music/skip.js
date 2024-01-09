@@ -26,8 +26,8 @@ export class SkipCommand extends Command {
 				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: []
-				, idHints: '1115020992201371658'
+				guildIds: [],
+				idHints: '1115020992201371658'
 			}
 		);
 	}

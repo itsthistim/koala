@@ -35,8 +35,8 @@ export class AchievementCommand extends Command {
 					.addStringOption((option) => option.setName('text').setDescription('The text to put on the achievement').setRequired(true));
 			},
 			{
-				guildIds: []
-				, idHints: '1115020559928016996'
+				guildIds: [],
+				idHints: '1115020559928016996'
 			}
 		);
 	}

@@ -92,7 +92,11 @@ export class QueueCommand extends Subcommand {
 		if (!queue) return reply(message, `There is nothing in the queue right now!`);
 
 		const q = queue.songs
-			.map((song, i) => `${i === 0 ? `Playing: ` : `**${i}.** `}` + `**[${cutTo(song.name.toString(), 0, 30, true)}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user} ${i === 0 ? '\n' : ''}`)
+			.map(
+				(song, i) =>
+					`${i === 0 ? `Playing: ` : `**${i}.** `}` +
+					`**[${cutTo(song.name.toString(), 0, 30, true)}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user} ${i === 0 ? '\n' : ''}`
+			)
 			.join('\n');
 
 		let footer = this.getTotalDuration(queue.songs);
@@ -113,7 +117,9 @@ export class QueueCommand extends Subcommand {
 		const queue = this.container.client.distube.getQueue(interaction.guild);
 		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
 
-		const q = queue.songs.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${cutTo(song.name.toString(), 0, 30, true)}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`).join('\n');
+		const q = queue.songs
+			.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${cutTo(song.name.toString(), 0, 30, true)}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`)
+			.join('\n');
 
 		const embed = new EmbedBuilder().setTitle(`Queue`).setDescription(q).setColor(COLORS.DEFAULT);
 

@@ -136,13 +136,12 @@ export class RoleCommand extends Subcommand {
 		const hoist = await args.pick('boolean').catch(() => false);
 		const mentionable = await args.pick('boolean').catch(() => false);
 
-		console.log("validating color", color, '...');
+		console.log('validating color', color, '...');
 		color = this.validateColor(color);
-		console.log("validated color", color);
-		console.log("resolving color ...");
+		console.log('validated color', color);
+		console.log('resolving color ...');
 		if (color) color = resolveColor(color);
-		console.log("resolved color", color);
-
+		console.log('resolved color', color);
 
 		const role = await message.guild.roles.create({
 			name: name,

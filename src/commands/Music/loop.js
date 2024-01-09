@@ -27,12 +27,16 @@ export class LoopCommand extends Command {
 					.setName(this.name)
 					.setDescription(this.description)
 					.addIntegerOption((option) =>
-						option.setName('mode').setDescription('The loop mode.').setRequired(true).addChoices({ name: 'Off', value: 0 }, { name: 'Song', value: 1 }, { name: 'Queue', value: 2 }, { name: 'Auto Play', value: 3 })
+						option
+							.setName('mode')
+							.setDescription('The loop mode.')
+							.setRequired(true)
+							.addChoices({ name: 'Off', value: 0 }, { name: 'Song', value: 1 }, { name: 'Queue', value: 2 }, { name: 'Auto Play', value: 3 })
 					);
 			},
 			{
-				guildIds: []
-				, idHints: '1115020905672888380'
+				guildIds: [],
+				idHints: '1115020905672888380'
 			}
 		);
 	}
@@ -55,9 +59,9 @@ export class LoopCommand extends Command {
 			return interaction.reply({ content: `${queue.autoplay == true ? 'Enabled' : 'Disabled'} Auto-Play!` });
 		} else {
 			if (queue.autoplay) return interaction.reply({ content: `Currently **auto-playing**!` });
-			if (queue.repeatMode = 0) return interaction.reply({ content: `Currently not looping!` });
-			if (queue.repeatMode = 1) return interaction.reply({ content: `Currently looping the **current song**!` });
-			if (queue.repeatMode = 2) return interaction.reply({ content: `Currently looping the **queue**!` });
+			if ((queue.repeatMode = 0)) return interaction.reply({ content: `Currently not looping!` });
+			if ((queue.repeatMode = 1)) return interaction.reply({ content: `Currently looping the **current song**!` });
+			if ((queue.repeatMode = 2)) return interaction.reply({ content: `Currently looping the **queue**!` });
 		}
 	}
 

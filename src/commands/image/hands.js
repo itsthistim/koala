@@ -32,8 +32,8 @@ export class HandsCommand extends Command {
 					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
 			},
 			{
-				guildIds: []
-				, idHints: '1115020647362482197'
+				guildIds: [],
+				idHints: '1115020647362482197'
 			}
 		);
 	}

@@ -26,8 +26,8 @@ export class PauseCommand extends Command {
 				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: []
-				, idHints: '1115020908285923418'
+				guildIds: [],
+				idHints: '1115020908285923418'
 			}
 		);
 	}

@@ -29,8 +29,8 @@ export class Eval extends Command {
 					.addBooleanOption((option) => option.setName('async').setDescription('Whether the code should be evaluated asynchronously.').setRequired(false));
 			},
 			{
-				guildIds: []
-				, idHints: '1115021074984353883'
+				guildIds: [],
+				idHints: '1115021074984353883'
 			}
 		);
 	}

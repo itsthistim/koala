@@ -34,8 +34,8 @@ export class GandhiCommand extends Command {
 					.addStringOption((option) => option.setName('text').setDescription('The text to put on the quote.').setRequired(true));
 			},
 			{
-				guildIds: []
-				, idHints: '1115020565841989642'
+				guildIds: [],
+				idHints: '1115020565841989642'
 			}
 		);
 	}

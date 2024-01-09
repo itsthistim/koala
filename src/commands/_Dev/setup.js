@@ -67,8 +67,8 @@ export class ServerListCommand extends Subcommand {
 					.addSubcommand((command) => command.setName('syncchannels').setDescription('Sync channels with parent channel.'));
 			},
 			{
-				guildIds: []
-				, idHints: '1115021076129390605'
+				guildIds: [],
+				idHints: '1115021076129390605'
 			}
 		);
 	}

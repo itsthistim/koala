@@ -29,16 +29,18 @@ export class VolumeCommand extends Command {
 					.addIntegerOption((option) => option.setName('volume').setDescription('The volume in percent.').setRequired(true));
 			},
 			{
-				guildIds: []
-				, idHints: '1115020994944446497'
+				guildIds: [],
+				idHints: '1115020994944446497'
 			}
 		);
 	}
 
 	async messageRun(message, args) {
-		let volume = await args.rest('integer').catch(() => { return null; });
+		let volume = await args.rest('integer').catch(() => {
+			return null;
+		});
 
-		if(!volume) return reply(message, `The current volume is ${this.container.client.distube.queues.get(message.channel.guild).volume}%`);
+		if (!volume) return reply(message, `The current volume is ${this.container.client.distube.queues.get(message.channel.guild).volume}%`);
 		if (volume > 100) return reply(message, 'The volume can not be higher than 100%');
 		if (volume < 0) return reply(message, 'The volume can not be lower than 0%');
 
@@ -54,6 +56,6 @@ export class VolumeCommand extends Command {
 
 		this.container.client.distube.setVolume(interaction, volume);
 
-        return interaction.reply({ content: `Volume set to ${volume}%`, ephemeral: true });
+		return interaction.reply({ content: `Volume set to ${volume}%`, ephemeral: true });
 	}
 }

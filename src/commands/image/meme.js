@@ -59,7 +59,7 @@ export class MemeCommand extends Command {
 			.filter((post) => post.data.post_hint === 'image')
 			.filter((post) => !post.data.stickied)
 			.filter((post) => post.data.ups > min_ups);
-		
+
 		// TODO: improve randomization of posts by using a better algorithm
 		const post = posts[~~(Math.random() * posts.length)]?.data;
 

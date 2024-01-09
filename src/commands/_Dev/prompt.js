@@ -24,7 +24,7 @@ export class PromptCommand extends Command {
 	async messageRun(message, args) {
 		var prompt = await args.rest('string').catch(() => null);
 
-        console.log('Making GPT-3 API request...');
+		console.log('Making GPT-3 API request...');
 
 		const openai_api_key = process.env.OPENAI_API_KEY;
 		const openai_url = 'https://api.openai.com/v1/engines/davinci-codex/completions';

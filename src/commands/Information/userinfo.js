@@ -135,7 +135,6 @@ export class UserInfoCommand extends Command {
 	}
 
 	durationAgo(date) {
-
 		date = moment.utc(date).valueOf();
 
 		// If the duration is less than an hour, return the minutes and seconds

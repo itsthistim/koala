@@ -134,7 +134,9 @@ export class FilterCommand extends Subcommand {
 		const embed = new EmbedBuilder() //
 			.setTitle('Filters')
 			.setDescription(filterList)
-			.setFooter({ text: `${this.container.client.fetchPrefix()[0]}filter add <filter>, ${this.container.client.fetchPrefix()[0]}filter remove <filter>, ${this.container.client.fetchPrefix()[0]}filter clear` })
+			.setFooter({
+				text: `${this.container.client.fetchPrefix()[0]}filter add <filter>, ${this.container.client.fetchPrefix()[0]}filter remove <filter>, ${this.container.client.fetchPrefix()[0]}filter clear`
+			})
 			.setColor(COLORS.DEFAULT);
 
 		return reply(message, { embeds: [embed] });

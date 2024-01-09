@@ -32,8 +32,8 @@ export class GunCommand extends Command {
 					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
 			},
 			{
-				guildIds: []
-				, idHints: '1115020645223383183'
+				guildIds: [],
+				idHints: '1115020645223383183'
 			}
 		);
 	}

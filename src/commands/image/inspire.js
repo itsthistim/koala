@@ -29,7 +29,7 @@ export default class InspireCommand extends Command {
 	async messageRun(msg, args) {
 		let quote = await this.getQuote();
 		let embed = new EmbedBuilder();
-        embed.setColor(Math.floor(Math.random() * (0xffffff + 1)));
+		embed.setColor(Math.floor(Math.random() * (0xffffff + 1)));
 		embed.setTitle(`Inspirational quote`);
 		embed.setURL(quote);
 		embed.setImage(quote);
