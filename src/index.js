@@ -80,11 +80,11 @@ client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
 	leaveOnStop: false,
 	leaveOnEmpty: true,
+	emptyCooldown: 3,
 	leaveOnFinish: false,
 	savePreviousSongs: true,
 	searchSongs: 0, // 1 <= 0, play first result
 	searchCooldown: 60,
-	emptyCooldown: 60,
 	nsfw: false,
 	emitAddSongWhenCreatingQueue: false,
 	emitAddListWhenCreatingQueue: false,
