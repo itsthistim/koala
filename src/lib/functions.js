@@ -524,7 +524,7 @@ export function updateIdHints() {
 
 			fs.writeFileSync(file, newContent, 'utf8');
 
-			console.log(`Updated ${file}: ${regex} -> ${replacement}`);
+			console.info(`Updated ${file}: ${regex} -> ${replacement}`);
 			sucCnt++;
 		} catch (error) {
 			console.error(`Error updating ${cmd}\n${error}`);
@@ -532,5 +532,5 @@ export function updateIdHints() {
 		}
 	});
 
-	console.log(`Updated ${sucCnt} commands, ${errCnt} errors`);
+	console.info(`Updated ${sucCnt} commands, ${errCnt} errors`);
 }

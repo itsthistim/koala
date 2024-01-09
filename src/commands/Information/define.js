@@ -87,7 +87,7 @@ export class DefineCommand extends Command {
 			);
 			return response.data;
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			return null;
 		}
 	}

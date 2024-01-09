@@ -81,7 +81,7 @@ export class SteamNowPlayingCommand extends Command {
 				name: 'steam-now-playing.png'
 			};
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			return `Error: Invalid image provided. Please make sure the image is a valid image url and has a valid file extension.\nValid file extensions: \`.png\`, \`.jpg\`, \`.jpeg\`, \`raw\`, \`.svg\``;
 		}
 	}

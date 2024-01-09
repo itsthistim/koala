@@ -73,7 +73,7 @@ export class AchievementCommand extends Command {
 				name: 'achievement.png'
 			};
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 }

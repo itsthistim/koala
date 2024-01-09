@@ -57,7 +57,6 @@ Jun 04 21:15:52 koala npm[13560]: 2023-06-04 21:15:52 - INFO  - ApplicationComma
 		}
 	}
 
-	console.log(cmds);
-	console.log(`Found ${cmds.length} commands!`);
+	console.info(`Found ${cmds.length} commands!`);
 	return cmds;
 }

@@ -78,7 +78,7 @@ export class CertificateCommand extends Command {
 				name: 'certificate.png'
 			};
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			return `Something went wrong. Please try again later.`;
 		}
 	}
