@@ -9,12 +9,12 @@ export default class AddSongListener extends Listener {
 	}
 
 	async run(queue, song) {
-		if (song.metadata && queue.npmessage) {
-			song.metadata.i.deleteReply().catch((err) => {});
-		}
-
-		if (!song.metadata && queue.npmessage) {
-			queue.npmessage.delete().catch((err) => {});
+		if (queue.npmessage) {
+			if (song.metadata) {
+				song.metadata.i.deleteReply().catch((err) => {});
+			} else {
+				queue.npmessage.delete().catch((err) => {});
+			}
 		}
 	}
 }

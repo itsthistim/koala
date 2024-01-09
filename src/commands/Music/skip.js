@@ -48,12 +48,12 @@ export class SkipCommand extends Command {
 
 		const queue = this.container.client.distube.getQueue(message.guild);
 		if (queue) {
+			queue.emit('finishSong', queue, queue.songs[0]);
 			try {
 				await queue.skip();
 			} catch (err) {
-				queue.stop();
+				return queue.stop();
 			}
 		}
-		return;
 	}
 }

@@ -49,6 +49,7 @@ export class PlayCommand extends Command {
 		if (!message.member.voice.channel) return reply(message, 'You need to be in a voice voice channel to run this command!');
 
 		const queue = this.container.client.distube.getQueue(message.guild);
-		if (queue) return queue.stop();
+		if (queue) queue.stop();
+		if (this.container.client.distube.voices.get(message.guild)) return this.container.client.distube.voices.leave(message.guild);
 	}
 }

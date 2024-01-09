@@ -1,4 +1,4 @@
-console.log('Starting...');
+console.info('Starting...');
 import '#lib/setup';
 
 import { BucketScope, LogLevel, SapphireClient } from '@sapphire/framework';
@@ -78,7 +78,7 @@ const pool = mysql.createPool({
 
 client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
-	leaveOnStop: true,
+	leaveOnStop: false,
 	leaveOnFinish: false,
 	leaveOnEmpty: true,
 	emptyCooldown: 3,
