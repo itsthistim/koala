@@ -16,7 +16,7 @@ export class PlayCommand extends Command {
 			description: 'Plays a song.',
 			detailedDescription: '',
 			usage: '<query>',
-			examples: ['bitch lasagna']
+			examples: ['bitch lasagna', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ']
 		});
 	}
 
@@ -37,6 +37,7 @@ export class PlayCommand extends Command {
 
 	async chatInputRun(interaction) {
 		let query = interaction.options.getString('query');
+		if (!query) return reply(interaction, 'You need to specify a song for me to play!');
 		query = query.replace('<', '').replace('>', '');
 
 		if (!interaction.member.voice.channel)
@@ -44,7 +45,7 @@ export class PlayCommand extends Command {
 				content: 'You need to be in a voice voice channel to run this command!'
 			});
 
-		this.container.client.distube.play(interaction.member.voice.channel, query, {
+		return client.distube.play(interaction.member.voice.channel, query, {
 			metadata: { i: interaction },
 			member: interaction.member,
 			textChannel: interaction.channel
@@ -52,13 +53,13 @@ export class PlayCommand extends Command {
 	}
 
 	async messageRun(message, args) {
-		var query = await args.rest('string').catch(() => null);
+		let query = await args.rest('string').catch(() => null);
+		if (!query) return reply(message, 'You need to specify a song for me to play!');
 		query = query.replace('<', '').replace('>', '');
 
-		if (!query) return reply(message, 'You need to specify a song!');
 		if (!message.member.voice.channel) return reply(message, 'You need to be in a voice voice channel to run this command!');
 
-		return this.container.client.distube.play(message.member.voice.channel, query, {
+		return client.distube.play(message.member.voice.channel, query, {
 			member: message.member,
 			textChannel: message.channel,
 			message: message
