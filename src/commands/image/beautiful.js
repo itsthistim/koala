@@ -1,8 +1,7 @@
 import { Command } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { createCanvas, loadImage, registerFont } from 'canvas';
-import { CanvasUtil } from '#lib/canvas';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import { PermissionFlagsBits } from 'discord.js';
 
 registerFont('src/lib/assets/fonts/MinecraftRegular-Bmg3.otf', {
 	family: 'Minecraftia'
