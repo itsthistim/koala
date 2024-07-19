@@ -1,10 +1,10 @@
 import 'dotenv/config';
+import '#lib/database';
 import { container, ApplicationCommandRegistries, RegisterBehavior } from '@sapphire/framework';
 import '@sapphire/plugin-api/register';
 import '@sapphire/plugin-logger/register';
 import '@sapphire/plugin-subcommands/register';
 import '@sapphire/plugin-editable-commands/register';
-import mysql from 'mysql2';
 import { createColors } from 'colorette';
 import { inspect } from 'node:util';
 import moment from 'moment';
@@ -25,20 +25,6 @@ createColors({ useColor: true });
 
 // Enable Moment Duration Format
 momentDurationFormat(moment);
-
-// MySQL Connection
-const pool = mysql.createPool({
-	host: process.env.DB_HOST,
-	user: process.env.DB_USER,
-	password: process.env.DB_PASS,
-	database: process.env.DB_NAME,
-	port: process.env.DB_PORT,
-	waitForConnections: true,
-	connectionLimit: 10,
-	queueLimit: 0
-});
-
-export const db = pool.promise();
 
 global.COLORS = {
 	DEFAULT: 0x9bacb4,

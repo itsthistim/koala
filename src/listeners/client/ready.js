@@ -1,7 +1,7 @@
 import { Listener } from '@sapphire/framework';
 import { blue, gray, green, magenta, magentaBright, white, yellow, redBright, red } from 'colorette';
 import { ActivityType } from 'discord.js';
-import { db } from '#lib/setup';
+import { db } from '#lib/database';
 
 const environmentType = process.env.NODE_ENV === 'DEVELOPMENT';
 const llc = environmentType ? magentaBright : white;
