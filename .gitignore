@@ -1,5 +1,11 @@
 .env
+.prettierrc
+
 .vscode
 .idea
+
 node_modules
 not_node_modules
+
+package-lock.json
+pnpm-lock.yaml
