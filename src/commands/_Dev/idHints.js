@@ -1,9 +1,7 @@
 import { Command } from '@sapphire/framework';
-import { stripIndents } from 'common-tags';
-import { cutTo, softWrap, capitalize, sendLoadingMessage, pickRandom } from '#lib/functions';
 import { reply } from '@sapphire/plugin-editable-commands';
 
-import { updateIdHints } from '#lib/functions';
+import { updateIdHints } from '#lib/util';
 
 export class IdHintsCommand extends Command {
 	constructor(context, options) {

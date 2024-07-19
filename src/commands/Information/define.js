@@ -1,7 +1,7 @@
 import { Command } from '@sapphire/framework';
 import { EmbedBuilder } from 'discord.js';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { ClientUtil } from '#lib/functions';
+import { ClientUtil } from '#lib/util';
 import axios from 'axios';
 
 export class DefineCommand extends Command {

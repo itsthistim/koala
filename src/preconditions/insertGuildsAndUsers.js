@@ -1,5 +1,5 @@
 import { AllFlowsPrecondition } from '@sapphire/framework';
-import { ClientUtil } from '#lib/functions';
+import { ClientUtil } from '#lib/util';
 
 export class insertGuildsAndUsersPrecondition extends AllFlowsPrecondition {
 	async chatInputRun(interaction) {

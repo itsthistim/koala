@@ -1,6 +1,6 @@
 import { Subcommand } from '@sapphire/plugin-subcommands';
 import { EmbedBuilder, Emoji, PermissionFlagsBits } from 'discord.js';
-import { cutTo } from '#lib/functions';
+import { fitTo } from '#lib/util';
 import { reply } from '@sapphire/plugin-editable-commands';
 import moment from 'moment';
 
@@ -89,7 +89,7 @@ export class QueueCommand extends Subcommand {
 			.map(
 				(song, i) =>
 					`${i === 0 ? `Playing: ` : `**${i}.** `}` +
-					`**[${cutTo(song.name.toString(), 0, 30, true)}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user} ${i === 0 ? '\n' : ''}`
+					`**[${fitTo(song.name.toString(), 30, true)}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user} ${i === 0 ? '\n' : ''}`
 			)
 			.join('\n');
 
@@ -112,7 +112,7 @@ export class QueueCommand extends Subcommand {
 		if (!queue) return interaction.reply({ content: `There is nothing in the queue right now!` });
 
 		const q = queue.songs
-			.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${cutTo(song.name.toString(), 0, 30, true)}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`)
+			.map((song, i) => `${i === 0 ? 'Playing:' : `**${i}.**`} **[${fitTo(song.name.toString(), 30, true)}](${song.url})** \`(${song.formattedDuration})\`${i === 0 ? '\n' : ''}`)
 			.join('\n');
 
 		const embed = new EmbedBuilder().setTitle(`Queue`).setDescription(q).setColor(COLORS.DEFAULT);

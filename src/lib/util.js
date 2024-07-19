@@ -21,17 +21,6 @@ export class ClientUtil {
 	}
 
 	/**
-	 * Resolves the indefinite article for a word.
-	 * @param {string} word - Word to resolve.
-	 * @returns {string} - 'a' or 'an'.
-	 */
-	static getIndefiniteArticle(word) {
-		const vowels = ['a', 'e', 'i', 'o', 'u'];
-		const firstLetter = word.charAt(0).toLowerCase();
-		return vowels.includes(firstLetter) ? 'an' : 'a';
-	}
-
-	/**
 	 * Resolves multiple users from a string, such as an ID, a name, or a mention.
 	 * @param {string} text - Text to resolve.
 	 * @param {Collection<Snowflake, User>} users - Collection of users to find in.
@@ -321,89 +310,55 @@ export class ClientUtil {
 	static permissionNames() {
 		return Object.keys(Permissions.FLAGS);
 	}
+}
+
+export class StringUtil {
+	/**
+	 * Resolves the indefinite article for a word.
+	 * @param {string} word - Word to resolve.
+	 * @returns {string} - 'a' or 'an'.
+	 */
+	static getIndefiniteArticle(word) {
+		const vowels = ['a', 'e', 'i', 'o', 'u'];
+		const firstLetter = word.charAt(0).toLowerCase();
+		return vowels.includes(firstLetter) ? 'an' : 'a';
+	}
 
 	/**
-	 * Resolves a permission number and returns an array of permission names.
-	 * @param {number} number - The permissions number.
-	 * @returns {string[]}
+	 * Shortens a text.
+	 * @param {string} input Input string
+	 * @param {number} from Start index
+	 * @param {number} to End index
+	 * @param {boolean} ending Should the string end with '...'?
+	 * @returns Formatted string
 	 */
-	static resolvePermissionNumber(number) {
-		const resolved = [];
-
-		for (const key of Object.keys(Permissions.FLAGS)) {
-			if (number & Permissions.FLAGS[key]) resolved.push(key);
+	static fitTo(input, maxLength = 250, ending = false) {
+		if (input.length >= maxLength) {
+			input = input.trim();
+			return input.substring(0, maxLength - (ending ? 3 : 0)) + (ending ? '...' : '');
 		}
-
-		return resolved;
+		return input;
 	}
 
 	/**
-	 * Compares two member objects presences and checks if they stopped or started a stream or not.
-	 * Returns `0`, `1`, or `2` for no change, stopped, or started.
-	 * @param {GuildMember} oldMember - The old member.
-	 * @param {GuildMember} newMember - The new member.
-	 * @returns {number}
+	 * Wraps a string to fit into a certain length.
+	 * @param {string} input String to be wrapped
+	 * @param {number} length Length of each line
+	 * @returns Wrapped string
 	 */
-	static compareStreaming(oldMember, newMember) {
-		const s1 = oldMember.presence?.activities.find((c) => c.type === 'STREAMING');
-		const s2 = newMember.presence?.activities.find((c) => c.type === 'STREAMING');
-		if (s1 === s2) return 0;
-		if (s1) return 1;
-		if (s2) return 2;
-		return 0;
+	static async softWrap(input, length = 30) {
+		const wrap = input.replace(new RegExp(`(?![^\\n]{1,${length}}$)([^\\n]{1,${length}})\\s`, 'g'), '$1\n');
+		return wrap;
 	}
 
 	/**
-	 * Combination of `<Client>.users.fetch()` and `<Guild>.members.fetch()`.
-	 * @param {Guild} guild - Guild to fetch in.
-	 * @param {string} id - ID of the user.
-	 * @param {boolean} cache - Whether or not to add to cache.
-	 * @returns {Promise<GuildMember>}
+	 * Capitalizes a given string.
+	 * @param {string} toCapitalize String to capitalize.
+	 * @return {string} capitalized string
 	 */
-	static async fetchMember(guild, id, cache) {
-		const user = await this.container.client.users.fetch(id, cache);
-		return guild.members.fetch(user, cache);
+	static async capitalize(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
-}
-
-/**
- * Shortens a text.
- * @param {string} input Input string
- * @param {number} from Start index
- * @param {number} to End index
- * @param {boolean} ending Should the string end with '...'?
- * @returns Formatted string
- */
-export function cutTo(input = 'error', from = 0, to = 250, ending = true) {
-	if (input.length > to) {
-		// check if the last character before the ... is a space and remove it
-		if (input.charAt(to - 1) === ' ') {
-			return input.substring(from, to - 1) + (ending ? '...' : '');
-		}
-		return input.substring(from, to) + (ending ? '...' : '');
-	}
-	return input;
-}
-
-/**
- * Wraps a string to fit into a certain length.
- * @param {string} input String to be wrapped
- * @param {number} length Length of each line
- * @returns Wrapped string
- */
-export async function softWrap(input, length = 30) {
-	const wrap = input.replace(new RegExp(`(?![^\\n]{1,${length}}$)([^\\n]{1,${length}})\\s`, 'g'), '$1\n');
-
-	return wrap;
-}
-
-/**
- * Capitalizes a given string.
- * @param {string} toCapitalize String to capitalize.
- * @return {string} capitalized string
- */
-export async function capitalize(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 /**
@@ -416,43 +371,10 @@ export async function pickRandom(array) {
 }
 
 /**
- * Sends a random loading message, which are defined in `#lib/constants`.
- * @param Message The message to send the random response with.
- */
-export async function sendLoadingMessage(interaction) {
-	const randomLoadingMessage = ['Computing...', 'Thinking...', 'Cooking some food', 'Give me a moment', 'Loading...'];
-
-	return interaction.reply({
-		embeds: [new EmbedBuilder().setDescription(pickRandom(randomLoadingMessage)).setColor(container.color.GREYPLE)],
-		ephemeral: true,
-		fetchReply: false
-	});
-}
-
-/**
  * Checks whether a user should be rate limited.
  * @param param0 The parameters for this function
  * @returns `true` if the user should be rate limited, `false` otherwise
  */
-export async function isRateLimited({ time, request, response, manager, auth = false }) {
-	if (isNullishOrZero(time) || isNullish(request) || isNullish(response) || isNullish(manager)) {
-		return false;
-	}
-	const id = auth ? request.auth.id : request.headers['x-api-key'] || request.socket.remoteAddress;
-	const bucket = manager.acquire(id);
-	response.setHeader('Date', new Date().toUTCString());
-	response.setHeader('X-RateLimit-Limit', time);
-	response.setHeader('X-RateLimit-Remaining', bucket.remaining.toString());
-	response.setHeader('X-RateLimit-Reset', bucket.remainingTime.toString());
-	if (bucket.limited) {
-		response.setHeader('Retry-After', bucket.remainingTime.toString());
-		return true;
-	}
-	try {
-		bucket.consume();
-	} catch {}
-	return false;
-}
 
 /**
  * @param {*} ctx The context to use
@@ -504,7 +426,7 @@ export function updateIdHints() {
 	let sucCnt = 0;
 
 	/*
-	
+
 		{
 			guildIds: []
 			// , idHints: ''

@@ -1,5 +1,5 @@
 import { Argument } from '@sapphire/framework';
-import { ClientUtil } from '#lib/functions';
+import { ClientUtil } from '#lib/util';
 import { isNullish } from '@sapphire/utilities';
 
 export class ImageArgument extends Argument {
