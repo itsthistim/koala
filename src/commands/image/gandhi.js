@@ -1,7 +1,7 @@
 import { Command } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { createCanvas, loadImage, registerFont } from 'canvas';
-import { CanvasUtil } from '#lib/canvas';
+import { CanvasUtil } from '#lib/util';
 
 registerFont('src/lib/assets/fonts/LibreBaskerville-Italic.ttf', {
 	family: 'Libre Baskerville Italic'

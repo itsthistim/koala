@@ -1,6 +1,7 @@
 import { Command } from '@sapphire/framework';
-import { EmbedBuilder } from 'discord.js';
 import { reply } from '@sapphire/plugin-editable-commands';
+import { StringUtil } from '#lib/util';
+import { EmbedBuilder } from 'discord.js';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -57,8 +58,7 @@ export class MemeCommand extends Command {
 			.filter((post) => post.data.ups > min_ups);
 
 		// TODO: improve randomization of posts by using a better algorithm
-		const post = posts[~~(Math.random() * posts.length)]?.data;
-
+		const post = StringUtil.pickRandom(posts)?.data;
 		if (!post) return await interaction.editReply({ content: 'No memes found.' });
 
 		const embed = this.buildEmbed(post.title, post.ups, post.permalink, post.created, post.author, post.url, interaction);
