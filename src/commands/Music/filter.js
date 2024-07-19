@@ -2,7 +2,6 @@ import { container } from '@sapphire/framework';
 import { Subcommand } from '@sapphire/plugin-subcommands';
 import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { capitalize } from '#lib/util';
 
 export class FilterCommand extends Subcommand {
 	constructor(context, options) {

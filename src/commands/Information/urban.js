@@ -2,7 +2,7 @@ import { Command } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import { EmbedBuilder } from 'discord.js';
-import { fitTo } from '#lib/util';
+import { StringUtil } from '#lib/util';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -59,11 +59,11 @@ export class UrbanCommand extends Command {
 				.setColor(global.COLORS.DEFAULT)
 				.setTitle(definition.word)
 				.setURL(definition.permalink)
-				.setDescription(fitTo(definition.definition.replace(/\[|\]/g, ''), EmbedLimits.MaximumDescriptionLength, true))
+				.setDescription(StringUtil.fitTo(definition.definition.replace(/\[|\]/g, ''), EmbedLimits.MaximumDescriptionLength, true))
 				.addFields(
 					{
 						name: 'Example',
-						value: `${fitTo(definition.example.replace(/\[|\]/g, ''), EmbedLimits.MaximumFieldValueLength, true)}\u200B`,
+						value: `${StringUtil.fitTo(definition.example.replace(/\[|\]/g, ''), EmbedLimits.MaximumFieldValueLength, true)}\u200B`,
 						inline: false
 					},
 					{ name: '👍', value: `${definition.thumbs_up}\u200B`, inline: true },
