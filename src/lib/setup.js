@@ -13,9 +13,9 @@ import momentDurationFormat from 'moment-duration-format';
 // Application Command Registry Options
 ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior.BulkOverwrite);
 
-if (process.env.NODE_ENV === 'DEVELOPMENT') {
-	ApplicationCommandRegistries.setDefaultGuildIds(['502208815937224715']);
-}
+// if (process.env.NODE_ENV === 'DEVELOPMENT') {
+// 	ApplicationCommandRegistries.setDefaultGuildIds(['502208815937224715']);
+// }
 
 // Inspect Depth
 inspect.defaultOptions.depth = 1;

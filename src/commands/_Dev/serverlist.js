@@ -15,7 +15,7 @@ export class ServerListCommand extends Command {
 			flags: [],
 			options: [],
 			nsfw: false,
-			description: 'Lists servers the bot is in.',
+			description: 'List all servers the bot is in.',
 			detailedDescription: '',
 			usage: '',
 			examples: ['']

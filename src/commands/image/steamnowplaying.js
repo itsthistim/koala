@@ -24,7 +24,9 @@ export class SteamNowPlayingCommand extends Command {
 
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
-			builder.setName(this.name).setDescription(this.description);
+			builder //
+				.setName(this.name)
+				.setDescription(this.description);
 		});
 	}
 

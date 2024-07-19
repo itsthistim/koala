@@ -42,48 +42,45 @@ export class UnregisterCommand extends Subcommand {
 		});
 	}
 
-	// registerApplicationCommands(registry) {
-	// 	registry.registerChatInputCommand(
-	// 		(builder) => {
-	// 			builder
-	// 				.setName(this.name)
-	// 				.setDescription(this.description)
-	// 				.addSubcommand((command) => command.setName('all').setDescription('Unregister all application commands.'))
-	// 				.addSubcommand((command) => command.setName('global').setDescription('Unregister all global application commands.'))
-	// 				.addSubcommand((command) => command.setName('guild').setDescription('Unregister all guild application commands.'));
-	// 		},
-	// 		{
-	// 			guildIds: [], // guilds for the command to be registered in; global if empty
-	// 		}
-	// 	);
-	// }
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand(
+			(builder) => {
+				builder //
+					.setName(this.name)
+					.setDescription(this.description)
+					.addSubcommand((command) => command.setName('all').setDescription('Unregister all application commands.'))
+					.addSubcommand((command) => command.setName('global').setDescription('Unregister all global application commands.'))
+					.addSubcommand((command) => command.setName('guild').setDescription('Unregister all guild application commands.'));
+			},
+			{
+				guildIds: ['502208815937224715']
+			}
+		);
+	}
 
-	// async chatInputRunAll(interaction) {
-	// 	this.unregisterAll(interaction.guild.id);
-	// 	return interaction.reply({
-	// 		content: 'Successfully unregistered **all** application commands.\nRestart to apply changes.',
-	// 		embeds: [],
-	// 		ephemeral: true
-	// 	});
-	// }
+	async chatInputRunAll(interaction) {
+		this.unregisterAll(interaction.guild.id);
+		return interaction.reply({
+			content: 'Successfully unregistered **all** application commands.\nRestart to apply changes.',
+			ephemeral: true
+		});
+	}
 
-	// async chatInputRunGlobal(interaction) {
-	// 	this.unregisterGlobal();
-	// 	return interaction.reply({
-	// 		content: 'Successfully unregistered all **global** application commands.\nRestart to apply changes.',
-	// 		embeds: [],
-	// 		ephemeral: true
-	// 	});
-	// }
+	async chatInputRunGlobal(interaction) {
+		this.unregisterGlobal();
+		return interaction.reply({
+			content: 'Successfully unregistered all **global** application commands.\nRestart to apply changes.',
+			ephemeral: true
+		});
+	}
 
-	// async chatInputRunGuild(interaction) {
-	// 	this.unregisterGuild(interaction.guild.id);
-	// 	return interaction.reply({
-	// 		content: 'Successfully unregistered all **guild** application commands.\nRestart to apply changes.',
-	// 		embeds: [],
-	// 		ephemeral: true
-	// 	});
-	// }
+	async chatInputRunGuild(interaction) {
+		this.unregisterGuild(interaction.guild.id);
+		return interaction.reply({
+			content: 'Successfully unregistered all **guild** application commands.\nRestart to apply changes.',
+			ephemeral: true
+		});
+	}
 
 	async messageRunAll(message) {
 		this.unregisterAll(message.guild.id);

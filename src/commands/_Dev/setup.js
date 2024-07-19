@@ -64,7 +64,7 @@ export class ServerListCommand extends Subcommand {
 							.setDescription('Set the mute role.')
 							.addRoleOption((option) => option.setName('role').setDescription('The role to set as the mute role.').setRequired(true))
 					)
-					.addSubcommand((command) => command.setName('syncchannels').setDescription('Sync channels with parent channel.'));
+					.addSubcommand((command) => command.setName('syncchannels').setDescription('Sync channel permissions with the parent channel.'));
 			},
 			{
 				guildIds: ['502208815937224715']
