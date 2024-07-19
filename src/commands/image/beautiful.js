@@ -27,7 +27,7 @@ export class BeautifulCommand extends Command {
 
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
-			builder
+			builder //
 				.setName(this.name)
 				.setDescription(this.description)
 				.addStringOption((option) => option.setName('url').setDescription('The image url to use.').setRequired(false))

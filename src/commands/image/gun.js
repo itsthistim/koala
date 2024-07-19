@@ -24,7 +24,7 @@ export class GunCommand extends Command {
 
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
-			builder
+			builder //
 				.setName(this.name)
 				.setDescription(this.description)
 				.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))

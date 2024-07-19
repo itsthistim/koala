@@ -28,7 +28,7 @@ export class AchievementCommand extends Command {
 
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
-			builder
+			builder //
 				.setName(this.name)
 				.setDescription(this.description)
 				.addStringOption((option) => option.setName('text').setDescription('The text to put on the achievement').setRequired(true));

@@ -25,7 +25,7 @@ export class CertificateCommand extends Command {
 
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
-			builder
+			builder //
 				.setName(this.name)
 				.setDescription(this.description)
 				.addStringOption((option) => option.setName('name').setDescription('The name to put on the certificate.').setRequired(true))

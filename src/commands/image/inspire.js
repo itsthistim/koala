@@ -1,7 +1,5 @@
-import { Command, CommandOptionsRunTypeEnum, BucketScope } from '@sapphire/framework';
+import { Command } from '@sapphire/framework';
 import { send, reply } from '@sapphire/plugin-editable-commands';
-import { Time } from '@sapphire/time-utilities';
-import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import { EmbedBuilder } from 'discord.js';
 import axios from 'axios';
 
@@ -17,31 +15,39 @@ export default class InspireCommand extends Command {
 			flags: [],
 			options: [],
 			nsfw: false,
-			description: {
-				content: 'Provides an inspirational quote for you.',
-				usage: '',
-				examples: ['']
-			},
-			detailedDescription: ''
+			description: 'Provides an inspirational quote for you.',
+			detailedDescription: '',
+			usage: '',
+			examples: ['']
 		});
 	}
 
-	// TODO: chatInput support
+	registerApplicationCommands(registry) {
+		registry.registerChatInputCommand((builder) => {
+			builder //
+				.setName(this.name)
+				.setDescription(this.description);
+		});
+	}
+
+	async chatInputRun(interaction) {
+		const embed = await this.getQuoteEmbed();
+		interaction.reply({ embeds: [embed] });
+	}
 
 	async messageRun(msg, args) {
-		let quote = await this.getQuote();
-		let embed = new EmbedBuilder();
-		embed.setColor(Math.floor(Math.random() * (0xffffff + 1)));
-		embed.setTitle(`Inspirational quote`);
-		embed.setURL(quote);
-		embed.setImage(quote);
-		embed.setFooter({ text: `Powered by https://inspirobot.me/` });
-
+		const embed = await this.getQuoteEmbed();
 		reply(msg, { embeds: [embed] });
 	}
 
-	async getQuote() {
+	async getQuoteEmbed() {
 		const res = await axios.get(`https://inspirobot.me/api?generate=true`);
-		return res.data;
+		const embed = new EmbedBuilder()
+			.setColor(this.container.color.DEFAULT)
+			.setTitle(`Inspirational quote`)
+			.setURL(res.data)
+			.setImage(res.data)
+			.setFooter({ text: `Powered by https://inspirobot.me/` });
+		return embed;
 	}
 }
