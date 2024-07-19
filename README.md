@@ -1,5 +1,5 @@
 ## 🐨 About
-[koala](https://discord.com/api/oauth2/authorize?client_id=796034058740170813&permissions=387136&scope=bot%20applications.commands) is a multi-purpose Discord written with the [Sapphire Discord.js Framework](https://www.sapphirejs.dev/) that I wrote for my friends. It's one of my first coding projects and it already saw multiple rewrites in its lifespan.
+[koala](https://discord.com/api/oauth2/authorize?client_id=796034058740170813&permissions=8&scope=bot%20applications.commands) is a multi-purpose Discord written with the [Sapphire Discord.js Framework](https://www.sapphirejs.dev/) that I wrote for my friends. It's one of my first coding projects and it already saw multiple rewrites in its lifespan.
 
 ## 🚀 Getting started
 Create a new application on the [Discord Developer Portal](https://discord.com/developers/applications) and add a bot to it. As soon as you have a bot application, set up the following:
