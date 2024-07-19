@@ -7,6 +7,8 @@ import '@sapphire/plugin-editable-commands/register';
 import mysql from 'mysql2';
 import { createColors } from 'colorette';
 import { inspect } from 'node:util';
+import moment from 'moment';
+import momentDurationFormat from 'moment-duration-format';
 
 // Application Command Registry Options
 ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior.BulkOverwrite);
@@ -20,6 +22,9 @@ inspect.defaultOptions.depth = 1;
 
 // Enable Colorette Colors
 createColors({ useColor: true });
+
+// Enable Moment Duration Format
+momentDurationFormat(moment);
 
 // MySQL Connection
 const pool = mysql.createPool({

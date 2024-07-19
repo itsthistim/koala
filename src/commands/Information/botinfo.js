@@ -39,6 +39,7 @@ export class BotInfoCommand extends Command {
 
 	async createInfoEmbed(interaction) {
 		const dev = this.container.client.users.cache.get('319183644331606016');
+		const uptime = moment.duration(this.container.client.uptime).format('d[d], h[h], m[m], s[s]');
 
 		return new EmbedBuilder()
 			.setColor(COLORS.DEFAULT)
@@ -49,9 +50,7 @@ export class BotInfoCommand extends Command {
 			.addFields(
 				{
 					name: 'Technical',
-					value: `**Uptime:** ${moment.duration(this.container.client.uptime).format('d[d], h[h], m[m], s[s]')}\n**Ping:** ${this.container.client.ws.ping}ms\n**Roundtrip:** ${
-						Date.now() - interaction.createdTimestamp
-					}ms`,
+					value: `**Uptime:** ${uptime}\n` + `**Ping:** ${this.container.client.ws.ping}ms\n` + `**Roundtrip:** ${Date.now() - interaction.createdTimestamp}ms`,
 					inline: true
 				},
 				{
