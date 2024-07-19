@@ -1,5 +1,5 @@
 import { Command } from '@sapphire/framework';
-import { reply } from '@skyra/editable-commands';
+import { reply } from '@sapphire/plugin-editable-commands';
 // import parse from 'parse-duration';
 // import humanizeDuration from 'humanize-duration';
 

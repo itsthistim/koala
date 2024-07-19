@@ -1,5 +1,5 @@
 import { Subcommand } from '@sapphire/plugin-subcommands';
-import { reply } from '@skyra/editable-commands';
+import { reply } from '@sapphire/plugin-editable-commands';
 
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';

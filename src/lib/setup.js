@@ -2,7 +2,6 @@ import 'dotenv/config';
 import '#lib/database';
 import { container, ApplicationCommandRegistries, RegisterBehavior } from '@sapphire/framework';
 import '@sapphire/plugin-api/register';
-import '@sapphire/plugin-logger/register';
 import '@sapphire/plugin-subcommands/register';
 import '@sapphire/plugin-editable-commands/register';
 import { createColors } from 'colorette';

@@ -39,7 +39,7 @@ export class PlayCommand extends Command {
 				content: 'You need to be in a voice voice channel to run this command!'
 			});
 
-		return client.distube.play(interaction.member.voice.channel, query, {
+		return this.container.client.distube.play(interaction.member.voice.channel, query, {
 			metadata: { i: interaction },
 			member: interaction.member,
 			textChannel: interaction.channel
@@ -53,7 +53,7 @@ export class PlayCommand extends Command {
 
 		if (!message.member.voice.channel) return reply(message, 'You need to be in a voice voice channel to run this command!');
 
-		return client.distube.play(message.member.voice.channel, query, {
+		return this.container.client.distube.play(message.member.voice.channel, query, {
 			member: message.member,
 			textChannel: message.channel,
 			message: message
