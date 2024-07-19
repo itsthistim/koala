@@ -61,7 +61,7 @@ export class UnregisterCommand extends Subcommand {
 	// async chatInputRunAll(interaction) {
 	// 	this.unregisterAll(interaction.guild.id);
 	// 	return interaction.reply({
-	// 		content: 'Successfully unregistered **all** application commands.\nYou will need to update the idHints after the next start.',
+	// 		content: 'Successfully unregistered **all** application commands.\nRestart to apply changes.',
 	// 		embeds: [],
 	// 		ephemeral: true
 	// 	});
@@ -70,7 +70,7 @@ export class UnregisterCommand extends Subcommand {
 	// async chatInputRunGlobal(interaction) {
 	// 	this.unregisterGlobal();
 	// 	return interaction.reply({
-	// 		content: 'Successfully unregistered all **global** application commands.\nYou will need to update the idHints after the next start.',
+	// 		content: 'Successfully unregistered all **global** application commands.\nRestart to apply changes.',
 	// 		embeds: [],
 	// 		ephemeral: true
 	// 	});
@@ -79,7 +79,7 @@ export class UnregisterCommand extends Subcommand {
 	// async chatInputRunGuild(interaction) {
 	// 	this.unregisterGuild(interaction.guild.id);
 	// 	return interaction.reply({
-	// 		content: 'Successfully unregistered all **guild** application commands.\nYou will need to update the idHints after the next start.',
+	// 		content: 'Successfully unregistered all **guild** application commands.\nRestart to apply changes.',
 	// 		embeds: [],
 	// 		ephemeral: true
 	// 	});
@@ -87,17 +87,17 @@ export class UnregisterCommand extends Subcommand {
 
 	async messageRunAll(message) {
 		this.unregisterAll(message.guild.id);
-		return reply(message, 'Successfully unregistered **all** application commands.\nYou will need to update the idHints after the next start.');
+		return reply(message, 'Successfully unregistered **all** application commands.\nRestart to apply changes.');
 	}
 
 	async messageRunGlobal(message) {
 		this.unregisterGlobal();
-		return reply(message, 'Successfully unregistered all **global** application commands.\nYou will need to update the idHints after the next start.');
+		return reply(message, 'Successfully unregistered all **global** application commands.\nRestart to apply changes.');
 	}
 
 	async messageRunGuild(message) {
 		this.unregisterGuild(message.guild.id);
-		return reply(message, 'Successfully unregistered all **guild** application commands.\nYou will need to update the idHints after the next start.');
+		return reply(message, 'Successfully unregistered all **guild** application commands.\nRestart to apply changes.');
 	}
 
 	async unregisterGuild(guildId) {
