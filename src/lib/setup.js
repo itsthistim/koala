@@ -10,7 +10,10 @@ import { inspect } from 'node:util';
 
 // Application Command Registry Options
 ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior.BulkOverwrite);
-ApplicationCommandRegistries.setDefaultGuildIds(['502208815937224715', '1261579620092743703']);
+
+if (process.env.NODE_ENV === 'DEVELOPMENT') {
+	ApplicationCommandRegistries.setDefaultGuildIds(['502208815937224715']);
+}
 
 // Inspect Depth
 inspect.defaultOptions.depth = 1;
