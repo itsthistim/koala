@@ -27,18 +27,12 @@ export class AchievementCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addStringOption((option) => option.setName('text').setDescription('The text to put on the achievement').setRequired(true));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020559928016996'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('text').setDescription('The text to put on the achievement').setRequired(true));
+		});
 	}
 
 	async chatInputRun(interaction) {

@@ -21,24 +21,18 @@ export class LoopCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addIntegerOption((option) =>
-						option
-							.setName('mode')
-							.setDescription('The loop mode.')
-							.setRequired(true)
-							.addChoices({ name: 'Off', value: 0 }, { name: 'Song', value: 1 }, { name: 'Queue', value: 2 }, { name: 'Auto Play', value: 3 })
-					);
-			},
-			{
-				guildIds: [],
-				idHints: '1115020905672888380'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addIntegerOption((option) =>
+					option
+						.setName('mode')
+						.setDescription('The loop mode.')
+						.setRequired(true)
+						.addChoices({ name: 'Off', value: 0 }, { name: 'Song', value: 1 }, { name: 'Queue', value: 2 }, { name: 'Auto Play', value: 3 })
+				);
+		});
 	}
 
 	async chatInputRun(interaction) {

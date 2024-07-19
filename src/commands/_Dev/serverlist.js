@@ -26,10 +26,6 @@ export class ServerListCommand extends Command {
 	// 	registry.registerChatInputCommand(
 	// 		(builder) => {
 	// 			builder.setName(this.name).setDescription(this.description);
-	// 		},
-	// 		{
-	// 			guildIds: [], // guilds for the command to be registered in; global if empty
-	// 			idHints: '1058004861502890014' // commandId, define after registering (id will be in log after first run)
 	// 		}
 	// 	);
 	// }

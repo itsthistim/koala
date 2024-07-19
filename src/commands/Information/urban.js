@@ -24,18 +24,12 @@ export class UrbanCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addStringOption((option) => option.setName('word').setDescription('The word to look up.').setRequired(true));
-			},
-			{
-				guildIds: []
-				// , idHints: ''
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('word').setDescription('The word to look up.').setRequired(true));
+		});
 	}
 
 	async chatInputRun(interaction) {

@@ -56,33 +56,27 @@ export class QueueCommand extends Subcommand {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addSubcommand((command) => command.setName('view').setDescription('Shows the queue.'))
-					.addSubcommand((command) => command.setName('clear').setDescription('Clears the queue.'))
-					.addSubcommand((command) =>
-						command
-							.setName('remove')
-							.setDescription('Removes a song from the queue.')
-							.addIntegerOption((option) => option.setName('song').setDescription('The song to remove.').setRequired(true))
-					)
-					.addSubcommand((command) =>
-						command
-							.setName('skipto')
-							.setDescription('Skips to a song in the queue.')
-							.addIntegerOption((option) => option.setName('song').setDescription('The song to skip to.').setRequired(true))
-					)
-					.addSubcommand((command) => command.setName('shuffle').setDescription('Shuffles the queue.'))
-					.addSubcommand((command) => command.setName('loop').setDescription('Loops or unloops the queue.'));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020991077302363'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addSubcommand((command) => command.setName('view').setDescription('Shows the queue.'))
+				.addSubcommand((command) => command.setName('clear').setDescription('Clears the queue.'))
+				.addSubcommand((command) =>
+					command
+						.setName('remove')
+						.setDescription('Removes a song from the queue.')
+						.addIntegerOption((option) => option.setName('song').setDescription('The song to remove.').setRequired(true))
+				)
+				.addSubcommand((command) =>
+					command
+						.setName('skipto')
+						.setDescription('Skips to a song in the queue.')
+						.addIntegerOption((option) => option.setName('song').setDescription('The song to skip to.').setRequired(true))
+				)
+				.addSubcommand((command) => command.setName('shuffle').setDescription('Shuffles the queue.'))
+				.addSubcommand((command) => command.setName('loop').setDescription('Loops or unloops the queue.'));
+		});
 	}
 
 	//#region View

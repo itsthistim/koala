@@ -23,19 +23,13 @@ export class HandsCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
-					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020647362482197'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
+				.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
+		});
 	}
 
 	async chatInputRun(interaction) {

@@ -51,51 +51,45 @@ export class RoleCommand extends Subcommand {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addSubcommand((command) =>
-						command
-							.setName('create')
-							.setDescription('Create a role.')
-							.addStringOption((option) => option.setName('name').setDescription('The name of the role.').setRequired(true))
-							.addStringOption((option) => option.setName('color').setDescription('The color of the role.').setRequired(false))
-							.addBooleanOption((option) => option.setName('hoist').setDescription('Whether or not to hoist the role.').setRequired(false))
-							.addBooleanOption((option) => option.setName('mentionable').setDescription('Whether or not to make the role mentionable.').setRequired(false))
-					)
-					.addSubcommand((command) =>
-						command
-							.setName('edit')
-							.setDescription('Edit a role.')
-							.addRoleOption((option) => option.setName('role').setDescription('The role to edit.').setRequired(true))
-							.addStringOption((option) => option.setName('name').setDescription('The name of the role.').setRequired(false))
-							.addStringOption((option) => option.setName('color').setDescription('The color of the role.').setRequired(false))
-							.addBooleanOption((option) => option.setName('hoist').setDescription('Whether or not to hoist the role.').setRequired(false))
-							.addBooleanOption((option) => option.setName('mentionable').setDescription('Whether or not to make the role mentionable.').setRequired(false))
-					)
-					.addSubcommand((command) =>
-						command
-							.setName('delete')
-							.setDescription('Delete a role.')
-							.addRoleOption((option) => option.setName('role').setDescription('The role to delete.').setRequired(true))
-					)
-					.addSubcommand((command) =>
-						command
-							.setName('assign')
-							.setDescription('Assign a role to users, bots or everyone.')
-							.addRoleOption((option) => option.setName('role').setDescription('The role to assign.').setRequired(true))
-							.addUserOption((option) => option.setName('user').setDescription('The user to assign the role to.').setRequired(false))
-							.addBooleanOption((option) => option.setName('bots').setDescription('Whether or not to assign the role to all bots.').setRequired(false))
-							.addBooleanOption((option) => option.setName('everyone').setDescription('Whether or not to assign the role to everyone.').setRequired(false))
-					);
-			},
-			{
-				guildIds: []
-				// , idHints: ''
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addSubcommand((command) =>
+					command
+						.setName('create')
+						.setDescription('Create a role.')
+						.addStringOption((option) => option.setName('name').setDescription('The name of the role.').setRequired(true))
+						.addStringOption((option) => option.setName('color').setDescription('The color of the role.').setRequired(false))
+						.addBooleanOption((option) => option.setName('hoist').setDescription('Whether or not to hoist the role.').setRequired(false))
+						.addBooleanOption((option) => option.setName('mentionable').setDescription('Whether or not to make the role mentionable.').setRequired(false))
+				)
+				.addSubcommand((command) =>
+					command
+						.setName('edit')
+						.setDescription('Edit a role.')
+						.addRoleOption((option) => option.setName('role').setDescription('The role to edit.').setRequired(true))
+						.addStringOption((option) => option.setName('name').setDescription('The name of the role.').setRequired(false))
+						.addStringOption((option) => option.setName('color').setDescription('The color of the role.').setRequired(false))
+						.addBooleanOption((option) => option.setName('hoist').setDescription('Whether or not to hoist the role.').setRequired(false))
+						.addBooleanOption((option) => option.setName('mentionable').setDescription('Whether or not to make the role mentionable.').setRequired(false))
+				)
+				.addSubcommand((command) =>
+					command
+						.setName('delete')
+						.setDescription('Delete a role.')
+						.addRoleOption((option) => option.setName('role').setDescription('The role to delete.').setRequired(true))
+				)
+				.addSubcommand((command) =>
+					command
+						.setName('assign')
+						.setDescription('Assign a role to users, bots or everyone.')
+						.addRoleOption((option) => option.setName('role').setDescription('The role to assign.').setRequired(true))
+						.addUserOption((option) => option.setName('user').setDescription('The user to assign the role to.').setRequired(false))
+						.addBooleanOption((option) => option.setName('bots').setDescription('Whether or not to assign the role to all bots.').setRequired(false))
+						.addBooleanOption((option) => option.setName('everyone').setDescription('Whether or not to assign the role to everyone.').setRequired(false))
+				);
+		});
 	}
 
 	//#region Missing Args

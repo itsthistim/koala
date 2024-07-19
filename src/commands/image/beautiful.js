@@ -26,19 +26,13 @@ export class BeautifulCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addStringOption((option) => option.setName('url').setDescription('The image url to use.').setRequired(false))
-					.addUserOption((option) => option.setName('user').setDescription('The user avatar to use.').setRequired(false));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020563413487616'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('url').setDescription('The image url to use.').setRequired(false))
+				.addUserOption((option) => option.setName('user').setDescription('The user avatar to use.').setRequired(false));
+		});
 	}
 
 	async chatInputRun(interaction) {

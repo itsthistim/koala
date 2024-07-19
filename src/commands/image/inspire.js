@@ -26,6 +26,8 @@ export default class InspireCommand extends Command {
 		});
 	}
 
+	// TODO: chatInput support
+
 	async messageRun(msg, args) {
 		let quote = await this.getQuote();
 		let embed = new EmbedBuilder();

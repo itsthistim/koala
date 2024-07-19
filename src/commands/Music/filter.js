@@ -46,75 +46,69 @@ export class FilterCommand extends Subcommand {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addSubcommand((command) => command.setName('view').setDescription('Shows the current and available filters.'))
-					.addSubcommand((command) =>
-						command
-							.setName('add')
-							.setDescription('Adds a filter.')
-							.addStringOption((option) =>
-								option
-									.setName('filter')
-									.setDescription('The filter to add.')
-									.setRequired(true)
-									.addChoices(
-										{ name: '3D', value: '3d' },
-										{ name: 'Bass Boost', value: 'bassboost' },
-										{ name: 'Echo', value: 'echo' },
-										{ name: 'Flanger', value: 'flanger' },
-										{ name: 'Gate', value: 'gate' },
-										{ name: 'Haas', value: 'haas' },
-										{ name: 'Karaoke', value: 'karaoke' },
-										{ name: 'Nightcore', value: 'nightcore' },
-										{ name: 'Reverse', value: 'reverse' },
-										{ name: 'Vaporwave', value: 'vaporwave' },
-										{ name: 'Mcompand', value: 'mcompand' },
-										{ name: 'Phaser', value: 'phaser' },
-										{ name: 'Tremolo', value: 'tremolo' },
-										{ name: 'Surround', value: 'surround' },
-										{ name: 'Earwax', value: 'earwax' }
-									)
-							)
-					)
-					.addSubcommand((command) =>
-						command
-							.setName('remove')
-							.setDescription('Removes a filter.')
-							.addStringOption((option) =>
-								option
-									.setName('filter')
-									.setDescription('The filter to remove.')
-									.setRequired(true)
-									.addChoices(
-										{ name: '3D', value: '3d' },
-										{ name: 'Bass Boost', value: 'bassboost' },
-										{ name: 'Echo', value: 'echo' },
-										{ name: 'Flanger', value: 'flanger' },
-										{ name: 'Gate', value: 'gate' },
-										{ name: 'Haas', value: 'haas' },
-										{ name: 'Karaoke', value: 'karaoke' },
-										{ name: 'Nightcore', value: 'nightcore' },
-										{ name: 'Reverse', value: 'reverse' },
-										{ name: 'Vaporwave', value: 'vaporwave' },
-										{ name: 'Mcompand', value: 'mcompand' },
-										{ name: 'Phaser', value: 'phaser' },
-										{ name: 'Tremolo', value: 'tremolo' },
-										{ name: 'Surround', value: 'surround' },
-										{ name: 'Earwax', value: 'earwax' }
-									)
-							)
-					)
-					.addSubcommand((command) => command.setName('clear').setDescription('Removes all active filters.'));
-			},
-			{
-				guildIds: []
-				// , idHints: ''
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addSubcommand((command) => command.setName('view').setDescription('Shows the current and available filters.'))
+				.addSubcommand((command) =>
+					command
+						.setName('add')
+						.setDescription('Adds a filter.')
+						.addStringOption((option) =>
+							option
+								.setName('filter')
+								.setDescription('The filter to add.')
+								.setRequired(true)
+								.addChoices(
+									{ name: '3D', value: '3d' },
+									{ name: 'Bass Boost', value: 'bassboost' },
+									{ name: 'Echo', value: 'echo' },
+									{ name: 'Flanger', value: 'flanger' },
+									{ name: 'Gate', value: 'gate' },
+									{ name: 'Haas', value: 'haas' },
+									{ name: 'Karaoke', value: 'karaoke' },
+									{ name: 'Nightcore', value: 'nightcore' },
+									{ name: 'Reverse', value: 'reverse' },
+									{ name: 'Vaporwave', value: 'vaporwave' },
+									{ name: 'Mcompand', value: 'mcompand' },
+									{ name: 'Phaser', value: 'phaser' },
+									{ name: 'Tremolo', value: 'tremolo' },
+									{ name: 'Surround', value: 'surround' },
+									{ name: 'Earwax', value: 'earwax' }
+								)
+						)
+				)
+				.addSubcommand((command) =>
+					command
+						.setName('remove')
+						.setDescription('Removes a filter.')
+						.addStringOption((option) =>
+							option
+								.setName('filter')
+								.setDescription('The filter to remove.')
+								.setRequired(true)
+								.addChoices(
+									{ name: '3D', value: '3d' },
+									{ name: 'Bass Boost', value: 'bassboost' },
+									{ name: 'Echo', value: 'echo' },
+									{ name: 'Flanger', value: 'flanger' },
+									{ name: 'Gate', value: 'gate' },
+									{ name: 'Haas', value: 'haas' },
+									{ name: 'Karaoke', value: 'karaoke' },
+									{ name: 'Nightcore', value: 'nightcore' },
+									{ name: 'Reverse', value: 'reverse' },
+									{ name: 'Vaporwave', value: 'vaporwave' },
+									{ name: 'Mcompand', value: 'mcompand' },
+									{ name: 'Phaser', value: 'phaser' },
+									{ name: 'Tremolo', value: 'tremolo' },
+									{ name: 'Surround', value: 'surround' },
+									{ name: 'Earwax', value: 'earwax' }
+								)
+						)
+				)
+				.addSubcommand((command) => command.setName('clear').setDescription('Removes all active filters.'));
+		});
 	}
 
 	//#region View

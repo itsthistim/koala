@@ -21,19 +21,13 @@ export class UnbanCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addUserOption((option) => option.setName('user').setDescription('The user to unban.').setRequired(true))
-					.addStringOption((option) => option.setName('reason').setDescription('The reason for the unban.').setRequired(false));
-			},
-			{
-				guildIds: []
-				// , idHints: ''
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName('user').setDescription('The user to unban.').setRequired(true))
+				.addStringOption((option) => option.setName('reason').setDescription('The reason for the unban.').setRequired(false));
+		});
 	}
 
 	async chatInputRun(interaction) {

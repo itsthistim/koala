@@ -23,19 +23,13 @@ export class GunCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
-					.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020645223383183'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName('user').setDescription('The user to draw the avatar of.').setRequired(false))
+				.addStringOption((option) => option.setName('url').setDescription('The image url to draw.').setRequired(false));
+		});
 	}
 
 	async chatInputRun(interaction) {

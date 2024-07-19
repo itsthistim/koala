@@ -26,18 +26,12 @@ export class GandhiCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addStringOption((option) => option.setName('text').setDescription('The text to put on the quote.').setRequired(true));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020565841989642'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('text').setDescription('The text to put on the quote.').setRequired(true));
+		});
 	}
 
 	async chatInputRun(interaction) {

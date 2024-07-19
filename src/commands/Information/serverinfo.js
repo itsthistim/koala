@@ -22,15 +22,9 @@ export class ServerInfoCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder.setName(this.name).setDescription(this.description);
-			},
-			{
-				guildIds: []
-				// , idHints: ''
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder.setName(this.name).setDescription(this.description);
+		});
 	}
 
 	async chatInputRun(interaction) {}

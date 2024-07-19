@@ -21,18 +21,12 @@ export class AvatarCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addUserOption((option) => option.setName('user').setDescription('The user to show the avatar of.').setRequired(false));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020561962242138'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName('user').setDescription('The user to show the avatar of.').setRequired(false));
+		});
 	}
 
 	async chatInputRun(interaction) {

@@ -21,18 +21,12 @@ export class VolumeCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addIntegerOption((option) => option.setName('volume').setDescription('The volume in percent.').setRequired(true));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020994944446497'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addIntegerOption((option) => option.setName('volume').setDescription('The volume in percent.').setRequired(true));
+		});
 	}
 
 	async messageRun(message, args) {

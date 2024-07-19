@@ -15,7 +15,7 @@ export class IdHintsCommand extends Command {
 	}
 
 	async messageRun(message) {
-		updateIdHints();
-		reply(message, 'Done!');
+		// updateIdHints();
+		reply(message, 'Deprecated!');
 	}
 }

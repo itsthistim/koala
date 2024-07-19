@@ -29,21 +29,15 @@ export class SayCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder //
-					.setName(this.name)
-					.setDescription(this.description)
-					.addStringOption((option) => option.setName('text').setDescription('The text to say.').setRequired(true))
-					.addBooleanOption((option) => option.setName('tts').setDescription('Enable Text To Speech for the message.').setRequired(false))
-					.addBooleanOption((option) => option.setName('owo').setDescription('OWOifys the message.').setRequired(false))
-					.addBooleanOption((option) => option.setName('embed').setDescription('Embeds the message.').setRequired(false));
-			},
-			{
-				guildIds: []
-				// idHints: '123456789012345678'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder //
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('text').setDescription('The text to say.').setRequired(true))
+				.addBooleanOption((option) => option.setName('tts').setDescription('Enable Text To Speech for the message.').setRequired(false))
+				.addBooleanOption((option) => option.setName('owo').setDescription('OWOifys the message.').setRequired(false))
+				.addBooleanOption((option) => option.setName('embed').setDescription('Embeds the message.').setRequired(false));
+		});
 	}
 
 	async chatInputRun(interaction) {

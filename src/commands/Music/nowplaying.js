@@ -21,15 +21,9 @@ export class NowPlayingCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder.setName(this.name).setDescription(this.description);
-			},
-			{
-				guildIds: []
-				, idHints: '1115020906868265010'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder.setName(this.name).setDescription(this.description);
+		});
 	}
 
 	async chatInputRun(interaction) {

@@ -22,18 +22,12 @@ export class UserInfoCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addUserOption((option) => option.setName('user').setDescription('The user or the id of the user to get information about.'));
-			},
-			{
-				guildIds: []
-				// , idHints: ''
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName('user').setDescription('The user or the id of the user to get information about.'));
+		});
 	}
 
 	async chatInputRun(interaction) {

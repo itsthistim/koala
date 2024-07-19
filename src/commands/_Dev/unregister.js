@@ -54,7 +54,6 @@ export class UnregisterCommand extends Subcommand {
 	// 		},
 	// 		{
 	// 			guildIds: [], // guilds for the command to be registered in; global if empty
-	// 			idHints: '1058011172730830938' // commandId, define after registering (id will be in log after first run)
 	// 		}
 	// 	);
 	// }

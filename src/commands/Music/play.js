@@ -21,18 +21,12 @@ export class PlayCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addStringOption((option) => option.setName('query').setDescription('The song to play.').setRequired(true));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020989433139280'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('query').setDescription('The song to play.').setRequired(true));
+		});
 	}
 
 	async chatInputRun(interaction) {

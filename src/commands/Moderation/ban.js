@@ -21,19 +21,13 @@ export class BanCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addUserOption((option) => option.setName('user').setDescription('The user to ban.').setRequired(true))
-					.addStringOption((option) => option.setName('reason').setDescription('The reason for the ban.').setRequired(false));
-			},
-			{
-				guildIds: []
-				// idHints: ''
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName('user').setDescription('The user to ban.').setRequired(true))
+				.addStringOption((option) => option.setName('reason').setDescription('The reason for the ban.').setRequired(false));
+		});
 	}
 
 	async chatInputRun(interaction) {

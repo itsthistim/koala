@@ -21,15 +21,9 @@ export class SkipCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder.setName(this.name).setDescription(this.description);
-			},
-			{
-				guildIds: [],
-				idHints: '1115020992201371658'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder.setName(this.name).setDescription(this.description);
+		});
 	}
 
 	async chatInputRun(interaction) {

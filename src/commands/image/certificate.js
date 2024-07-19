@@ -24,19 +24,13 @@ export class CertificateCommand extends Command {
 	}
 
 	registerApplicationCommands(registry) {
-		registry.registerChatInputCommand(
-			(builder) => {
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addStringOption((option) => option.setName('name').setDescription('The name to put on the certificate.').setRequired(true))
-					.addStringOption((option) => option.setName('reason').setDescription('The text for the certificate.').setRequired(true));
-			},
-			{
-				guildIds: [],
-				idHints: '1115020564420100118'
-			}
-		);
+		registry.registerChatInputCommand((builder) => {
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('name').setDescription('The name to put on the certificate.').setRequired(true))
+				.addStringOption((option) => option.setName('reason').setDescription('The text for the certificate.').setRequired(true));
+		});
 	}
 
 	async chatInputRun(interaction) {
