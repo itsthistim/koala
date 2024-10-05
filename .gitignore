@@ -9,3 +9,5 @@ not_node_modules
 
 package-lock.json
 pnpm-lock.yaml
+
+cookies.json
