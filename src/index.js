@@ -1,16 +1,19 @@
-import '#lib/setup';
-import { SapphireClient, ApplicationCommandRegistries, BucketScope } from '@sapphire/framework';
-import { GatewayIntentBits, Partials } from 'discord.js';
-import { Time } from '@sapphire/time-utilities';
-import { DisTube } from 'distube';
-import { YtDlpPlugin } from '@distube/yt-dlp';
+import "#lib/setup";
+import { SapphireClient, ApplicationCommandRegistries, BucketScope } from "@sapphire/framework";
+import { GatewayIntentBits, Partials } from "discord.js";
+import { Time } from "@sapphire/time-utilities";
+
+import { DisTube } from "distube";
+import { YouTubePlugin } from "@distube/youtube";
+
+import fs from "fs";
 
 let prefixes = [];
 
-if (process.env.NODE_ENV === 'PRODUCTION') {
-	prefixes.push('-');
+if (process.env.NODE_ENV === "PRODUCTION") {
+	prefixes.push("-");
 } else {
-	prefixes.push('+');
+	prefixes.push("+");
 }
 
 const client = new SapphireClient({
@@ -41,13 +44,13 @@ const client = new SapphireClient({
 	defaultCooldown: {
 		delay: Time.Second * 5,
 		limit: 3,
-		filteredUsers: process.env.OWNERS.split(','),
+		filteredUsers: process.env.OWNERS.split(","),
 		scope: BucketScope.User
 	},
 	allowedMentions: { repliedUser: true },
 	loadMessageCommandListeners: true,
 	partials: [Partials.Channel],
-	shards: 'auto'
+	shards: "auto"
 });
 
 client.distube = new DisTube(client, {
@@ -63,12 +66,12 @@ client.distube = new DisTube(client, {
 	emitAddSongWhenCreatingQueue: false,
 	emitAddListWhenCreatingQueue: false,
 	youtubeCookie: process.env.YT_COOKIE,
-	plugins: [new YtDlpPlugin()]
+	plugins: [new YouTubePlugin({ cookies: JSON.parse(fs.readFileSync("../cookies.json")) })]
 });
 
 const main = async () => {
 	try {
-		client.logger.info('Logging in...');
+		client.logger.info("Logging in...");
 		await client.login();
 	} catch (error) {
 		console.error(error);

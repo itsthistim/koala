@@ -46,6 +46,7 @@
 		"mysql2": "^3.10.3",
 		"owoify-js": "^2.0.0",
 		"paste.gg": "^1.0.5",
+		"sodium-native": "^4.2.1",
 		"table": "^6.8.2",
 		"ytdl-core": "^4.11.5"
 	},
