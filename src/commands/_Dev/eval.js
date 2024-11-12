@@ -1,21 +1,21 @@
-import { Command } from '@sapphire/framework';
-import { Stopwatch } from '@sapphire/stopwatch';
-import { Time } from '@sapphire/time-utilities';
-import { codeBlock, isThenable } from '@sapphire/utilities';
-import { inspect } from 'node:util';
-import { PasteGG } from 'paste.gg';
+import { Command } from "@sapphire/framework";
+import { Stopwatch } from "@sapphire/stopwatch";
+import { Time } from "@sapphire/time-utilities";
+import { codeBlock, isThenable } from "@sapphire/utilities";
+import { inspect } from "node:util";
+import { PasteGG } from "paste.gg";
 
 export class Eval extends Command {
 	constructor(context, options) {
 		super(context, {
-			name: 'eval',
-			aliases: ['e'],
-			description: 'Evaluates code.',
-			preconditions: ['ownerOnly'],
-			description: 'Evaluates code.',
-			detailedDescription: '',
-			usage: '',
-			examples: ['']
+			name: "eval",
+			aliases: ["e"],
+			description: "Evaluates code.",
+			preconditions: ["ownerOnly"],
+			description: "Evaluates code.",
+			detailedDescription: "",
+			usage: "",
+			examples: [""]
 		});
 	}
 
@@ -25,18 +25,18 @@ export class Eval extends Command {
 				builder
 					.setName(this.name)
 					.setDescription(this.description)
-					.addStringOption((option) => option.setName('code').setDescription('The code to evaluate.').setRequired(true))
-					.addBooleanOption((option) => option.setName('async').setDescription('Whether the code should be evaluated asynchronously.').setRequired(false));
+					.addStringOption((option) => option.setName("code").setDescription("The code to evaluate.").setRequired(true))
+					.addBooleanOption((option) => option.setName("async").setDescription("Whether the code should be evaluated asynchronously.").setRequired(false));
 			},
 			{
-				guildIds: ['502208815937224715']
+				guildIds: ["502208815937224715"]
 			}
 		);
 	}
 
 	// Run message command
 	async messageRun(message, args) {
-		let code = await args.rest('string');
+		let code = await args.rest("string");
 		let isAsync = false;
 		if (!isAsync) isAsync = false;
 
@@ -45,14 +45,14 @@ export class Eval extends Command {
 		if (success && thenable) return result;
 
 		return message.channel.send({
-			content: `${result.length > 2000 ? await this.getPaste(result, code).catch((err) => codeBlock('js', err)) : codeBlock('js', result)}\n${time}`
+			content: `${result.length > 2000 ? await this.getPaste(result, code).catch((err) => codeBlock("js", err)) : codeBlock("js", result)}\n${time}`
 		});
 	}
 
 	// Run slash command
 	async chatInputRun(interaction) {
-		let code = interaction.options.getString('code');
-		let isAsync = interaction.options.getBoolean('async');
+		let code = interaction.options.getString("code");
+		let isAsync = interaction.options.getBoolean("async");
 		if (!isAsync) isAsync = false;
 
 		const { success, time, result, thenable } = await this.eval(code, interaction, isAsync);
@@ -60,7 +60,7 @@ export class Eval extends Command {
 		if (success && thenable) return result;
 
 		return interaction.reply({
-			content: `${result.length > 2000 ? await this.getPaste(result, code).catch((err) => codeBlock('js', err)) : codeBlock('js', result)}\n${time}`
+			content: `${result.length > 2000 ? await this.getPaste(result, code).catch((err) => codeBlock("js", err)) : codeBlock("js", result)}\n${time}`
 		});
 	}
 
@@ -91,7 +91,7 @@ export class Eval extends Command {
 				asyncTime = stopwatch.toString();
 			}
 
-			if (typeof result !== 'string') {
+			if (typeof result !== "string") {
 				result = result instanceof Error ? result.stack : inspect(result, { depth: 0 });
 			}
 
@@ -108,7 +108,7 @@ export class Eval extends Command {
 
 		return {
 			success,
-			time: this.formatTime(syncTime, asyncTime ?? ''),
+			time: this.formatTime(syncTime, asyncTime ?? ""),
 			result: result,
 			thenable
 		};
@@ -134,22 +134,22 @@ export class Eval extends Command {
 		try {
 			const client = new PasteGG();
 			let paste = await client.post({
-				name: 'eval',
+				name: "eval",
 				expires: new Date(Date.now() + Time.Minute * 2).toISOString(),
 				description: description,
 				files: [
 					{
-						name: 'eval.js',
+						name: "eval.js",
 						content: {
-							format: 'text',
-							highlight_language: 'javascript',
+							format: "text",
+							highlight_language: "javascript",
 							value: text
 						}
 					}
 				]
 			});
 
-			if (paste.status == 'error') return `\n${paste.message}`;
+			if (paste.status == "error") return `\n${paste.message}`;
 
 			return `\n${paste.result.url}`;
 		} catch (err) {
