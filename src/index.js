@@ -52,5 +52,5 @@ const main = async () => {
 };
 
 main().then(() => {
-	client.logger.info("Logged in!");
+	client.logger.info("Logged in as " + client.user.tag);
 });
