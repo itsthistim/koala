@@ -1,26 +1,26 @@
-import { Command } from '@sapphire/framework';
-import { reply } from '@sapphire/plugin-editable-commands';
-import { EmbedLimits } from '@sapphire/discord-utilities';
-import { EmbedBuilder } from 'discord.js';
-import { StringUtil } from '#lib/util';
-import axios from 'axios';
-import moment from 'moment';
+import { container, Command } from "@sapphire/framework";
+import { reply } from "@sapphire/plugin-editable-commands";
+import { EmbedLimits } from "@sapphire/discord-utilities";
+import { EmbedBuilder } from "discord.js";
+import { StringUtil } from "#lib/util";
+import axios from "axios";
+import moment from "moment";
 
 export class UrbanCommand extends Command {
 	constructor(context, options) {
 		super(context, {
-			name: 'urban',
-			aliases: ['urban-dictionary'],
+			name: "urban",
+			aliases: ["urban-dictionary"],
 			requiredUserPermissions: [],
 			requiredClientPermissions: [],
 			preconditions: [],
 			flags: [],
 			options: [],
 			nsfw: false,
-			description: 'Looks up a word on Urban Dictionary.',
-			detailedDescription: '',
-			usage: '<word>',
-			examples: ['koala']
+			description: "Looks up a word on Urban Dictionary.",
+			detailedDescription: "",
+			usage: "<word>",
+			examples: ["koala"]
 		});
 	}
 
@@ -29,12 +29,12 @@ export class UrbanCommand extends Command {
 			builder
 				.setName(this.name)
 				.setDescription(this.description)
-				.addStringOption((option) => option.setName('word').setDescription('The word to look up.').setRequired(true));
+				.addStringOption((option) => option.setName("word").setDescription("The word to look up.").setRequired(true));
 		});
 	}
 
 	async chatInputRun(interaction) {
-		const query = interaction.options.getString('word', true);
+		const query = interaction.options.getString("word", true);
 
 		const definition = await this.getDefinition(query);
 		const embed = await this.getInfoEmbed(definition, query);
@@ -42,7 +42,7 @@ export class UrbanCommand extends Command {
 	}
 
 	async messageRun(message, args) {
-		const query = await args.rest('string').catch(() => 'koala');
+		const query = await args.rest("string").catch(() => "koala");
 
 		const definition = await this.getDefinition(query);
 		const embed = await this.getInfoEmbed(definition, query);
@@ -56,21 +56,21 @@ export class UrbanCommand extends Command {
 
 		return new Promise(async (resolve, reject) => {
 			const embed = new EmbedBuilder()
-				.setColor(global.COLORS.DEFAULT)
+				.setColor(container.colors.DEFAULT)
 				.setTitle(definition.word)
 				.setURL(definition.permalink)
-				.setDescription(StringUtil.fitTo(definition.definition.replace(/\[|\]/g, ''), EmbedLimits.MaximumDescriptionLength, true))
+				.setDescription(StringUtil.fitTo(definition.definition.replace(/\[|\]/g, ""), EmbedLimits.MaximumDescriptionLength, true))
 				.addFields(
 					{
-						name: 'Example',
-						value: `${StringUtil.fitTo(definition.example.replace(/\[|\]/g, ''), EmbedLimits.MaximumFieldValueLength, true)}\u200B`,
+						name: "Example",
+						value: `${StringUtil.fitTo(definition.example.replace(/\[|\]/g, ""), EmbedLimits.MaximumFieldValueLength, true)}\u200B`,
 						inline: false
 					},
-					{ name: '👍', value: `${definition.thumbs_up}\u200B`, inline: true },
-					{ name: '👎', value: `${definition.thumbs_down}\u200B`, inline: true }
+					{ name: "👍", value: `${definition.thumbs_up}\u200B`, inline: true },
+					{ name: "👎", value: `${definition.thumbs_down}\u200B`, inline: true }
 				)
 				.setFooter({
-					text: `${definition.author}  •  ${moment(definition.written_on).format('MMM Do YYYY, h:mm a')}`
+					text: `${definition.author}  •  ${moment(definition.written_on).format("MMM Do YYYY, h:mm a")}`
 				});
 
 			return resolve(embed);
