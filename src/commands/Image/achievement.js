@@ -1,28 +1,28 @@
-import { Command } from '@sapphire/framework';
-import { EmbedBuilder, PermissionFlagsBits } from 'discord.js';
-import { reply } from '@sapphire/plugin-editable-commands';
-import { createCanvas, loadImage, registerFont } from 'canvas';
-import { CanvasUtil } from '#lib/util';
+import { Command } from "@sapphire/framework";
+import { PermissionFlagsBits } from "discord.js";
+import { reply } from "@sapphire/plugin-editable-commands";
+import { createCanvas, loadImage, registerFont } from "canvas";
+import { CanvasUtil } from "#lib/util";
 
-registerFont('src/lib/assets/fonts/MinecraftRegular-Bmg3.otf', {
-	family: 'Minecraftia'
+registerFont("src/lib/assets/fonts/MinecraftRegular-Bmg3.otf", {
+	family: "Minecraftia"
 });
 
 export class AchievementCommand extends Command {
 	constructor(context, options) {
 		super(context, {
-			name: 'achievement',
-			aliases: ['advancement'],
+			name: "achievement",
+			aliases: ["advancement"],
 			requiredUserPermissions: [],
 			requiredClientPermissions: [PermissionFlagsBits.AttachFiles],
 			preconditions: [],
 			flags: [],
 			options: [],
 			nsfw: false,
-			description: 'Send a minecraft advancement with any text.',
-			detailedDescription: '',
-			usage: '[text]',
-			examples: ['Invite koala!']
+			description: "Send a minecraft advancement with any text.",
+			detailedDescription: "",
+			usage: "[text]",
+			examples: ["Invite koala!"]
 		});
 	}
 
@@ -31,19 +31,19 @@ export class AchievementCommand extends Command {
 			builder //
 				.setName(this.name)
 				.setDescription(this.description)
-				.addStringOption((option) => option.setName('text').setDescription('The text to put on the achievement').setRequired(true));
+				.addStringOption((option) => option.setName("text").setDescription("The text to put on the achievement").setRequired(true));
 		});
 	}
 
 	async chatInputRun(interaction) {
-		const text = (await interaction.options.getString('text')) ?? `Invite ${this.container.client.user.username}!`;
+		const text = (await interaction.options.getString("text")) ?? `Invite ${this.container.client.user.username}!`;
 
 		let attachment = await this.createImage(text);
 		interaction.reply({ files: [attachment] });
 	}
 
 	async messageRun(message, args) {
-		const text = await args.rest('string').catch(() => `Invite ${this.container.client.user.username}!`);
+		const text = await args.rest("string").catch(() => `Invite ${this.container.client.user.username}!`);
 
 		let attachment = await this.createImage(text);
 		reply(message, { files: [attachment] });
@@ -51,20 +51,20 @@ export class AchievementCommand extends Command {
 
 	async createImage(text) {
 		try {
-			const base = await loadImage('src/lib/assets/images/achievement.png');
+			const base = await loadImage("src/lib/assets/images/achievement.png");
 			const canvas = createCanvas(base.width, base.height);
 
-			const ctx = canvas.getContext('2d');
+			const ctx = canvas.getContext("2d");
 			ctx.drawImage(base, 0, 0);
-			ctx.font = '20px Minecraftia';
-			ctx.fillStyle = '#ffff00';
-			ctx.fillStyle = '#ffffff';
+			ctx.font = "20px Minecraftia";
+			ctx.fillStyle = "#ffff00";
+			ctx.fillStyle = "#ffffff";
 			ctx.fillText(CanvasUtil.shortenText(ctx, text, 250), 60, 50);
 			let attachment = canvas.toBuffer();
 			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;
 			return {
 				attachment: attachment,
-				name: 'achievement.png'
+				name: "achievement.png"
 			};
 		} catch (err) {
 			console.error(err);

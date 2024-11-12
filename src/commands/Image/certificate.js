@@ -44,7 +44,7 @@ export class CertificateCommand extends Command {
 
 	async messageRun(message, args) {
 		let name = await args.pick('string').catch(() => message.guild.members.cache.get(message.guild.ownerId).user.username);
-		let reason = await args.rest('string').catch(() => `Inviting ${this.container.client.user.username} to the server`);
+		let reason = await args.rest('string').catch(() => `Using ${this.container.client.user.username} on this server`);
 
 		let result = await this.createImage(name, reason);
 		if (typeof result === 'string') return reply(message, result);
