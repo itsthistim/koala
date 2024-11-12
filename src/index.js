@@ -34,7 +34,7 @@ const client = new SapphireClient({
 		GatewayIntentBits.AutoModerationConfiguration,
 		GatewayIntentBits.AutoModerationExecution
 	],
-	allowedMentions: { repliedUser: true },
+	allowedMentions: { repliedUser: false },
 	loadMessageCommandListeners: true,
 	partials: [Partials.Channel],
 	shards: "auto"
