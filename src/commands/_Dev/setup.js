@@ -1,44 +1,43 @@
-import { Subcommand } from '@sapphire/plugin-subcommands';
-import { EmbedBuilder } from 'discord.js';
-import { reply } from '@sapphire/plugin-editable-commands';
+import { container } from "@sapphire/framework";
+import { Subcommand } from "@sapphire/plugin-subcommands";
+import { EmbedBuilder } from "discord.js";
+import { reply } from "@sapphire/plugin-editable-commands";
 
 export class ServerListCommand extends Subcommand {
 	constructor(context, options) {
 		super(context, {
-			name: 'setup',
+			name: "setup",
 			aliases: [],
 			requiredUserPermissions: [],
 			requiredClientPermissions: [],
-			preconditions: ['adminOnly'],
+			preconditions: ["adminOnly"],
 			flags: [],
 			options: [],
 			nsfw: false,
-			description: 'Setup some things in a server.',
+			description: "Setup some things in a server.",
 			detailedDescription:
-				'`setup mute <role>`: Takes a role and sets all channels to have that role. Also denies permissions to communicate with other members. They can still join voice channels but not talk in them.\n\n`setup bot <role>`: Takes a role and attempts to assign all bots to this role.\n\n`setup sync`: Syncs permissions with the parent channel.',
-			usage: '',
-			examples: [''],
+				"`setup mute <role>`: Takes a role and sets all channels to have that role. Also denies permissions to communicate with other members. They can still join voice channels but not talk in them.\n\n`setup bot <role>`: Takes a role and attempts to assign all bots to this role.\n\n`setup sync`: Syncs permissions with the parent channel.",
 			subcommands: [
 				{
-					name: 'info',
-					chatInputRun: 'chatInputRunInfo',
-					messageRun: 'messageRunInfo',
+					name: "info",
+					chatInputRun: "chatInputRunInfo",
+					messageRun: "messageRunInfo",
 					default: true
 				},
 				{
-					name: 'botrole',
-					chatInputRun: 'chatInputRunBotrole',
-					messageRun: 'messageRunBotrole'
+					name: "botrole",
+					chatInputRun: "chatInputRunBotrole",
+					messageRun: "messageRunBotrole"
 				},
 				{
-					name: 'muterole',
-					chatInputRun: 'chatInputRunMuterole',
-					messageRun: 'messageRunMuterole'
+					name: "muterole",
+					chatInputRun: "chatInputRunMuterole",
+					messageRun: "messageRunMuterole"
 				},
 				{
-					name: 'syncchannels',
-					chatInputRun: 'chatInputRunSyncchannels',
-					messageRun: 'messageRunSyncchannels'
+					name: "syncchannels",
+					chatInputRun: "chatInputRunSyncchannels",
+					messageRun: "messageRunSyncchannels"
 				}
 			]
 		});
@@ -50,23 +49,23 @@ export class ServerListCommand extends Subcommand {
 				builder
 					.setName(this.name)
 					.setDescription(this.description)
-					.addSubcommand((command) => command.setName('info').setDescription('Get info about the setup command.'))
+					.addSubcommand((command) => command.setName("info").setDescription("Get info about the setup command."))
 					.addSubcommand((command) =>
 						command
-							.setName('botrole')
-							.setDescription('Set the bot role.')
-							.addRoleOption((option) => option.setName('role').setDescription('The role to set as the bot role.').setRequired(true))
+							.setName("botrole")
+							.setDescription("Set the bot role.")
+							.addRoleOption((option) => option.setName("role").setDescription("The role to set as the bot role.").setRequired(true))
 					)
 					.addSubcommand((command) =>
 						command
-							.setName('muterole')
-							.setDescription('Set the mute role.')
-							.addRoleOption((option) => option.setName('role').setDescription('The role to set as the mute role.').setRequired(true))
+							.setName("muterole")
+							.setDescription("Set the mute role.")
+							.addRoleOption((option) => option.setName("role").setDescription("The role to set as the mute role.").setRequired(true))
 					)
-					.addSubcommand((command) => command.setName('syncchannels').setDescription('Sync channel permissions with the parent channel.'));
+					.addSubcommand((command) => command.setName("syncchannels").setDescription("Sync channel permissions with the parent channel."));
 			},
 			{
-				guildIds: ['502208815937224715']
+				guildIds: ["502208815937224715"]
 			}
 		);
 	}
@@ -85,31 +84,31 @@ export class ServerListCommand extends Subcommand {
 
 	getInfoEmbed() {
 		return new EmbedBuilder()
-			.setTitle('Setup Command')
+			.setTitle("Setup Command")
 			.addFields(
 				{
-					name: 'Botrole',
-					value: 'Takes a role and sets it as the bot role. All bots will be given this role.'
+					name: "Botrole",
+					value: "Takes a role and sets it as the bot role. All bots will be given this role."
 				},
 				{
-					name: 'Muterole',
-					value: 'Takes a role and sets it as the mute role. All channels will be updated with the mute role.'
+					name: "Muterole",
+					value: "Takes a role and sets it as the mute role. All channels will be updated with the mute role."
 				},
 				{
-					name: 'Syncchannels',
-					value: 'Syncs all channels with their respective parent channel.'
+					name: "Syncchannels",
+					value: "Syncs all channels with their respective parent channel."
 				}
 			)
-			.setColor(global.COLORS.DEFAULT);
+			.setColor(container.colors.DEFAULT);
 	}
 	//#endregion
 
 	//#region Mute Role
 	async chatInputRunMuterole(interaction) {
-		const role = interaction.options.getRole('role');
+		const role = interaction.options.getRole("role");
 		if (!role)
 			return interaction.reply({
-				content: 'You must provide a role.',
+				content: "You must provide a role.",
 				ephemeral: true
 			});
 
@@ -122,8 +121,8 @@ export class ServerListCommand extends Subcommand {
 	}
 
 	async messageRunMuterole(message, args) {
-		var role = await args.pick('role').catch(() => null);
-		if (!role) return reply(message, 'You must provide a role.');
+		var role = await args.pick("role").catch(() => null);
+		if (!role) return reply(message, "You must provide a role.");
 
 		this.processMuterole(role, message.guild);
 
@@ -132,7 +131,7 @@ export class ServerListCommand extends Subcommand {
 
 	async processMuterole(role, guild) {
 		// channel permissions
-		const channels = guild.channels.cache.filter((c) => c.type === 'GUILD_TEXT' || c.type === 'GUILD_VOICE');
+		const channels = guild.channels.cache.filter((c) => c.type === "GUILD_TEXT" || c.type === "GUILD_VOICE");
 		const promises = [];
 		for (const channel of channels.values()) {
 			promises.push(
@@ -150,7 +149,7 @@ export class ServerListCommand extends Subcommand {
 		await Promise.all(promises);
 
 		// role permissions
-		const permissions = ['SEND_MESSAGES', 'SPEAK', 'ADD_REACTIONS', 'CREATE_PUBLIC_THREADS', 'CREATE_PRIVATE_THREADS', 'SEND_MESSAGES_IN_THREADS', 'CHANGE_NICKNAME'];
+		const permissions = ["SEND_MESSAGES", "SPEAK", "ADD_REACTIONS", "CREATE_PUBLIC_THREADS", "CREATE_PRIVATE_THREADS", "SEND_MESSAGES_IN_THREADS", "CHANGE_NICKNAME"];
 		const rolePermissions = role.permissions.toArray();
 		const newPermissions = rolePermissions.filter((p) => !permissions.includes(p));
 		await role.setPermissions(newPermissions);
@@ -159,10 +158,10 @@ export class ServerListCommand extends Subcommand {
 
 	//#region Bot Role
 	async chatInputRunBotrole(interaction) {
-		const role = interaction.options.getRole('role');
+		const role = interaction.options.getRole("role");
 		if (!role)
 			return interaction.reply({
-				content: 'You must provide a role.',
+				content: "You must provide a role.",
 				ephemeral: true
 			});
 
@@ -175,8 +174,8 @@ export class ServerListCommand extends Subcommand {
 	}
 
 	async messageRunBotrole(message, args) {
-		var role = await args.pick('role').catch(() => null);
-		if (!role) return reply(message, 'You must provide a role.');
+		var role = await args.pick("role").catch(() => null);
+		if (!role) return reply(message, "You must provide a role.");
 
 		this.processBotrole(role, message.guild);
 
@@ -206,7 +205,7 @@ export class ServerListCommand extends Subcommand {
 	}
 
 	async syncChannels(guild) {
-		const channels = guild.channels.cache.filter((c) => c.type === 'GUILD_TEXT' || c.type === 'GUILD_VOICE');
+		const channels = guild.channels.cache.filter((c) => c.type === "GUILD_TEXT" || c.type === "GUILD_VOICE");
 		channels.forEach((channel) => {
 			if (channel.parent) {
 				channel.lockPermissions().catch(console.error);
