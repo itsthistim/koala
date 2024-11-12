@@ -43,10 +43,11 @@
 		"libsodium-wrappers": "^0.7.14",
 		"moment": "^2.30.1",
 		"moment-duration-format": "^2.3.2",
-		"mysql2": "^3.10.3",
 		"owoify-js": "^2.0.0",
 		"paste.gg": "^1.0.5",
+		"sequelize": "^6.37.5",
 		"sodium-native": "^4.2.1",
+		"sqlite3": "^5.1.7",
 		"table": "^6.8.2",
 		"ytdl-core": "^4.11.5"
 	},
