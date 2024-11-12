@@ -1,7 +1,6 @@
 import { Subcommand } from '@sapphire/plugin-subcommands';
 import { EmbedBuilder } from 'discord.js';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { CookieStore } from '@sapphire/plugin-api';
 import { resolveColor } from 'discord.js';
 
 export class RoleCommand extends Subcommand {
