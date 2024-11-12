@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === "DEVELOPMENT") {
 //#endregion
 
 //#region Constants
-container.color = {
+container.colors = {
 	DEFAULT: 0x9bacb4,
 	GREEN: 0x87de7f,
 	RED: 0x8e3741,
@@ -45,7 +45,7 @@ container.color = {
 	WHITE: 0xffffff
 };
 
-container.emoji = {
+container.emojis = {
 	POSITIVE: "<:positive:1017154150464753665>",
 	NEGATIVE: "<:negative:1017154192525250590>",
 	NEUTRAL: "<:neutral:1017154199735259146>",
