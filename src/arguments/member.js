@@ -1,6 +1,6 @@
-import { Argument } from '@sapphire/framework';
-import { ClientUtil } from '#lib/util';
-import { isNullish } from '@sapphire/utilities';
+import { Argument } from "@sapphire/framework";
+import { ClientUtil } from "#lib/util";
+import { isNullish } from "@sapphire/utilities";
 
 export class MemberArgument extends Argument {
 	async run(parameter, context) {
@@ -14,8 +14,8 @@ export class MemberArgument extends Argument {
 		return this.error({
 			context,
 			parameter,
-			message: 'The provided argument could not be resolved to a member.',
-			identifier: 'InvalidMember'
+			message: "The provided argument could not be resolved to a member.",
+			identifier: "InvalidMember"
 		});
 	}
 }

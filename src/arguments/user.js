@@ -1,6 +1,6 @@
-import { Argument } from '@sapphire/framework';
-import { ClientUtil } from '#lib/util';
-import { isNullish } from '@sapphire/utilities';
+import { Argument } from "@sapphire/framework";
+import { ClientUtil } from "#lib/util";
+import { isNullish } from "@sapphire/utilities";
 
 export class ImageArgument extends Argument {
 	async run(parameter, context) {
@@ -14,8 +14,8 @@ export class ImageArgument extends Argument {
 		return this.error({
 			context,
 			parameter,
-			message: 'The provided argument could not be resolved to a member.',
-			identifier: 'InvalidUser'
+			message: "The provided argument could not be resolved to a member.",
+			identifier: "InvalidUser"
 		});
 	}
 }
