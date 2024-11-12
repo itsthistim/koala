@@ -1,13 +1,13 @@
-import { Command } from '@sapphire/framework';
-import { send, reply } from '@sapphire/plugin-editable-commands';
-import { EmbedBuilder } from 'discord.js';
-import axios from 'axios';
+import { container, Command } from "@sapphire/framework";
+import { send, reply } from "@sapphire/plugin-editable-commands";
+import { EmbedBuilder } from "discord.js";
+import axios from "axios";
 
 export default class InspireCommand extends Command {
 	constructor(context, options) {
 		super(context, {
-			name: 'inspire',
-			aliases: ['inspire'],
+			name: "inspire",
+			aliases: ["inspire"],
 			requiredUserPermissions: [],
 			requiredClientPermissions: [],
 			preconditions: [],
@@ -15,10 +15,10 @@ export default class InspireCommand extends Command {
 			flags: [],
 			options: [],
 			nsfw: false,
-			description: 'Provides an inspirational quote for you.',
-			detailedDescription: '',
-			usage: '',
-			examples: ['']
+			description: "Provides an inspirational quote for you.",
+			detailedDescription: "",
+			usage: "",
+			examples: [""]
 		});
 	}
 
@@ -43,7 +43,7 @@ export default class InspireCommand extends Command {
 	async getQuoteEmbed() {
 		const res = await axios.get(`https://inspirobot.me/api?generate=true`);
 		const embed = new EmbedBuilder()
-			.setColor(this.container.color.DEFAULT)
+			.setColor(container.colors.DEFAULT)
 			.setTitle(`Inspirational quote`)
 			.setURL(res.data)
 			.setImage(res.data)

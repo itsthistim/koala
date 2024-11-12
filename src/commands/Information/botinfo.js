@@ -1,4 +1,4 @@
-import { Command, container, version as sappVersion } from "@sapphire/framework";
+import { container, Command, version as sappVersion } from "@sapphire/framework";
 import { EmbedBuilder, version as djsVersion } from "discord.js";
 import { reply } from "@sapphire/plugin-editable-commands";
 import moment from "moment";
@@ -37,19 +37,19 @@ export class BotInfoCommand extends Command {
 	}
 
 	async createInfoEmbed(interaction) {
-		const dev = this.container.client.users.cache.get("319183644331606016");
-		const uptime = moment.duration(this.container.client.uptime).format("d[d], h[h], m[m], s[s]");
+		const dev = container.client.users.cache.get("319183644331606016");
+		const uptime = moment.duration(container.client.uptime).format("d[d], h[h], m[m], s[s]");
 
 		return new EmbedBuilder()
 			.setColor(container.colors.DEFAULT)
 			.setAuthor({
-				name: this.container.client.user.username,
-				iconURL: this.container.client.user.displayAvatarURL({ dynamic: true })
+				name: container.client.user.username,
+				iconURL: container.client.user.displayAvatarURL({ dynamic: true })
 			})
 			.addFields(
 				{
 					name: "Technical",
-					value: `**Uptime:** ${uptime}\n` + `**Ping:** ${this.container.client.ws.ping}ms\n` + `**Roundtrip:** ${Date.now() - interaction.createdTimestamp}ms`,
+					value: `**Uptime:** ${uptime}\n` + `**Ping:** ${container.client.ws.ping}ms\n` + `**Roundtrip:** ${Date.now() - interaction.createdTimestamp}ms`,
 					inline: true
 				},
 				{
@@ -59,7 +59,7 @@ export class BotInfoCommand extends Command {
 				},
 				{
 					name: "Discord",
-					value: `**Guilds:** ${this.container.client.guilds.cache.size}\n**Channels:** ${this.container.client.channels.cache.size}\n**Users:** ${this.container.client.users.cache.size}`,
+					value: `**Guilds:** ${container.client.guilds.cache.size}\n**Channels:** ${container.client.channels.cache.size}\n**Users:** ${container.client.users.cache.size}`,
 					inline: true
 				}
 			)

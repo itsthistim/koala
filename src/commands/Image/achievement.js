@@ -1,4 +1,4 @@
-import { Command } from "@sapphire/framework";
+import { container, Command } from "@sapphire/framework";
 import { PermissionFlagsBits } from "discord.js";
 import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
@@ -36,14 +36,14 @@ export class AchievementCommand extends Command {
 	}
 
 	async chatInputRun(interaction) {
-		const text = (await interaction.options.getString("text")) ?? `Invite ${this.container.client.user.username}!`;
+		const text = (await interaction.options.getString("text")) ?? `Invite ${container.client.user.username}!`;
 
 		let attachment = await this.createImage(text);
 		interaction.reply({ files: [attachment] });
 	}
 
 	async messageRun(message, args) {
-		const text = await args.rest("string").catch(() => `Invite ${this.container.client.user.username}!`);
+		const text = await args.rest("string").catch(() => `Invite ${container.client.user.username}!`);
 
 		let attachment = await this.createImage(text);
 		reply(message, { files: [attachment] });

@@ -1,4 +1,4 @@
-import { Listener } from "@sapphire/framework";
+import { container, Listener } from "@sapphire/framework";
 import { blue, gray, green, magenta, magentaBright, white, yellow, redBright, red } from "colorette";
 import { ActivityType } from "discord.js";
 import db from "#lib/db";
@@ -25,15 +25,17 @@ export class ReadyEvent extends Listener {
 	}
 
 	async setStatus() {
-		this.container.client.user.setPresence({ activities: [{ name: "eucalyptus grow.", type: ActivityType.Watching }], status: "online" }); // dnd, idle, online, invisible
+		container.client.user.setPresence({ activities: [{ name: "eucalyptus grow.", type: ActivityType.Watching }], status: "online" }); // dnd, idle, online, invisible
 	}
 
 	async printBanner() {
-		console.info(`[${green("+")}] Gateway online\n` + `${environmentType ? `${blc("</>") + llc(` ${process.env.NODE_ENV} ENVIRONMENT`)}` : "PRODUCTION ENVIRONMENT"}\n` + `${llc(`v${version}`)}`);
+		console.info(`[${green("+")}] Gateway online`);
+		console.info(environmentType ? `${blc("</>") + llc(` ${process.env.NODE_ENV} ENVIRONMENT`)}` : "PRODUCTION ENVIRONMENT");
+		console.info(llc(`v${version}`));
 	}
 
 	printStoreDebugInformation() {
-		const { client } = this.container;
+		const client = container.client;
 		const stores = [...client.stores.values()];
 		const first = stores.shift();
 		const last = stores.pop();
