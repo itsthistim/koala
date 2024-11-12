@@ -1,4 +1,4 @@
-import { Command } from "@sapphire/framework";
+import { container, Command } from "@sapphire/framework";
 import { Stopwatch } from "@sapphire/stopwatch";
 import { Time } from "@sapphire/time-utilities";
 import { codeBlock, isThenable } from "@sapphire/utilities";
