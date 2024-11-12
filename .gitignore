@@ -5,6 +5,7 @@
 # project setting files
 .env
 .prettierrc
+.untracked
 
 # node related files
 node_modules
