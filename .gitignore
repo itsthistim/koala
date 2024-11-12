@@ -1,13 +1,15 @@
-.env
-.prettierrc
-
+# IDE related files
 .vscode
 .idea
 
-node_modules
-not_node_modules
+# project setting files
+.env
+.prettierrc
 
+# node related files
+node_modules
 package-lock.json
 pnpm-lock.yaml
 
-cookies.json
+# database related files
+*.sqlite
