@@ -2,7 +2,6 @@ import { container, Command } from "@sapphire/framework";
 import { PermissionFlagsBits } from "discord.js";
 import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
-import { CanvasUtil } from "#lib/util";
 
 registerFont("src/lib/assets/fonts/MinecraftRegular-Bmg3.otf", {
 	family: "Minecraftia"
@@ -59,7 +58,7 @@ export class AchievementCommand extends Command {
 			ctx.font = "20px Minecraftia";
 			ctx.fillStyle = "#ffff00";
 			ctx.fillStyle = "#ffffff";
-			ctx.fillText(CanvasUtil.shortenText(ctx, text, 250), 60, 50);
+			ctx.fillText(shortenText(ctx, text, 250), 60, 50);
 			let attachment = canvas.toBuffer();
 			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;
 			return {

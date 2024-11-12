@@ -1,8 +1,7 @@
 import { Command } from "@sapphire/framework";
-import { EmbedBuilder } from "discord.js";
 import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
-import { CanvasUtil } from "#lib/util";
+import { drawImageWithTint } from "#lib/canvas";
 
 export class HeartsCommand extends Command {
 	constructor(context, options) {
@@ -66,7 +65,7 @@ export class HeartsCommand extends Command {
 
 			const canvas = createCanvas(data.width, data.height);
 			const ctx = canvas.getContext("2d");
-			CanvasUtil.drawImageWithTint(ctx, data, "deeppink", 0, 0, data.width, data.height);
+			drawImageWithTint(ctx, data, "deeppink", 0, 0, data.width, data.height);
 			ctx.drawImage(base, 0, 0, data.width, data.height);
 			let attachment = canvas.toBuffer();
 			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;

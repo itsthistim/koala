@@ -1,8 +1,6 @@
 import { Command } from "@sapphire/framework";
-import { EmbedBuilder } from "discord.js";
 import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
-import { CanvasUtil } from "#lib/util";
 
 export class GunCommand extends Command {
 	constructor(context, options) {

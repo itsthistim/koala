@@ -1,8 +1,8 @@
 import { container, Command } from "@sapphire/framework";
 import { EmbedBuilder } from "discord.js";
 import { reply } from "@sapphire/plugin-editable-commands";
-import { ClientUtil } from "#lib/util";
 import axios from "axios";
+import { getIndefiniteArticle } from "#lib/util";
 
 export class DefineCommand extends Command {
 	constructor(context, options) {
@@ -62,7 +62,7 @@ export class DefineCommand extends Command {
 
 			definition[0].meanings.forEach((meaning) => {
 				embed.addFields({
-					name: `As ${ClientUtil.getIndefiniteArticle(meaning.partOfSpeech)} ${meaning.partOfSpeech}`,
+					name: `As ${getIndefiniteArticle(meaning.partOfSpeech)} ${meaning.partOfSpeech}`,
 					value: meaning.definitions[0].definition
 				});
 			});

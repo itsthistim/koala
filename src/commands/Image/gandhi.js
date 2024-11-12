@@ -1,7 +1,7 @@
 import { Command } from "@sapphire/framework";
 import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
-import { CanvasUtil } from "#lib/util";
+import { wrapText } from "#lib/canvas";
 
 registerFont("src/lib/assets/fonts/LibreBaskerville-Italic.ttf", {
 	family: "Libre Baskerville Italic"
@@ -67,7 +67,7 @@ export class GandhiCommand extends Command {
 			ctx.font = `${fontSize}px Libre Baskerville Italic`;
 		}
 
-		const lines = await CanvasUtil.wrapText(ctx, quote, 270);
+		const lines = await wrapText(ctx, quote, 270);
 		const topMost = 180 - ((fontSize * lines.length) / 2 + (20 * (lines.length - 1)) / 2);
 
 		for (let i = 0; i < lines.length; i++) {

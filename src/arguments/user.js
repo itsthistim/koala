@@ -1,11 +1,11 @@
 import { container, Argument } from "@sapphire/framework";
-import { ClientUtil } from "#lib/util";
 import { isNullish } from "@sapphire/utilities";
+import { resolveUser } from "#lib/util";
 
 export class ImageArgument extends Argument {
 	async run(parameter, context) {
 		const users = container.client.users.cache.sort((a, b) => a.username.localeCompare(b.username));
-		const value = ClientUtil.resolveUser(parameter, users);
+		const value = resolveUser(parameter, users);
 
 		if (!isNullish(value)) {
 			return this.ok(value);
