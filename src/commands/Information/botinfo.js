@@ -41,7 +41,7 @@ export class BotInfoCommand extends Command {
 		const uptime = moment.duration(this.container.client.uptime).format("d[d], h[h], m[m], s[s]");
 
 		return new EmbedBuilder()
-			.setColor(container.colors.default)
+			.setColor(container.colors.DEFAULT)
 			.setAuthor({
 				name: this.container.client.user.username,
 				iconURL: this.container.client.user.displayAvatarURL({ dynamic: true })
