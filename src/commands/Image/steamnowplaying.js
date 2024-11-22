@@ -42,7 +42,7 @@ export class SteamNowPlayingCommand extends Command {
 	}
 
 	async messageRun(message, args) {
-		const member = await args.pick("member");
+		const member = await args.pick("member").catch(() => message.member);
 		const game = await args.rest("string").catch(() => "a game");
 
 		const attachment = await this.createImage(member.user, game);
