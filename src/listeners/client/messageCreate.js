@@ -27,9 +27,11 @@ export class UserEvent extends Listener {
 
 					const uwuified = uwuify(msgContent);
 					const channelWebhooks = await message.channel.fetchWebhooks();
-					const webhook = channelWebhooks.find((webhook) => webhook.name === "koala");
+					let webhook = channelWebhooks.find((webhook) => webhook.name === "koala");
 
-					if (!webhook) message.channel.createWebhook({ name: "koala" }).catch(console.error);
+					if (!webhook) {
+						webhook = await message.channel.createWebhook({ name: "koala" }).catch(console.error);
+					}
 
 					webhook
 						.send({
