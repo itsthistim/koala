@@ -3,7 +3,7 @@ import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import moment from "moment";
 
-registerFont("src/lib/assets/fonts/OLD.ttf", { family: "Old English Text MT" });
+registerFont("src/lib/assets/fonts/Old-English-Text.ttf", { family: "Old English Text MT" });
 
 export class CertificateCommand extends Command {
 	constructor(context, options) {
@@ -39,7 +39,7 @@ export class CertificateCommand extends Command {
 
 		let result = await this.createImage(name, reason);
 		if (typeof result === "string") return reply(interaction, result);
-		return reply(interaction, { files: [result] });
+		return interaction.reply({ files: [result] });
 	}
 
 	async messageRun(message, args) {
