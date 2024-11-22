@@ -3,9 +3,7 @@ import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { wrapText } from "#lib/canvas";
 
-registerFont("src/lib/assets/fonts/LibreBaskerville-Italic.ttf", {
-	family: "Libre Baskerville Italic"
-});
+registerFont("src/lib/assets/fonts/LibreBaskerville-Italic.ttf", { family: "Libre Baskerville" });
 
 export class GandhiCommand extends Command {
 	constructor(context, options) {
@@ -57,14 +55,14 @@ export class GandhiCommand extends Command {
 		ctx.drawImage(base, 0, 0);
 		ctx.textAlign = "center";
 		ctx.textBaseline = "top";
-		ctx.font = "50px Libre Baskerville Italic";
+		ctx.font = '50px "Libre Baskerville"';
 		ctx.fillStyle = "white";
 
 		let fontSize = 50;
 
 		while (ctx.measureText(quote).width > 945) {
 			fontSize--;
-			ctx.font = `${fontSize}px Libre Baskerville Italic`;
+			ctx.font = `${fontSize}px "Libre Baskerville"`;
 		}
 
 		const lines = await wrapText(ctx, quote, 270);

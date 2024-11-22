@@ -4,6 +4,8 @@ import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { shortenText } from "#lib/canvas";
 
+registerFont("src/lib/assets/fonts/Mojangles.ttf", { family: "Mojangles" });
+
 export class AchievementCommand extends Command {
 	constructor(context, options) {
 		super(context, {
