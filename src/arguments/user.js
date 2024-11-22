@@ -14,7 +14,7 @@ export class ImageArgument extends Argument {
 		return this.error({
 			context,
 			parameter,
-			message: "The provided argument could not be resolved to a member.",
+			message: "The provided argument could not be resolved to a user.",
 			identifier: "InvalidUser"
 		});
 	}

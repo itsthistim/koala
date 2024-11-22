@@ -1,6 +1,7 @@
-import { Command } from "@sapphire/framework";
+import { container, Command } from "@sapphire/framework";
 import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage } from "canvas";
+import { shortenText } from "#lib/canvas";
 
 export class SteamNowPlayingCommand extends Command {
 	constructor(context, options) {
@@ -24,41 +25,38 @@ export class SteamNowPlayingCommand extends Command {
 		registry.registerChatInputCommand((builder) => {
 			builder //
 				.setName(this.name)
-				.setDescription(this.description);
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName("user").setDescription("The user to draw the avatar of.").setRequired(true))
+				.addStringOption((option) => option.setName("game").setDescription("The game for the user to play.").setRequired(true));
 		});
 	}
 
 	async chatInputRun(interaction) {
-		let image =
-			(await interaction.options.getUser("user"))?.displayAvatarURL({
-				extension: "png",
-				size: 512
-			}) ??
-			(await interaction.options.getString("url")) ??
-			interaction.user.displayAvatarURL({ extension: "png", size: 512 });
+		const member = await interaction.options.getMember("user");
+		const game = await interaction.options.getString("game");
 
-		let attachment = await this.createImage(image);
+		const attachment = await this.createImage(member.user, game);
 
-		if (typeof attachment === "string") {
-			return interaction.reply(attachment);
-		} else {
-			return interaction.reply({ files: [attachment] });
-		}
+		if (typeof attachment === "string") return interaction.reply(attachment);
+		return interaction.reply({ files: [attachment] });
 	}
 
 	async messageRun(message, args) {
-		let image = await args.pick("member").catch(() => args.pick("image").catch((err) => message.author.displayAvatarURL({ extension: "png", size: 512 })));
-		if (typeof image === "object") image = image.user.displayAvatarURL({ extension: "png", size: 512 });
+		const member = await args.pick("member");
+		const game = await args.rest("string").catch(() => "a game");
 
-		const result = await this.createImage(image);
-		if (typeof result === "string") return reply(message, result);
-		return message.channel.send({ files: [result] });
+		console.log(member.user.username, game);
+
+		const attachment = await this.createImage(member.user, game);
+
+		if (typeof attachment === "string") return reply(message, attachment);
+		return message.channel.send({ files: [attachment] });
 	}
 
-	async createImage(image) {
+	async createImage(user, game) {
 		try {
 			const base = await loadImage("src/lib/assets/images/steam-now-playing.png");
-			const data = await loadImage(image);
+			const data = await loadImage(user.displayAvatarURL({ extension: "png", size: 512 }));
 
 			const canvas = createCanvas(base.width, base.height);
 			const ctx = canvas.getContext("2d");
@@ -66,7 +64,7 @@ export class SteamNowPlayingCommand extends Command {
 			ctx.drawImage(data, 26, 26, 41, 42);
 			ctx.fillStyle = "#90b93c";
 			ctx.font = "14px Sans";
-			ctx.fillText(guildMember.user.username, 80, 34);
+			ctx.fillText(user.username, 80, 34);
 			ctx.fillText(shortenText(ctx, game, 200), 80, 70);
 			let attachment = canvas.toBuffer();
 			if (Buffer.byteLength(attachment) > 8e6) return `Error: The image was too large to send.`;

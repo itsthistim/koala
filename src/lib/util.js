@@ -7,7 +7,7 @@
  * @returns {User}
  */
 export function resolveUser(text, users, caseSensitive = false, wholeWord = false) {
-	return users.get(text) || users.find((user) => this.checkUser(text, user, caseSensitive, wholeWord));
+	return users.get(text) || users.find((user) => checkUser(text, user, caseSensitive, wholeWord));
 }
 
 /**
@@ -19,7 +19,7 @@ export function resolveUser(text, users, caseSensitive = false, wholeWord = fals
  * @returns {Collection<Snowflake, User>}
  */
 export function resolveUsers(text, users, caseSensitive = false, wholeWord = false) {
-	return users.filter((user) => this.checkUser(text, user, caseSensitive, wholeWord));
+	return users.filter((user) => checkUser(text, user, caseSensitive, wholeWord));
 }
 
 /**
@@ -58,7 +58,7 @@ export function checkUser(text, user, caseSensitive = false, wholeWord = false) 
  * @returns {GuildMember}
  */
 export function resolveMember(text, members, caseSensitive = false, wholeWord = false) {
-	return members.get(text) || members.find((member) => this.checkMember(text, member, caseSensitive, wholeWord));
+	return members.get(text) || members.find((member) => checkMember(text, member, caseSensitive, wholeWord));
 }
 
 /**
@@ -70,7 +70,7 @@ export function resolveMember(text, members, caseSensitive = false, wholeWord = 
  * @returns {Collection<Snowflake, GuildMember>}
  */
 export function resolveMembers(text, members, caseSensitive = false, wholeWord = false) {
-	return members.filter((member) => this.checkMember(text, member, caseSensitive, wholeWord));
+	return members.filter((member) => checkMember(text, member, caseSensitive, wholeWord));
 }
 
 /**
@@ -110,7 +110,7 @@ export function checkMember(text, member, caseSensitive = false, wholeWord = fal
  * @returns {Channel}
  */
 export function resolveChannel(text, channels, caseSensitive = false, wholeWord = false) {
-	return channels.get(text) || channels.find((channel) => this.checkChannel(text, channel, caseSensitive, wholeWord));
+	return channels.get(text) || channels.find((channel) => checkChannel(text, channel, caseSensitive, wholeWord));
 }
 
 /**
@@ -122,7 +122,7 @@ export function resolveChannel(text, channels, caseSensitive = false, wholeWord 
  * @returns {Collection<Snowflake, Channel>}
  */
 export function resolveChannels(text, channels, caseSensitive = false, wholeWord = false) {
-	return channels.filter((channel) => this.checkChannel(text, channel, caseSensitive, wholeWord));
+	return channels.filter((channel) => checkChannel(text, channel, caseSensitive, wholeWord));
 }
 
 /**
@@ -160,7 +160,7 @@ export function checkChannel(text, channel, caseSensitive = false, wholeWord = f
  * @returns {Role}
  */
 export function resolveRole(text, roles, caseSensitive = false, wholeWord = false) {
-	return roles.get(text) || roles.find((role) => this.checkRole(text, role, caseSensitive, wholeWord));
+	return roles.get(text) || roles.find((role) => checkRole(text, role, caseSensitive, wholeWord));
 }
 
 /**
@@ -172,7 +172,7 @@ export function resolveRole(text, roles, caseSensitive = false, wholeWord = fals
  * @returns {Collection<Snowflake, Role>}
  */
 export function resolveRoles(text, roles, caseSensitive = false, wholeWord = false) {
-	return roles.filter((role) => this.checkRole(text, role, caseSensitive, wholeWord));
+	return roles.filter((role) => checkRole(text, role, caseSensitive, wholeWord));
 }
 
 /**
@@ -210,7 +210,7 @@ export function checkRole(text, role, caseSensitive = false, wholeWord = false) 
  * @returns {Emoji}
  */
 export function resolveEmoji(text, emojis, caseSensitive = false, wholeWord = false) {
-	return emojis.get(text) || emojis.find((emoji) => this.checkEmoji(text, emoji, caseSensitive, wholeWord));
+	return emojis.get(text) || emojis.find((emoji) => checkEmoji(text, emoji, caseSensitive, wholeWord));
 }
 
 /**
@@ -222,7 +222,7 @@ export function resolveEmoji(text, emojis, caseSensitive = false, wholeWord = fa
  * @returns {Collection<Snowflake, Emoji>}
  */
 export function resolveEmojis(text, emojis, caseSensitive = false, wholeWord = false) {
-	return emojis.filter((emoji) => this.checkEmoji(text, emoji, caseSensitive, wholeWord));
+	return emojis.filter((emoji) => checkEmoji(text, emoji, caseSensitive, wholeWord));
 }
 
 /**
@@ -260,7 +260,7 @@ export function checkEmoji(text, emoji, caseSensitive = false, wholeWord = false
  * @returns {Guild}
  */
 export function resolveGuild(text, guilds, caseSensitive = false, wholeWord = false) {
-	return guilds.get(text) || guilds.find((guild) => this.checkGuild(text, guild, caseSensitive, wholeWord));
+	return guilds.get(text) || guilds.find((guild) => checkGuild(text, guild, caseSensitive, wholeWord));
 }
 
 /**
@@ -272,7 +272,7 @@ export function resolveGuild(text, guilds, caseSensitive = false, wholeWord = fa
  * @returns {Collection<Snowflake, Guild>}
  */
 export function resolveGuilds(text, guilds, caseSensitive = false, wholeWord = false) {
-	return guilds.filter((guild) => this.checkGuild(text, guild, caseSensitive, wholeWord));
+	return guilds.filter((guild) => checkGuild(text, guild, caseSensitive, wholeWord));
 }
 
 /**
