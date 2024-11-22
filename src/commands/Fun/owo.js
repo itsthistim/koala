@@ -50,7 +50,7 @@ export class UserCommand extends Subcommand {
 				.setName(this.name)
 				.setDescription(this.description)
 				.addSubcommand((subcommand) => subcommand.setName("me").setDescription("uwuify your messages. run again to disable"))
-				.addSubcommand((subcommand) => subcommand.setName("everyone").setDescription("uwuify everyone's messages. run again to disable"))
+				// .addSubcommand((subcommand) => subcommand.setName("everyone").setDescription("uwuify everyone's messages. run again to disable"))
 				.addSubcommand((subcommand) =>
 					subcommand
 						.setName("this")
