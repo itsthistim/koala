@@ -1,6 +1,7 @@
 import { Command } from "@sapphire/framework";
+import { PermissionFlagsBits } from "discord.js";
 import { reply } from "@sapphire/plugin-editable-commands";
-import { createCanvas, loadImage, registerFont } from "canvas";
+import { createCanvas, loadImage } from "canvas";
 
 export class RossCommand extends Command {
 	constructor(context, options) {
