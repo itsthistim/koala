@@ -1,3 +1,30 @@
+import Uwuifier from "uwuifier";
+
+/**
+ * UwUifies a text.
+ * @param {string} text The text to uwuify
+ * @returns {string} The uwuified text
+ */
+export function uwuify(text) {
+	const uwuifier = new Uwuifier({
+		spaces: {
+			faces: 0.1,
+			actions: 0.1,
+			stutters: 0.2
+		},
+		words: 1,
+		exclamations: 1
+	});
+
+	let uwuified = uwuifier.uwuifySentence(text);
+
+	// sanitize
+	uwuified = uwuified.replace(/`/g, "\\`");
+	uwuified = uwuified.replace(/\*/g, "\\*");
+
+	return uwuified;
+}
+
 /**
  * Resolves a user from a string, such as an ID, a name, or a mention.
  * @param {string} text - Text to resolve.
