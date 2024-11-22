@@ -1,6 +1,6 @@
 import { Command } from "@sapphire/framework";
 import { reply } from "@sapphire/plugin-editable-commands";
-import { createCanvas, loadImage, registerFont } from "canvas";
+import { createCanvas, loadImage } from "canvas";
 import { drawImageWithTint } from "#lib/canvas";
 
 export class HeartsCommand extends Command {
