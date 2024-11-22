@@ -41,7 +41,7 @@ export class UserEvent extends Listener {
 							avatarURL: message.author.displayAvatarURL()
 						})
 						.catch(() => {
-							message.channel.send(uwuified);
+							message.channel.send({ content: uwuified, files: msgAttachments });
 						});
 
 					return message.delete();
