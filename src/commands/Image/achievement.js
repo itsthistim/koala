@@ -2,10 +2,7 @@ import { container, Command } from "@sapphire/framework";
 import { PermissionFlagsBits } from "discord.js";
 import { reply } from "@sapphire/plugin-editable-commands";
 import { createCanvas, loadImage, registerFont } from "canvas";
-
-registerFont("src/lib/assets/fonts/MinecraftRegular-Bmg3.otf", {
-	family: "Minecraftia"
-});
+import { shortenText } from "#lib/canvas";
 
 export class AchievementCommand extends Command {
 	constructor(context, options) {
@@ -55,7 +52,7 @@ export class AchievementCommand extends Command {
 
 			const ctx = canvas.getContext("2d");
 			ctx.drawImage(base, 0, 0);
-			ctx.font = "20px Minecraftia";
+			ctx.font = "20px Mojangles";
 			ctx.fillStyle = "#ffff00";
 			ctx.fillStyle = "#ffffff";
 			ctx.fillText(shortenText(ctx, text, 250), 60, 50);
