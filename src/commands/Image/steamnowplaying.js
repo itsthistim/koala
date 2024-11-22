@@ -45,8 +45,6 @@ export class SteamNowPlayingCommand extends Command {
 		const member = await args.pick("member");
 		const game = await args.rest("string").catch(() => "a game");
 
-		console.log(member.user.username, game);
-
 		const attachment = await this.createImage(member.user, game);
 
 		if (typeof attachment === "string") return reply(message, attachment);
