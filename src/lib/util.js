@@ -1,4 +1,51 @@
+import { Channel, Collection, GuildMember, Snowflake, User } from "discord.js";
 import Uwuifier from "uwuifier";
+
+//#region String Utilities
+/**
+ * Resolves the indefinite article for a word.
+ * @param {string} word - Word to resolve.
+ * @returns {string} - 'a' or 'an'.
+ */
+export function getIndefiniteArticle(word) {
+	const vowels = ["a", "e", "i", "o", "u"];
+	const firstLetter = word.charAt(0).toLowerCase();
+	return vowels.includes(firstLetter) ? "an" : "a";
+}
+
+/**
+ * Shortens a text.
+ * @param {string} input Input string
+ * @param {number} maxLength Maximum length of the string
+ * @param {boolean} ending Whether to add an ellipsis at the end or not
+ * @returns Formatted string
+ */
+export function fitTo(input, maxLength = 250, ending = false) {
+	if (input.length >= maxLength) {
+		input = input.trim();
+		return input.substring(0, maxLength - (ending ? 3 : 0)) + (ending ? "..." : "");
+	}
+	return input;
+}
+
+/**
+ * Wraps a string to fit into a certain length.
+ * @param {string} input String to be wrapped
+ * @param {number} length Length of each line
+ * @returns Wrapped string
+ */
+export async function softWrap(input, length = 30) {
+	return input.replace(new RegExp(`(?![^\\n]{1,${length}}$)([^\\n]{1,${length}})\\s`, "g"), "$1\n");
+}
+
+/**
+ * Capitalizes a given string.
+ * @param {string} toCapitalize String to capitalize.
+ * @return {string} capitalized string
+ */
+export async function capitalize(toCapitalize) {
+	return toCapitalize.charAt(0).toUpperCase() + toCapitalize.slice(1);
+}
 
 /**
  * UwUifies a text.
@@ -25,6 +72,9 @@ export function uwuify(text) {
 	return uwuified;
 }
 
+//#endregion
+
+//#region Discord Utilities
 /**
  * Resolves a user from a string, such as an ID, a name, or a mention.
  * @param {string} text - Text to resolve.
@@ -320,53 +370,9 @@ export function checkGuild(text, guild, caseSensitive = false, wholeWord = false
 	return name === text;
 }
 
-/**
- * Resolves the indefinite article for a word.
- * @param {string} word - Word to resolve.
- * @returns {string} - 'a' or 'an'.
- */
-export function getIndefiniteArticle(word) {
-	const vowels = ["a", "e", "i", "o", "u"];
-	const firstLetter = word.charAt(0).toLowerCase();
-	return vowels.includes(firstLetter) ? "an" : "a";
-}
+//#endregion
 
-/**
- * Shortens a text.
- * @param {string} input Input string
- * @param {number} from Start index
- * @param {number} to End index
- * @param {boolean} ending Should the string end with '...'?
- * @returns Formatted string
- */
-export function fitTo(input, maxLength = 250, ending = false) {
-	if (input.length >= maxLength) {
-		input = input.trim();
-		return input.substring(0, maxLength - (ending ? 3 : 0)) + (ending ? "..." : "");
-	}
-	return input;
-}
-
-/**
- * Wraps a string to fit into a certain length.
- * @param {string} input String to be wrapped
- * @param {number} length Length of each line
- * @returns Wrapped string
- */
-export async function softWrap(input, length = 30) {
-	const wrap = input.replace(new RegExp(`(?![^\\n]{1,${length}}$)([^\\n]{1,${length}})\\s`, "g"), "$1\n");
-	return wrap;
-}
-
-/**
- * Capitalizes a given string.
- * @param {string} toCapitalize String to capitalize.
- * @return {string} capitalized string
- */
-export async function capitalize(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
+//#region Array Utilities
 /**
  * Picks a random element from an array and returns it.
  * @param {Array} array Array to pick from.
@@ -375,3 +381,5 @@ export async function capitalize(string) {
 export async function pickRandom(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
+
+//#endregion
