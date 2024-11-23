@@ -122,7 +122,7 @@ export class UserCommand extends Subcommand {
 		const guild = message.guild;
 
 		if (user.bot) {
-			return await interaction.reply({ content: "I can't uwuify bots", ephemeral: true });
+			return await message.reply({ content: "I can't uwuify bots", ephemeral: true });
 		}
 
 		const isFollowing = await this.followUser(user, guild);
@@ -138,7 +138,10 @@ export class UserCommand extends Subcommand {
 		const guild = interaction.guild;
 
 		if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-			return await interaction.reply({ content: "you need the `Manage Messages` permission to uwuify others", ephemeral: true });
+			return await interaction.reply({
+				content: "you need the `Manage Messages` permission to uwuify others",
+				ephemeral: true
+			});
 		}
 
 		if (user.bot) {
@@ -157,11 +160,14 @@ export class UserCommand extends Subcommand {
 		const guild = message.guild;
 
 		if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-			return await interaction.reply({ content: "you need the `Manage Messages` permission to uwuify others", ephemeral: true });
+			return await message.reply({
+				content: "you need the `Manage Messages` permission to uwuify others",
+				ephemeral: true
+			});
 		}
 
 		if (member.user.bot) {
-			return await interaction.reply({ content: "I can't uwuify bots", ephemeral: true });
+			return await message.reply({ content: "I can't uwuify bots", ephemeral: true });
 		}
 
 		const isFollowing = await this.followUser(member.user, guild);
@@ -173,10 +179,16 @@ export class UserCommand extends Subcommand {
 
 	// Everyone
 	async slashEveryone(interaction) {
-		return await interaction.reply({ content: "this is still being worked on! this will be available soon!", ephemeral: true });
+		return await interaction.reply({
+			content: "this is still being worked on! this will be available soon!",
+			ephemeral: true
+		});
 	}
 
 	async msgEveryone(message, args) {
-		return await message.reply({ content: "this is still being worked on! this will be available soon!", allowedMentions: { repliedUser: false } });
+		return await message.reply({
+			content: "this is still being worked on! this will be available soon!",
+			allowedMentions: { repliedUser: false }
+		});
 	}
 }
