@@ -1,4 +1,3 @@
-import { Channel, Collection, GuildMember, Snowflake, User } from "discord.js";
 import Uwuifier from "uwuifier";
 
 //#region String Utilities
