@@ -20,12 +20,13 @@ export class UserEvent extends Listener {
 					user_id: message.author.id,
 					guild_id: message.guild.id
 				}
-			}).then(async (data) => {
-				if (data) {
+			}).then(async (foundData) => {
+				if (foundData) {
 					const msgContent = message.content;
 					const msgAttachments = message.attachments.map((attachment) => attachment.url);
 
 					const uwuified = uwuify(msgContent);
+
 					const channelWebhooks = await message.channel.fetchWebhooks();
 					let webhook = channelWebhooks.find((webhook) => webhook.name === "koala");
 

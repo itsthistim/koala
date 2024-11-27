@@ -1,6 +1,6 @@
 import "#lib/setup";
-import { SapphireClient } from "@sapphire/framework";
-import { GatewayIntentBits, Partials } from "discord.js";
+import {SapphireClient} from "@sapphire/framework";
+import {GatewayIntentBits, Partials} from "discord.js";
 
 let prefixes = [];
 if (process.env.NODE_ENV === "PRODUCTION") {
@@ -19,7 +19,6 @@ const client = new SapphireClient({
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.GuildMessageTyping,
 		GatewayIntentBits.GuildModeration,
-		GatewayIntentBits.GuildEmojisAndStickers,
 		GatewayIntentBits.GuildIntegrations,
 		GatewayIntentBits.GuildWebhooks,
 		GatewayIntentBits.GuildInvites,
@@ -34,7 +33,7 @@ const client = new SapphireClient({
 		GatewayIntentBits.AutoModerationConfiguration,
 		GatewayIntentBits.AutoModerationExecution
 	],
-	allowedMentions: { repliedUser: false },
+	allowedMentions: {repliedUser: false},
 	loadMessageCommandListeners: true,
 	partials: [Partials.Channel],
 	shards: "auto"
