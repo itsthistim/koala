@@ -1,10 +1,10 @@
-import { Listener } from '@sapphire/framework';
+import { container, Listener } from "@sapphire/framework";
 
 export default class SearchNoResultListener extends Listener {
 	constructor(context) {
 		super(context, {
-			event: 'searchNoResult',
-			emitter: 'distube'
+			event: "searchNoResult",
+			emitter: "distube"
 		});
 	}
 
@@ -14,7 +14,7 @@ export default class SearchNoResultListener extends Listener {
 				{
 					title: `No Result`,
 					description: `Couldn't find a result for \`${query.slice(0, 1974)}\`.`,
-					color: COLORS.RED
+					color: container.colors.RED
 				}
 			]
 		});

@@ -1,10 +1,10 @@
-import { Listener } from '@sapphire/framework';
+import { container, Listener } from "@sapphire/framework";
 
 export default class AddSongListener extends Listener {
 	constructor(context) {
 		super(context, {
-			event: 'addSong',
-			emitter: 'distube'
+			event: "addSong",
+			emitter: "distube"
 		});
 	}
 
@@ -19,7 +19,7 @@ export default class AddSongListener extends Listener {
 							thumbnail: {
 								url: `${song.thumbnail}`
 							},
-							color: COLORS.GREEN
+							color: container.colors.GREEN
 						}
 					]
 				});
@@ -30,7 +30,7 @@ export default class AddSongListener extends Listener {
 							title: `Added to queue`,
 							description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
 							thumbnail: { url: `${song.thumbnail}` },
-							color: COLORS.GREEN
+							color: container.colors.GREEN
 						}
 					]
 				});
@@ -44,7 +44,7 @@ export default class AddSongListener extends Listener {
 						thumbnail: {
 							url: `${song.thumbnail}`
 						},
-						color: COLORS.GREEN
+						color: container.colors.GREEN
 					}
 				]
 			});
