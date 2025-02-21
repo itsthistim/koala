@@ -295,4 +295,5 @@ export class RoleCommand extends Subcommand {
 		const embed = new EmbedBuilder().setTitle("Role Assigned").setDescription(`Role ${role} assigned.`).setColor(container.color.PASTEL_GREEN).setTimestamp();
 		await reply(message, { embeds: [embed] });
 	}
+	//#endregion
 }
