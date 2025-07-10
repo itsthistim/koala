@@ -61,8 +61,8 @@ export class RoleCommand extends Subcommand {
 						.setDescription("Create a role.")
 						.addStringOption((option) => option.setName("name").setDescription("The name of the role.").setRequired(true))
 						.addStringOption((option) => option.setName("color").setDescription("The color of the role.").setRequired(false))
-						.addBooleanOption((option) => option.setName("hoist").setDescription("Whether or not to hoist the role.").setRequired(false))
 						.addBooleanOption((option) => option.setName("mentionable").setDescription("Whether or not to make the role mentionable.").setRequired(false))
+						.addBooleanOption((option) => option.setName("hoist").setDescription("Whether or not to hoist the role.").setRequired(false))
 				)
 				.addSubcommand((command) =>
 					command
@@ -71,8 +71,8 @@ export class RoleCommand extends Subcommand {
 						.addRoleOption((option) => option.setName("role").setDescription("The role to edit.").setRequired(true))
 						.addStringOption((option) => option.setName("name").setDescription("The name of the role.").setRequired(false))
 						.addStringOption((option) => option.setName("color").setDescription("The color of the role.").setRequired(false))
-						.addBooleanOption((option) => option.setName("hoist").setDescription("Whether or not to hoist the role.").setRequired(false))
 						.addBooleanOption((option) => option.setName("mentionable").setDescription("Whether or not to make the role mentionable.").setRequired(false))
+						.addBooleanOption((option) => option.setName("hoist").setDescription("Whether or not to hoist the role.").setRequired(false))
 				)
 				.addSubcommand((command) =>
 					command
@@ -102,13 +102,11 @@ export class RoleCommand extends Subcommand {
 	async slashCreate(interaction) {
 		const name = interaction.options.getString("name");
 		let color = interaction.options.getString("color");
-		const hoist = interaction.options.getBoolean("hoist");
 		const mentionable = interaction.options.getBoolean("mentionable");
+		const hoist = interaction.options.getBoolean("hoist");
 
 		color = this.validateColor(color);
 		if (color) color = resolveColor(color);
-
-		console.log(name, color, hoist, mentionable);
 
 		const role = await interaction.guild.roles.create({
 			data: {
@@ -119,9 +117,10 @@ export class RoleCommand extends Subcommand {
 			}
 		});
 
-		const embed = new EmbedBuilder().setTitle("Role Created").setDescription(`Role ${role} created.`).setColor(container.color.PASTEL_GREEN).setTimestamp();
-
-		await interaction.reply({ embeds: [embed] });
+		return await interaction.reply({
+			content: `Created role ${role}.`,
+			ephemeral: true
+		});
 	}
 
 	async msgCreate(message, args) {
@@ -130,12 +129,8 @@ export class RoleCommand extends Subcommand {
 		const hoist = await args.pick("boolean").catch(() => false);
 		const mentionable = await args.pick("boolean").catch(() => false);
 
-		console.log("validating color", color, "...");
 		color = this.validateColor(color);
-		console.log("validated color", color);
-		console.log("resolving color ...");
 		if (color) color = resolveColor(color);
-		console.log("resolved color", color);
 
 		const role = await message.guild.roles.create({
 			name: name,
@@ -145,9 +140,7 @@ export class RoleCommand extends Subcommand {
 			reason: `Role created by ${message.author.tag}`
 		});
 
-		const embed = new EmbedBuilder().setTitle("Role Created").setDescription(`Role ${role} created.`).setColor(container.color.PASTEL_GREEN).setTimestamp();
-
-		await reply(message, { embeds: [embed] });
+		return await reply(message, `Created role ${role}.`);
 	}
 	//#endregion
 
@@ -156,22 +149,22 @@ export class RoleCommand extends Subcommand {
 		const role = interaction.options.getRole("role");
 
 		if (!role) {
-			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be found.`).setColor(container.color.CHERRY_RED).setTimestamp();
+			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be found.`).setColor(container.colors.RED).setTimestamp();
 			await interaction.reply({ embeds: [embed] });
 			return;
 		} else if (!interaction.guild.roles.cache.get(role.id)) {
-			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be found.`).setColor(container.color.CHERRY_RED).setTimestamp();
+			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be found.`).setColor(container.colors.RED).setTimestamp();
 			await interaction.reply({ embeds: [embed] });
 			return;
 		} else if (role.managed) {
-			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be deleted.`).setColor(container.color.CHERRY_RED).setTimestamp();
+			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be deleted.`).setColor(container.colors.RED).setTimestamp();
 			await interaction.reply({ embeds: [embed] });
 			return;
 		}
 
 		await role.delete();
 
-		const embed = new EmbedBuilder().setTitle("Role Deleted").setDescription(`Role ${role} deleted.`).setColor(container.color.CHERRY_RED).setTimestamp();
+		const embed = new EmbedBuilder().setTitle("Role Deleted").setDescription(`Role ${role} deleted.`).setColor(container.colors.RED).setTimestamp();
 		await interaction.reply({ embeds: [embed] });
 	}
 
@@ -180,22 +173,22 @@ export class RoleCommand extends Subcommand {
 
 		// check if role exists
 		if (!role) {
-			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be found.`).setColor(container.color.CHERRY_RED).setTimestamp();
+			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be found.`).setColor(container.colors.RED).setTimestamp();
 			await reply(message, { embeds: [embed] });
 			return;
 		} else if (!message.guild.roles.cache.get(role.id)) {
-			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be found.`).setColor(container.color.CHERRY_RED).setTimestamp();
+			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be found.`).setColor(container.colors.RED).setTimestamp();
 			await reply(message, { embeds: [embed] });
 			return;
 		} else if (role.managed) {
-			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be deleted.`).setColor(container.color.CHERRY_RED).setTimestamp();
+			const embed = new EmbedBuilder().setTitle("Role Not Found").setDescription(`Role could not be deleted.`).setColor(container.colors.RED).setTimestamp();
 			await reply(message, { embeds: [embed] });
 			return;
 		}
 
 		await role.delete();
 
-		const embed = new EmbedBuilder().setTitle("Role Deleted").setDescription(`Role ${role} deleted.`).setColor(container.color.CHERRY_RED).setTimestamp();
+		const embed = new EmbedBuilder().setTitle("Role Deleted").setDescription(`Role ${role} deleted.`).setColor(container.colors.RED).setTimestamp();
 		await reply(message, { embeds: [embed] });
 	}
 	//#endregion
@@ -218,7 +211,7 @@ export class RoleCommand extends Subcommand {
 			mentionable: mentionable
 		});
 
-		const embed = new EmbedBuilder().setTitle("Role Edited").setDescription(`Role ${role} edited.`).setColor(container.color.PASTEL_GREEN).setTimestamp();
+		const embed = new EmbedBuilder().setTitle("Role Edited").setDescription(`Role ${role} edited.`).setColor(container.colors.GREEN).setTimestamp();
 		await interaction.reply({ embeds: [embed] });
 	}
 
@@ -239,7 +232,7 @@ export class RoleCommand extends Subcommand {
 			mentionable: mentionable
 		});
 
-		const embed = new EmbedBuilder().setTitle("Role Edited").setDescription(`Role ${role} edited.`).setColor(container.color.PASTEL_GREEN).setTimestamp();
+		const embed = new EmbedBuilder().setTitle("Role Edited").setDescription(`Role ${role} edited.`).setColor(container.colors.GREEN).setTimestamp();
 		await reply(message, { embeds: [embed] });
 	}
 
@@ -269,7 +262,7 @@ export class RoleCommand extends Subcommand {
 			await interaction.guild.members.cache.forEach((member) => member.roles.add(role));
 		}
 
-		const embed = new EmbedBuilder().setTitle("Role Assigned").setDescription(`Role ${role} assigned.`).setColor(container.color.PASTEL_GREEN).setTimestamp();
+		const embed = new EmbedBuilder().setTitle("Role Assigned").setDescription(`Role ${role} assigned.`).setColor(container.colors.GREEN).setTimestamp();
 		await interaction.reply({ embeds: [embed] });
 	}
 
@@ -292,7 +285,7 @@ export class RoleCommand extends Subcommand {
 			await target.roles.add(role);
 		}
 
-		const embed = new EmbedBuilder().setTitle("Role Assigned").setDescription(`Role ${role} assigned.`).setColor(container.color.PASTEL_GREEN).setTimestamp();
+		const embed = new EmbedBuilder().setTitle("Role Assigned").setDescription(`Role ${role} assigned.`).setColor(container.colors.GREEN).setTimestamp();
 		await reply(message, { embeds: [embed] });
 	}
 	//#endregion
