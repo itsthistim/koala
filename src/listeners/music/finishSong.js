@@ -1,10 +1,10 @@
-import { Listener } from '@sapphire/framework';
+import { Listener } from "@sapphire/framework";
 
 export default class AddSongListener extends Listener {
 	constructor(context) {
 		super(context, {
-			event: 'finishSong',
-			emitter: 'distube'
+			event: "finishSong",
+			emitter: "distube"
 		});
 	}
 

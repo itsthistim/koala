@@ -12,56 +12,56 @@ export default class PlaySongListener extends Listener {
 		if (song.metadata) {
 			if (song.metadata.i.replied) {
 				song.metadata.i
-				.followUp({
-					embeds: [
-						{
-							title: `Now playing`,
-							description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
-							thumbnail: {
-								url: `${song.thumbnail}`
-							},
-							color: container.colors.DEFAULT
-						}
-					]
-				})
-				.then((msg) => {
-					queue.npmessage = msg;
-				});
+					.followUp({
+						embeds: [
+							{
+								title: `Now playing`,
+								description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
+								thumbnail: {
+									url: `${song.thumbnail}`
+								},
+								color: container.colors.DEFAULT
+							}
+						]
+					})
+					.then((msg) => {
+						queue.npmessage = msg;
+					});
 			} else {
 				song.metadata.i
-				.reply({
-					embeds: [
-						{
-							title: `Now playing`,
-							description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
-							thumbnail: {
-								url: `${song.thumbnail}`
-							},
-							color: container.colors.DEFAULT
-						}
-					]
-				})
-				.then((msg) => {
-					queue.npmessage = msg;
-				});
+					.reply({
+						embeds: [
+							{
+								title: `Now playing`,
+								description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
+								thumbnail: {
+									url: `${song.thumbnail}`
+								},
+								color: container.colors.DEFAULT
+							}
+						]
+					})
+					.then((msg) => {
+						queue.npmessage = msg;
+					});
 			}
 		} else {
 			queue.textChannel
-			.send({
-				embeds: [
-					{
-						title: `Now playing`,
-						description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
-						thumbnail: {
-							url: `${song.thumbnail}`
-						},
-						color: container.colors.DEFAULT
-					}
-				]
-			})
-			.then((msg) => {
-				queue.npmessage = msg;
-			});
+				.send({
+					embeds: [
+						{
+							title: `Now playing`,
+							description: `**[${song.name}](${song.url})** - **[${song.uploader.name}](${song.uploader.url})** | ${song.user}`,
+							thumbnail: {
+								url: `${song.thumbnail}`
+							},
+							color: container.colors.DEFAULT
+						}
+					]
+				})
+				.then((msg) => {
+					queue.npmessage = msg;
+				});
 		}
 	}
 }

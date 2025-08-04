@@ -1,9 +1,9 @@
-import { Argument } from '@sapphire/framework';
+import { Argument } from "@sapphire/framework";
 
 export class ImageArgument extends Argument {
 	async run(parameter, context) {
-		parameter = parameter.replace('<', '');
-		parameter = parameter.replace('>', '');
+		parameter = parameter.replace("<", "");
+		parameter = parameter.replace(">", "");
 
 		if (this.validURL(parameter)) {
 			return this.ok(parameter);
@@ -12,13 +12,13 @@ export class ImageArgument extends Argument {
 		return this.error({
 			context,
 			parameter,
-			message: 'The provided argument could not be resolved to an image.',
-			identifier: 'InvalidImage'
+			message: "The provided argument could not be resolved to an image.",
+			identifier: "InvalidImage"
 		});
 	}
 
 	validURL(str) {
-		const pattern = new RegExp('https?://\\S+', 'i');
+		const pattern = new RegExp("https?://\\S+", "i");
 		return !!pattern.test(str);
 	}
 }

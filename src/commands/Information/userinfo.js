@@ -24,9 +24,9 @@ export class UserInfoCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
 			builder
-			.setName(this.name)
-			.setDescription(this.description)
-			.addUserOption((option) => option.setName("user").setDescription("The user or the id of the user to get information about."));
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName("user").setDescription("The user or the id of the user to get information about."));
 		});
 	}
 
@@ -71,54 +71,54 @@ export class UserInfoCommand extends Command {
 
 		if (!member) {
 			return new EmbedBuilder()
-			.setColor(container.colors.DEFAULT)
-			.setAuthor({
-				name: `${user.username}`,
-				iconURL: user.displayAvatarURL({ dynamic: true })
-			})
-			.setThumbnail(user.displayAvatarURL({ dynamic: true }))
-			.setDescription(`${user}`)
-			.addFields({
-				name: "Joined Discord",
-				value: `${moment.utc(user.createdAt).format("MMM Do YYYY, HH:mm:ss")}\n(${this.durationAgo(user.createdAt)})`,
-				inline: true
-			})
-			.setFooter({ text: `All times are UTC!` });
+				.setColor(container.colors.DEFAULT)
+				.setAuthor({
+					name: `${user.username}`,
+					iconURL: user.displayAvatarURL({ dynamic: true })
+				})
+				.setThumbnail(user.displayAvatarURL({ dynamic: true }))
+				.setDescription(`${user}`)
+				.addFields({
+					name: "Joined Discord",
+					value: `${moment.utc(user.createdAt).format("MMM Do YYYY, HH:mm:ss")}\n(${this.durationAgo(user.createdAt)})`,
+					inline: true
+				})
+				.setFooter({ text: `All times are UTC!` });
 		}
 
 		let embed = new EmbedBuilder()
-		.setColor(container.colors.DEFAULT)
-		.setAuthor({
-			name: `${member.user.tag}`,
-			iconURL: user.displayAvatarURL({ dynamic: true })
-		})
-		.setThumbnail(member.displayAvatarURL({ dynamic: true }))
-		.setDescription(`${member.presence ? status[member.presence.status] : ""}${member}`)
-		.addFields(
-			{
-				name: "Joined Server",
-				value: `${moment.utc(member.joinedAt).format("MMM Do YYYY, HH:mm:ss")}\n(${this.durationAgo(member.joinedAt)})`,
-				inline: true
-			},
-			{
-				name: "Joined Discord",
-				value: `${moment.utc(member.user.createdAt).format("MMM Do YYYY, HH:mm:ss")}\n(${this.durationAgo(member.user.createdAt)})`,
-				inline: true
-			},
-			{
-				name: `Roles [${member.roles.cache.size - 1}]`,
-				value: member.roles.cache.size > 1 ? member.roles.cache.map((r) => r).join(" ") : "None",
-				inline: false
-			}
-		);
+			.setColor(container.colors.DEFAULT)
+			.setAuthor({
+				name: `${member.user.tag}`,
+				iconURL: user.displayAvatarURL({ dynamic: true })
+			})
+			.setThumbnail(member.displayAvatarURL({ dynamic: true }))
+			.setDescription(`${member.presence ? status[member.presence.status] : ""}${member}`)
+			.addFields(
+				{
+					name: "Joined Server",
+					value: `${moment.utc(member.joinedAt).format("MMM Do YYYY, HH:mm:ss")}\n(${this.durationAgo(member.joinedAt)})`,
+					inline: true
+				},
+				{
+					name: "Joined Discord",
+					value: `${moment.utc(member.user.createdAt).format("MMM Do YYYY, HH:mm:ss")}\n(${this.durationAgo(member.user.createdAt)})`,
+					inline: true
+				},
+				{
+					name: `Roles [${member.roles.cache.size - 1}]`,
+					value: member.roles.cache.size > 1 ? member.roles.cache.map((r) => r).join(" ") : "None",
+					inline: false
+				}
+			);
 
 		if (Object.keys(key_permissions).filter((key) => member.permissions.toArray().includes(key)).length > 0) {
 			embed.addFields({
 				name: "Key Permissions",
 				value: Object.keys(key_permissions)
-				.filter((key) => member.permissions.toArray().includes(key))
-				.map((key) => key_permissions[key])
-				.join(", "),
+					.filter((key) => member.permissions.toArray().includes(key))
+					.map((key) => key_permissions[key])
+					.join(", "),
 				inline: false
 			});
 		}

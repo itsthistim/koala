@@ -34,7 +34,7 @@ export class RossCommand extends Command {
 	async chatInputRun(interaction, ctx) {
 		let image =
 			(await interaction.options.getUser("user"))?.displayAvatarURL({ extension: "png", size: 512 }) ??
-			(interaction.options.getString("url")) ??
+			interaction.options.getString("url") ??
 			interaction.user.displayAvatarURL({ extension: "png", size: 512 });
 
 		let attachment = await this.createImage(image);
@@ -47,10 +47,14 @@ export class RossCommand extends Command {
 	}
 
 	async messageRun(message, args, ctx) {
-		let image = await args.pick("member").catch(() => args.pick("image").catch(() => message.author.displayAvatarURL({
-			extension: "png",
-			size: 512
-		})));
+		let image = await args.pick("member").catch(() =>
+			args.pick("image").catch(() =>
+				message.author.displayAvatarURL({
+					extension: "png",
+					size: 512
+				})
+			)
+		);
 
 		if (typeof image === "object") {
 			image = image.displayAvatarURL({ extension: "png", size: 512 });

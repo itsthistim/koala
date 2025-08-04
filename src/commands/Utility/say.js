@@ -31,12 +31,12 @@ export class SayCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
 			builder //
-			.setName(this.name)
-			.setDescription(this.description)
-			.addStringOption((option) => option.setName("text").setDescription("The text to say.").setRequired(true))
-			.addBooleanOption((option) => option.setName("tts").setDescription("Enable Text To Speech for the message.").setRequired(false))
-			.addBooleanOption((option) => option.setName("owo").setDescription("OWOifys the message.").setRequired(false))
-			.addBooleanOption((option) => option.setName("embed").setDescription("Embeds the message.").setRequired(false));
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName("text").setDescription("The text to say.").setRequired(true))
+				.addBooleanOption((option) => option.setName("tts").setDescription("Enable Text To Speech for the message.").setRequired(false))
+				.addBooleanOption((option) => option.setName("owo").setDescription("OWOifys the message.").setRequired(false))
+				.addBooleanOption((option) => option.setName("embed").setDescription("Embeds the message.").setRequired(false));
 		});
 	}
 
@@ -91,16 +91,14 @@ export class SayCommand extends Command {
 			embed.setDescription(text);
 
 			if (del) {
-				await message.delete().catch(() => {
-				});
+				await message.delete().catch(() => {});
 				return send(message, { embeds: [embed], allowedMentions: { parse: [], repliedUser: true } });
 			} else {
 				return reply(message, { embeds: [embed], allowedMentions: { parse: [], repliedUser: true } });
 			}
 		} else {
 			if (del) {
-				await message.delete().catch(() => {
-				});
+				await message.delete().catch(() => {});
 				return send(message, { content: text, tts: doTTS, allowedMentions: { parse: [], repliedUser: true } });
 			} else {
 				return reply(message, { content: text, tts: doTTS, allowedMentions: { parse: [], repliedUser: true } });

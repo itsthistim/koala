@@ -27,9 +27,9 @@ export class UrbanCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
 			builder
-			.setName(this.name)
-			.setDescription(this.description)
-			.addStringOption((option) => option.setName("word").setDescription("The word to look up.").setRequired(true));
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName("word").setDescription("The word to look up.").setRequired(true));
 		});
 	}
 
@@ -56,22 +56,22 @@ export class UrbanCommand extends Command {
 
 		return new Promise(async (resolve, reject) => {
 			const embed = new EmbedBuilder()
-			.setColor(container.colors.DEFAULT)
-			.setTitle(definition.word)
-			.setURL(definition.permalink)
-			.setDescription(fitTo(definition.definition.replace(/\[|\]/g, ""), EmbedLimits.MaximumDescriptionLength, true))
-			.addFields(
-				{
-					name: "Example",
-					value: `${fitTo(definition.example.replace(/\[|\]/g, ""), EmbedLimits.MaximumFieldValueLength, true)}\u200B`,
-					inline: false
-				},
-				{ name: "👍", value: `${definition.thumbs_up}\u200B`, inline: true },
-				{ name: "👎", value: `${definition.thumbs_down}\u200B`, inline: true }
-			)
-			.setFooter({
-				text: `${definition.author}  •  ${moment(definition.written_on).format("MMM Do YYYY, h:mm a")}`
-			});
+				.setColor(container.colors.DEFAULT)
+				.setTitle(definition.word)
+				.setURL(definition.permalink)
+				.setDescription(fitTo(definition.definition.replace(/\[|\]/g, ""), EmbedLimits.MaximumDescriptionLength, true))
+				.addFields(
+					{
+						name: "Example",
+						value: `${fitTo(definition.example.replace(/\[|\]/g, ""), EmbedLimits.MaximumFieldValueLength, true)}\u200B`,
+						inline: false
+					},
+					{ name: "👍", value: `${definition.thumbs_up}\u200B`, inline: true },
+					{ name: "👎", value: `${definition.thumbs_down}\u200B`, inline: true }
+				)
+				.setFooter({
+					text: `${definition.author}  •  ${moment(definition.written_on).format("MMM Do YYYY, h:mm a")}`
+				});
 
 			return resolve(embed);
 		});

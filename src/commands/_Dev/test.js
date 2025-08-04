@@ -1,14 +1,14 @@
-import { Command } from '@sapphire/framework';
-import { reply } from '@sapphire/plugin-editable-commands';
+import { Command } from "@sapphire/framework";
+import { reply } from "@sapphire/plugin-editable-commands";
 // import parse from 'parse-duration';
 // import humanizeDuration from 'humanize-duration';
 
 export class TestCommand extends Command {
 	constructor(context, options) {
 		super(context, {
-			name: 'test',
-			description: 'Testing stuff.',
-			preconditions: ['ownerOnly']
+			name: "test",
+			description: "Testing stuff.",
+			preconditions: ["ownerOnly"]
 		});
 	}
 
@@ -18,16 +18,16 @@ export class TestCommand extends Command {
 				builder.setName(this.name).setDescription(this.description);
 			},
 			{
-				guildIds: ['502208815937224715']
+				guildIds: ["502208815937224715"]
 			}
 		);
 	}
 
 	async chatInputRun(interaction) {
-		interaction.reply({ content: 'test' });
+		interaction.reply({ content: "test" });
 	}
 
 	async messageRun(message, args) {
-		reply(message, 'test');
+		reply(message, "test");
 	}
 }

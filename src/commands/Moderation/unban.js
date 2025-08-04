@@ -23,10 +23,10 @@ export class UnbanCommand extends Command {
 	registerApplicationCommands(registry) {
 		registry.registerChatInputCommand((builder) => {
 			builder
-			.setName(this.name)
-			.setDescription(this.description)
-			.addUserOption((option) => option.setName("user").setDescription("The user to unban.").setRequired(true))
-			.addStringOption((option) => option.setName("reason").setDescription("The reason for the unban.").setRequired(false));
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) => option.setName("user").setDescription("The user to unban.").setRequired(true))
+				.addStringOption((option) => option.setName("reason").setDescription("The reason for the unban.").setRequired(false));
 		});
 	}
 
@@ -51,9 +51,9 @@ export class UnbanCommand extends Command {
 
 	async messageRun(message, args) {
 		var user = await args
-		.pick("member")
-		.catch(() => args.pick("user"))
-		.catch(() => null);
+			.pick("member")
+			.catch(() => args.pick("user"))
+			.catch(() => null);
 		var reason = await args.rest("string").catch(() => null);
 
 		if (!user) {
@@ -74,17 +74,17 @@ export class UnbanCommand extends Command {
 	async unbanUser(interaction, user, reason) {
 		if (user.member) {
 			return new EmbedBuilder()
-			.setColor(container.colors.RED)
-			.setTitle("User Not Banned")
-			.setDescription(`**${user.tag ?? user.user.tag}** is not banned.`);
+				.setColor(container.colors.RED)
+				.setTitle("User Not Banned")
+				.setDescription(`**${user.tag ?? user.user.tag}** is not banned.`);
 		}
 
 		// return await interaction.guild.bans.create(user.id, { reason: reason }).then((banInfo) => {
 		return new EmbedBuilder()
-		.setColor(container.colors.GREEN)
-		.setTitle("User Unbanned")
-		.setDescription(`**${user.tag ?? user.user.tag}** has been unbanned.`)
-		.addFields({ name: "Reason", value: reason, inline: true });
+			.setColor(container.colors.GREEN)
+			.setTitle("User Unbanned")
+			.setDescription(`**${user.tag ?? user.user.tag}** has been unbanned.`)
+			.addFields({ name: "Reason", value: reason, inline: true });
 		// });
 	}
 }

@@ -1,10 +1,10 @@
-import { Listener } from '@sapphire/framework';
+import { Listener } from "@sapphire/framework";
 
 export default class InitQueueListener extends Listener {
 	constructor(context) {
 		super(context, {
-			event: 'initQueue',
-			emitter: 'distube'
+			event: "initQueue",
+			emitter: "distube"
 		});
 	}
 

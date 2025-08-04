@@ -1,4 +1,4 @@
-import { Listener } from '@sapphire/framework';
+import { Listener } from "@sapphire/framework";
 
 export class commandDeniedEvent extends Listener {
 	async run(error, { message }) {
