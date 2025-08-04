@@ -6,10 +6,10 @@
 .env
 .env*
 !.env.example
-.prettierrc
 .untracked
 
 node_modules
+pnpm-workspace.yaml
 
 # database related files
 *.sqlite
