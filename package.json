@@ -7,7 +7,7 @@
 	"scripts": {
 		"dev": "nodemon --enable-source-maps --experimental-json-modules -L --watch src",
 		"start": "node --enable-source-maps --experimental-json-modules src/index.js",
-		"create-env": "printenv > .env"
+		"format": "prettier --write ."
 	},
 	"author": "ThisTim",
 	"license": "ISC",
