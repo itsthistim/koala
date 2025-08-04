@@ -26,7 +26,7 @@
 		"@sapphire/timestamp": "^1.0.3",
 		"@sapphire/utilities": "^3.16.2",
 		"axios": "^1.7.2",
-		"canvas": "^2.11.2",
+		"canvas": "3.0.0-rc3",
 		"common-tags": "^1.8.2",
 		"discord-api-types": "^0.37.92",
 		"discord.js": "^14.15.3",
