@@ -4,6 +4,8 @@
 
 # project setting files
 .env
+.env*
+!.env.example
 .prettierrc
 .untracked
 
