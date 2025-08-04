@@ -7,10 +7,7 @@
 .prettierrc
 .untracked
 
-# node related files
 node_modules
-package-lock.json
-pnpm-lock.yaml
 
 # database related files
 *.sqlite
