@@ -3,7 +3,7 @@ import { Stopwatch } from "@sapphire/stopwatch";
 import { Time } from "@sapphire/time-utilities";
 import { codeBlock, isThenable } from "@sapphire/utilities";
 import { inspect } from "node:util";
-import { PasteGG } from "paste.gg";
+import PasteGG from "paste.gg";
 
 export class Eval extends Command {
 	constructor(context, options) {
