@@ -1,19 +1,24 @@
 ## 🐨 About
+
 [koala](https://discord.com/api/oauth2/authorize?client_id=796034058740170813&permissions=8&scope=bot%20applications.commands) is a multi-purpose Discord that I wrote for my friends. It's using the [Discord Sapphire Framework](https://www.sapphirejs.dev/). It's one of my first coding projects and it already saw multiple rewrites in its lifespan.
 
 ## 🚀 Getting started
+
 Create a new application on the [Discord Developer Portal](https://discord.com/developers/applications) and add a bot to it. As soon as you have a bot application, set up the following:
+
 - Enable the following Privileged Gateway Intents in the bot tab:
-  - Message Content Intent
-  - Server Members Intent
-  - Presence Intent
+
+    - Message Content Intent
+    - Server Members Intent
+    - Presence Intent
 
 - To invite your bot, go to the OAuth2 tab and go to the URL Generator. Select the following scopes:
-  - `bot`
-  - `applications.commands`
+    - `bot`
+    - `applications.commands`
 - Give it the needed permissions (or just give it Administrator permissions if you're lazy) and invite your bot using the generated URL.
 
 When your bot is in your server, you can start setting up this project. Clone the repository and install the dependencies:
+
 ```
 git clone https://github.com/itsthistim/koala.git
 cd koala
