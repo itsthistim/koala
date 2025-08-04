@@ -1,0 +1,13 @@
+[phases.setup]
+nixPkgs = [
+	"python3",
+	"pkg-config",
+	"cairo",
+	"pango",
+	"libjpeg",
+	"giflib",
+	"make",
+	"gcc",
+	"sqlite",
+	"pnpm",
+]
