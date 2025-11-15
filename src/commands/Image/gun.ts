@@ -9,8 +9,7 @@ const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationTy
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Command.Options>({
-	aliases: ['hand'],
-	description: 'Puts hands over an avatar or image',
+	description: "Puts a gun in someone's hand or on an image.",
 	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm]
 })
 @RegisterChatInputCommand((builder, command) =>
@@ -28,7 +27,7 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 		.addStringOption((option) =>
 			option //
 				.setName('url')
-				.setDescription('The image URL to put hands on.')
+				.setDescription('The image URL to put a gun on.')
 				.setRequired(false)
 		)
 )
@@ -73,14 +72,14 @@ export class UserCommand extends Command {
 			.replace(/(\?|&)format=\w+/g, '') // remove format param
 			.trim();
 
-		const base = await loadImage('src/lib/assets/images/hands.png');
+		const base = await loadImage('src/lib/assets/images/gun.png');
 		const data = await loadImage(image);
 
-		return createAttachment(data.width, data.height, 'hands.png', async (ctx) => {
+		return createAttachment(data.width, data.height, 'gun.png', async (ctx) => {
 			ctx.drawImage(data, 0, 0);
-			const ratio = data.width / base.width;
-			const height = base.height * ratio;
-			ctx.drawImage(base, 0, data.height - height, data.width, height);
+			const ratio = data.height / 2 / base.height;
+			const width = base.width * ratio;
+			ctx.drawImage(base, data.width - width, data.height - data.height / 2, width, data.height / 2);
 		});
 	}
 }
