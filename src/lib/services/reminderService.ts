@@ -1,19 +1,17 @@
+import { colors } from '#lib/constants';
+import { getReminderDatabase, Reminder } from '#lib/database/reminders';
+import { Time } from '@sapphire/duration';
 import { container } from '@sapphire/framework';
 import { EmbedBuilder, time, TimestampStyles, userMention } from 'discord.js';
-import { getReminderDatabase, Reminder } from '#lib/database/reminders';
 
 export class ReminderService {
 	private interval: NodeJS.Timeout | null = null;
 	private isChecking = false;
-	private readonly CHECK_INTERVAL = 60_000; // Check every minute
+	private readonly CHECK_INTERVAL = 1 * Time.Minute; // Check every minute
 
 	public start() {
 		if (this.interval) return;
-
-		// check reminders on start
 		this.checkReminders();
-
-		// check every minute
 		this.interval = setInterval(() => this.checkReminders(), this.CHECK_INTERVAL);
 	}
 
@@ -25,10 +23,8 @@ export class ReminderService {
 	}
 
 	private async checkReminders() {
-		// prevent overlapping executions
 		if (this.isChecking) {
-			container.logger.debug('[ReminderService] Skipping check - previous check still in progress');
-			return;
+			return container.logger.debug('[ReminderService] Skipping check - previous check still in progress');
 		}
 
 		this.isChecking = true;
@@ -37,9 +33,7 @@ export class ReminderService {
 			const db = getReminderDatabase();
 			const dueReminders = db.getDueReminders();
 
-			if (dueReminders.length === 0) return;
-
-			container.logger.debug(`[ReminderService] Processing ${dueReminders.length} due reminder(s)`);
+			if (dueReminders.length === 0) return; // no due reminders
 
 			for (const reminder of dueReminders) {
 				await this.sendReminder(reminder);
@@ -54,21 +48,20 @@ export class ReminderService {
 
 	private async sendReminder(reminder: Reminder) {
 		try {
-			const user = await container.client.users.fetch(reminder.userId).catch(() => null);
+			const user = await container.client.users.fetch(reminder.user_id).catch(() => null);
 			if (!user) {
-				container.logger.warn(`[ReminderService] User ${reminder.userId} not found for reminder ${reminder.id}`);
-				return;
+				return container.logger.warn(`[ReminderService] User ${reminder.user_id} not found for reminder ${reminder.id}!`);
 			}
 
 			let messageLink = '';
-			if (reminder.channelId && reminder.messageId) {
-				messageLink = `https://discord.com/channels/${reminder.guildId || '@me'}/${reminder.channelId}/${reminder.messageId}`;
+			if (reminder.channel_id && reminder.message_id) {
+				messageLink = `https://discord.com/channels/${reminder.guild_id || '@me'}/${reminder.channel_id}/${reminder.message_id}`;
 			}
 
 			const embed = new EmbedBuilder()
-				.setColor(0x5865f2)
-				.setTitle('⏰ Reminder')
-				.setDescription(reminder.message)
+				.setColor(colors.default)
+				.setTitle('Reminder')
+				.setDescription(reminder.reminderText)
 				.addFields({
 					name: 'Set',
 					value: time(Math.floor(reminder.createdAt / 1000), TimestampStyles.RelativeTime),
@@ -76,10 +69,10 @@ export class ReminderService {
 				})
 				.setTimestamp();
 
-			const content = messageLink ? `${userMention(reminder.userId)}\n${messageLink}` : userMention(reminder.userId);
+			const content = messageLink ? `${userMention(reminder.user_id)}\n${messageLink}` : userMention(reminder.user_id);
 
 			await user.send({ content, embeds: [embed] }).catch((error) => {
-				container.logger.warn(`[ReminderService] Failed to DM user ${reminder.userId}:`, error.message);
+				container.logger.warn(`[ReminderService] Failed to DM user ${reminder.user_id}:`, error.message);
 			});
 		} catch (error) {
 			container.logger.error(`[ReminderService] Error sending reminder ${reminder.id}:`, error);

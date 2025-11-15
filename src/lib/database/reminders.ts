@@ -4,11 +4,11 @@ import { dirname, join } from 'path';
 
 export interface Reminder {
 	id: number;
-	userId: string;
-	channelId: string | null;
-	guildId: string | null;
-	messageId: string | null;
-	message: string;
+	user_id: string;
+	guild_id: string | null;
+	channel_id: string | null;
+	message_id: string | null;
+	reminderText: string;
 	timestamp: number;
 	completed: boolean;
 	createdAt: number;
@@ -20,11 +20,12 @@ export class ReminderDatabase {
 	constructor(dbPath?: string) {
 		const path = dbPath ?? join(process.cwd(), 'data', 'reminders.db');
 		const dir = dirname(path);
-		
+
+		// check if data directory exists
 		if (!existsSync(dir)) {
 			mkdirSync(dir, { recursive: true });
 		}
-		
+
 		this.db = new Database(path);
 		this.initialize();
 	}
@@ -33,13 +34,13 @@ export class ReminderDatabase {
 		this.db.exec(`
 			CREATE TABLE IF NOT EXISTS reminders (
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
-				userId TEXT NOT NULL,
-				channelId TEXT,
-				guildId TEXT,
-				messageId TEXT,
-				message TEXT NOT NULL,
+				user_id TEXT NOT NULL,
+				guild_id TEXT,
+				channel_id TEXT,
+				message_id TEXT,
+				reminderText TEXT NOT NULL,
 				timestamp INTEGER NOT NULL,
-				completed INTEGER DEFAULT 0,
+				completed BOOLEAN DEFAULT FALSE,
 				createdAt INTEGER NOT NULL
 			);
 			CREATE INDEX IF NOT EXISTS idx_timestamp ON reminders(timestamp);
@@ -47,22 +48,39 @@ export class ReminderDatabase {
 		`);
 	}
 
-	public addReminder(userId: string, message: string, timestamp: number, channelId?: string, guildId?: string, messageId?: string): Reminder {
+	/**
+	 * Adds a new reminder to the database.
+	 * @param user_id The ID of the user to remind
+	 * @param reminderText The text of the reminder
+	 * @param timestamp The time at which the reminder should trigger
+	 * @param guild_id The ID of the guild associated with the reminder (optional)
+	 * @param channel_id The ID of the channel associated with the reminder (optional)
+	 * @param message_id The ID of the message associated with the reminder (optional)
+	 * @returns {Reminder} The newly created reminder object.
+	 */
+	public addReminder(
+		user_id: string,
+		reminderText: string,
+		timestamp: number,
+		guild_id?: string,
+		channel_id?: string,
+		message_id?: string
+	): Reminder {
 		const createdAt = Date.now();
 		const stmt = this.db.prepare(`
-			INSERT INTO reminders (userId, channelId, guildId, messageId, message, timestamp, createdAt)
+			INSERT INTO reminders (user_id, guild_id, channel_id, message_id, reminderText, timestamp, createdAt)
 			VALUES (?, ?, ?, ?, ?, ?, ?)
 		`);
 
-		const result = stmt.run(userId, channelId ?? null, guildId ?? null, messageId ?? null, message, timestamp, createdAt);
+		const result = stmt.run(user_id, guild_id ?? null, channel_id ?? null, message_id ?? null, reminderText, timestamp, createdAt);
 
 		return {
 			id: result.lastInsertRowid as number,
-			userId,
-			channelId: channelId ?? null,
-			guildId: guildId ?? null,
-			messageId: messageId ?? null,
-			message,
+			user_id,
+			guild_id: guild_id ?? null,
+			channel_id: channel_id ?? null,
+			message_id: message_id ?? null,
+			reminderText,
 			timestamp,
 			completed: false,
 			createdAt
@@ -76,62 +94,60 @@ export class ReminderDatabase {
 			ORDER BY timestamp ASC
 		`);
 
-		const rows = stmt.all(Date.now()) as Array<{
-			id: number;
-			userId: string;
-			channelId: string | null;
-			guildId: string | null;
-			messageId: string | null;
-			message: string;
-			timestamp: number;
-			completed: number;
-			createdAt: number;
-		}>;
-		return rows.map((row) => ({
-			...row,
-			completed: Boolean(row.completed),
-			channelId: row.channelId ?? null,
-			guildId: row.guildId ?? null,
-			messageId: row.messageId ?? null
-		}));
+		const rows = stmt.all(Date.now());
+		return rows as Reminder[];
 	}
 
 	public markCompleted(id: number): void {
-		const stmt = this.db.prepare('UPDATE reminders SET completed = 1 WHERE id = ?');
+		const stmt = this.db.prepare('UPDATE reminders SET completed = TRUE WHERE id = ?');
 		stmt.run(id);
 	}
 
-	public getUserReminders(userId: string, includeCompleted = false): Reminder[] {
+	public getUserReminders(user_id: string, includeCompleted = false): Reminder[] {
 		const stmt = this.db.prepare(`
 			SELECT * FROM reminders
-			WHERE userId = ? ${includeCompleted ? '' : 'AND completed = 0'}
+			WHERE user_id = ? ${includeCompleted ? '' : 'AND completed = 0'}
 			ORDER BY timestamp ASC
 		`);
 
-		const rows = stmt.all(userId) as Array<{
-			id: number;
-			userId: string;
-			channelId: string | null;
-			guildId: string | null;
-			messageId: string | null;
-			message: string;
-			timestamp: number;
-			completed: number;
-			createdAt: number;
-		}>;
-		return rows.map((row) => ({
-			...row,
-			completed: Boolean(row.completed),
-			channelId: row.channelId ?? null,
-			guildId: row.guildId ?? null,
-			messageId: row.messageId ?? null
-		}));
+		const rows = stmt.all(user_id);
+		return rows as Reminder[];
 	}
 
-	public deleteReminder(id: number, userId: string): boolean {
-		const stmt = this.db.prepare('DELETE FROM reminders WHERE id = ? AND userId = ?');
-		const result = stmt.run(id, userId);
+	public getUserReminder(id: number, user_id: string): Reminder | null {
+		const stmt = this.db.prepare('SELECT * FROM reminders WHERE id = ? AND user_id = ?');
+		const row = stmt.get(id, user_id);
+		return (row as Reminder) || null;
+	}
+
+	public deleteReminder(id: number, user_id: string): boolean {
+		const stmt = this.db.prepare('DELETE FROM reminders WHERE id = ? AND user_id = ?');
+		const result = stmt.run(id, user_id);
 		return result.changes > 0;
+	}
+
+	public deleteCompletedReminders(): boolean {
+		const stmt = this.db.prepare('DELETE FROM reminders WHERE completed = TRUE');
+		const result = stmt.run();
+		return result.changes > 0;
+	}
+
+	public reinitialize(): boolean {
+		this.db.exec('DROP TABLE IF EXISTS reminders;');
+		this.db.exec(`
+			CREATE TABLE IF NOT EXISTS reminders (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				user_id TEXT NOT NULL,
+				guild_id TEXT,
+				channel_id TEXT,
+				message_id TEXT,
+				reminderText TEXT NOT NULL,
+				timestamp INTEGER NOT NULL,
+				completed BOOLEAN DEFAULT FALSE,
+				createdAt INTEGER NOT NULL
+			);
+		`);
+		return true;
 	}
 
 	/**
