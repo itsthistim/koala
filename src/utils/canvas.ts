@@ -1,5 +1,25 @@
 import { createCanvas } from "canvas";
 import type { Canvas, CanvasRenderingContext2D, Image } from "canvas";
+import { AttachmentBuilder } from "discord.js";
+
+export async function createAttachment(
+	width: number,
+	height: number,
+	filename: string,
+	drawFn: (ctx: CanvasRenderingContext2D, canvas: Canvas) => Promise<void> | void
+): Promise<AttachmentBuilder> {
+	const canvas = createCanvas(width, height);
+	const ctx = canvas.getContext("2d");
+
+	await drawFn(ctx, canvas);
+
+	const buffer = canvas.toBuffer();
+	if (Buffer.byteLength(buffer) > 8e6) {
+		throw new Error("Generated image exceeds 8MB size limit");
+	}
+
+	return new AttachmentBuilder(buffer, { name: filename });
+}
 
 export function shortenText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
 	let shorten = false;
