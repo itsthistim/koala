@@ -14,11 +14,7 @@ import {
 import { colors } from '#lib/constants';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [
-	InteractionContextType.BotDM,
-	InteractionContextType.Guild,
-	InteractionContextType.PrivateChannel
-];
+const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Command.Options>({
 	aliases: ['whois', 'user-info'],
@@ -31,9 +27,7 @@ const contexts: InteractionContextType[] = [
 		.setDescription(command.description)
 		.setContexts(...contexts)
 		.setIntegrationTypes(...integrationTypes)
-		.addUserOption((option) =>
-			option.setName('user').setDescription('The user to get information about').setRequired(false)
-	)
+		.addUserOption((option) => option.setName('user').setDescription('The user to get information about').setRequired(false))
 )
 @RegisterUserContextMenuCommand((builder, command) =>
 	builder
@@ -42,7 +36,6 @@ const contexts: InteractionContextType[] = [
 		.setIntegrationTypes(...integrationTypes)
 )
 export class UserCommand extends Command {
-
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const user = interaction.options.getUser('user') || interaction.user;
 		let embed = await this.getInfoEmbed(interaction, user);
@@ -51,20 +44,25 @@ export class UserCommand extends Command {
 
 	public override async messageRun(msg: Message, args: Args) {
 		const user = args.finished ? msg.author : await args.pick('userName').catch(() => null);
-		
+
 		if (!user) {
 			return reply(msg, `Could not find the specified user ${args.getOption('user')}.`);
 		}
-		
+
 		let embed = await this.getInfoEmbed(msg, user);
-		return await reply(msg,{ embeds: [embed] });
+		return await reply(msg, { embeds: [embed] });
 	}
 
-	// TODO implement context menu run on users
-	// public override async contextMenuRun(interaction: Command.ContextMenuCommandInteraction) {}
+	public override async contextMenuRun(interaction: Command.ContextMenuCommandInteraction) {
+		if (!interaction.isUserContextMenuCommand()) return;
+		
+		const user = interaction.targetUser;
+		let embed = await this.getInfoEmbed(interaction, user);
+		return interaction.reply({ embeds: [embed] });
+	}
 
-		private async getInfoEmbed(interaction: Interaction | Message, user: User) {
-			const status = {
+	private async getInfoEmbed(interaction: Interaction | Message, user: User) {
+		const status = {
 			online: '<:online:861986701580697670> ',
 			idle: '<:idle:861986831541207042>',
 			dnd: '<:dnd:861986768517070938> ',
