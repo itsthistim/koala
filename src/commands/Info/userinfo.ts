@@ -11,7 +11,7 @@ import {
 	User,
 	type Message
 } from 'discord.js';
-import { colors } from '../../lib/constants';
+import { colors } from '#lib/constants';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
 const contexts: InteractionContextType[] = [

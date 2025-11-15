@@ -12,6 +12,10 @@
 		"dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
 		"format": "prettier --write \"src/**/*.ts\""
 	},
+	"imports": {
+		"#utils/*": "./dist/utils/*.js",
+		"#lib/*": "./dist/lib/*.js"
+	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
