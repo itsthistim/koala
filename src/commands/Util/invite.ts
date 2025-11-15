@@ -1,7 +1,7 @@
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { container, Command, CommandOptionsRunTypeEnum } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { ApplicationIntegrationType, InteractionContextType, type Message } from 'discord.js';
+import { ApplicationIntegrationType, InteractionContextType, MessageFlags, type Message } from 'discord.js';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
@@ -20,7 +20,7 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const inviteLink = this.getInviteLink();
-		return await interaction.reply({ content: `Invite me to your server using this link: ${inviteLink}`, ephemeral: true }); // TODO use Flags
+		return await interaction.reply({ content: `Invite me to your server using this link: ${inviteLink}`, flags: MessageFlags.Ephemeral });
 	}
 
 	public override async messageRun(msg: Message) {
