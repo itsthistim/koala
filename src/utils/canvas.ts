@@ -1,6 +1,6 @@
-import { createCanvas } from "canvas";
-import type { Canvas, CanvasRenderingContext2D, Image } from "canvas";
-import { AttachmentBuilder } from "discord.js";
+import { createCanvas } from 'canvas';
+import type { Canvas, CanvasRenderingContext2D, Image } from 'canvas';
+import { AttachmentBuilder } from 'discord.js';
 
 export async function createAttachment(
 	width: number,
@@ -9,13 +9,13 @@ export async function createAttachment(
 	drawFn: (ctx: CanvasRenderingContext2D, canvas: Canvas) => Promise<void> | void
 ): Promise<AttachmentBuilder> {
 	const canvas = createCanvas(width, height);
-	const ctx = canvas.getContext("2d");
+	const ctx = canvas.getContext('2d');
 
 	await drawFn(ctx, canvas);
 
 	const buffer = canvas.toBuffer();
 	if (Buffer.byteLength(buffer) > 8e6) {
-		throw new Error("Generated image exceeds 8MB size limit");
+		throw new Error('Generated image exceeds 8MB size limit');
 	}
 
 	return new AttachmentBuilder(buffer, { name: filename });
@@ -28,6 +28,44 @@ export function shortenText(ctx: CanvasRenderingContext2D, text: string, maxWidt
 		text = text.substring(0, text.length - 1);
 	}
 	return shorten ? `${text}...` : text;
+}
+
+/**
+ * Fits the given text within the specified width and height constraints by adding newlines as needed.
+ * If the text exceeds the maximum height, it will be truncated and an ellipsis will be added.
+ *
+ * @param {CanvasRenderingContext2D} ctx - The canvas rendering context used to measure text.
+ * @param {string} text - The text to fit within the constraints.
+ * @param {number} maxWidth - The maximum width (in pixels) for each line.
+ * @param {number} maxHeight - The maximum height (in pixels) for the entire text block.
+ * @returns {string} The fitted text with newlines and possible truncation.
+ */
+export function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, maxHeight: number): string {
+	const words = text.split(' ');
+	let fittedText = '';
+	let line = '';
+
+	for (let n = 0; n < words.length; n++) {
+		const testLine = line + words[n] + ' ';
+		const metrics = ctx.measureText(testLine);
+		const testWidth = metrics.width;
+
+		// Check if maxHeight is exceeded
+		const lineHeight = parseInt(ctx.font.match(/(\d+)px/)?.[1] || '16', 10);
+		const currentHeight = (fittedText.split('\n').length + 1) * lineHeight;
+		if (currentHeight > maxHeight) {
+			return shortenText(ctx, fittedText.trim(), maxWidth);
+		}
+
+		if (testWidth > maxWidth && n > 0) {
+			fittedText += line + '\n';
+			line = words[n] + ' ';
+		} else {
+			line = testLine;
+		}
+	}
+	fittedText += line;
+	return fittedText;
 }
 
 export function greyscale(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
@@ -89,7 +127,14 @@ export function contrast(ctx: CanvasRenderingContext2D, x: number, y: number, wi
 	return ctx;
 }
 
-export function desaturate(ctx: CanvasRenderingContext2D, level: number, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
+export function desaturate(
+	ctx: CanvasRenderingContext2D,
+	level: number,
+	x: number,
+	y: number,
+	width: number,
+	height: number
+): CanvasRenderingContext2D {
 	const data = ctx.getImageData(x, y, width, height);
 	for (let i = 0; i < height; i++) {
 		for (let j = 0; j < width; j++) {
@@ -104,7 +149,15 @@ export function desaturate(ctx: CanvasRenderingContext2D, level: number, x: numb
 	return ctx;
 }
 
-export function distort(ctx: CanvasRenderingContext2D, amplitude: number, x: number, y: number, width: number, height: number, strideLevel: number = 4): CanvasRenderingContext2D {
+export function distort(
+	ctx: CanvasRenderingContext2D,
+	amplitude: number,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	strideLevel: number = 4
+): CanvasRenderingContext2D {
 	const data = ctx.getImageData(x, y, width, height);
 	const temp = ctx.getImageData(x, y, width, height);
 	const stride = width * strideLevel;
@@ -144,7 +197,16 @@ export function fishEye(ctx: CanvasRenderingContext2D, level: number, x: number,
 	return ctx;
 }
 
-export function pixelize(ctx: CanvasRenderingContext2D, canvas: Canvas, image: Image, level: number, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
+export function pixelize(
+	ctx: CanvasRenderingContext2D,
+	canvas: Canvas,
+	image: Image,
+	level: number,
+	x: number,
+	y: number,
+	width: number,
+	height: number
+): CanvasRenderingContext2D {
 	ctx.imageSmoothingEnabled = false;
 	ctx.drawImage(image, x, y, width * level, height * level);
 	ctx.drawImage(canvas, x, y, width * level, height * level, x, y, width, height);
@@ -154,7 +216,7 @@ export function pixelize(ctx: CanvasRenderingContext2D, canvas: Canvas, image: I
 
 export function hasAlpha(image: Image): boolean {
 	const canvas = createCanvas(image.width, image.height);
-	const ctx = canvas.getContext("2d");
+	const ctx = canvas.getContext('2d');
 	ctx.drawImage(image, 0, 0);
 	const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	let hasAlphaPixels = false;
@@ -167,7 +229,15 @@ export function hasAlpha(image: Image): boolean {
 	return hasAlphaPixels;
 }
 
-export function drawImageWithTint(ctx: CanvasRenderingContext2D, image: Image, color: string, x: number, y: number, width: number, height: number): void {
+export function drawImageWithTint(
+	ctx: CanvasRenderingContext2D,
+	image: Image,
+	color: string,
+	x: number,
+	y: number,
+	width: number,
+	height: number
+): void {
 	const { fillStyle, globalAlpha } = ctx;
 	ctx.fillStyle = color;
 	ctx.drawImage(image, x, y, width, height);
@@ -180,10 +250,10 @@ export function drawImageWithTint(ctx: CanvasRenderingContext2D, image: Image, c
 export function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): Promise<string[] | null> {
 	return new Promise((resolve) => {
 		if (ctx.measureText(text).width < maxWidth) return resolve([text]);
-		if (ctx.measureText("W").width > maxWidth) return resolve(null);
-		const words = text.split(" ");
+		if (ctx.measureText('W').width > maxWidth) return resolve(null);
+		const words = text.split(' ');
 		const lines: string[] = [];
-		let line = "";
+		let line = '';
 		while (words.length > 0) {
 			let split = false;
 			while (ctx.measureText(words[0]).width >= maxWidth) {
@@ -200,7 +270,7 @@ export function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: 
 				line += `${words.shift()} `;
 			} else {
 				lines.push(line.trim());
-				line = "";
+				line = '';
 			}
 			if (words.length === 0) lines.push(line.trim());
 		}
@@ -228,7 +298,13 @@ export function centerImage(base: Image, data: Image): { x: number; y: number; w
 	return { x, y, width, height };
 }
 
-export function centerImagePart(data: Image, maxWidth: number, maxHeight: number, widthOffset: number, heightOffest: number): { x: number; y: number; width: number; height: number } {
+export function centerImagePart(
+	data: Image,
+	maxWidth: number,
+	maxHeight: number,
+	widthOffset: number,
+	heightOffest: number
+): { x: number; y: number; width: number; height: number } {
 	let { width, height } = data;
 	if (width > maxWidth) {
 		const ratio = maxWidth / width;
@@ -247,18 +323,18 @@ export function centerImagePart(data: Image, maxWidth: number, maxHeight: number
 
 export function generateErrorImage(error: string): { attachment: Buffer; name: string } {
 	const canvas = createCanvas(512, 512);
-	const ctx = canvas.getContext("2d");
-	ctx.fillStyle = "#000000";
+	const ctx = canvas.getContext('2d');
+	ctx.fillStyle = '#000000';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = "#20C20E";
-	ctx.textAlign = "left";
-	ctx.textBaseline = "middle";
-	ctx.font = "20px Consolas";
-	ctx.fillText("Error", 64, 64);
-	ctx.font = "16px Consolas";
+	ctx.fillStyle = '#20C20E';
+	ctx.textAlign = 'left';
+	ctx.textBaseline = 'middle';
+	ctx.font = '20px Consolas';
+	ctx.fillText('Error', 64, 64);
+	ctx.font = '16px Consolas';
 	ctx.fillText(error, 64, 80);
 	return {
 		attachment: canvas.toBuffer(),
-		name: "error.png"
+		name: 'error.png'
 	};
 }
