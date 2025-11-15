@@ -1,4 +1,3 @@
-/// <reference path="./index.d.ts" />
 import '#lib/setup';
 
 import { LogLevel, SapphireClient } from '@sapphire/framework';
