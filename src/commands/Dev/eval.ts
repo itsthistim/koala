@@ -23,8 +23,13 @@ export class UserCommand extends Command {
 
 		const { success, time, result } = await this.eval(code, msg, isAsync, depth, showHidden);
 
-		const output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
+		let output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
 		if (args.getFlags('silent', 's')) return null;
+
+		// replace discord token with placeholder
+		const token = process.env.DISCORD_TOKEN;
+		const tokenRegex = token ? new RegExp(token, 'g') : null;
+		output = tokenRegex ? output.replace(tokenRegex, '[REDACTED TOKEN]') : output;
 
 		if (output.length > 2000) {
 			return send(msg, {
