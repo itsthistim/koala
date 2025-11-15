@@ -31,15 +31,24 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 				.setDescription('The image URL to put hands on.')
 				.setRequired(false)
 		)
+		.addAttachmentOption((option) =>
+			option //
+				.setName('image')
+				.setDescription('The image to put hands on')
+				.setRequired(false)
+		)
 )
 export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const image = interaction.options.getString('url');
 		const user = interaction.options.getUser('user');
+		const attachmentInput = interaction.options.getAttachment('image');
 
 		let imageUrl: string;
 		if (user) {
 			imageUrl = user.displayAvatarURL({ extension: 'png', size: 512 });
+		} else if (attachmentInput) {
+			imageUrl = attachmentInput.url;
 		} else if (image) {
 			imageUrl = image;
 		} else {
