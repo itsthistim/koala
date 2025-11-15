@@ -3,4 +3,5 @@ packages:
 
 onlyBuiltDependencies:
   - '@sapphire/type'
+  - better-sqlite3
   - canvas
