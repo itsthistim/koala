@@ -30,18 +30,18 @@ export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const text = interaction.options.getString('text') ?? `Invite ${this.container.client.user!.username}!`;
 		let attachment = await this.getImage(text);
-		interaction.reply({ files: [attachment] });
+		return await interaction.reply({ files: [attachment] });
 	}
 
 	public override async messageRun(msg: Message, args: Args) {
 		const text = await args.rest('string').catch(() => `Invite ${this.container.client.user!.username}!`);
 		let attachment = await this.getImage(text);
-		reply(msg, { files: [attachment] });
+		return await reply(msg, { files: [attachment] });
 	}
 
 	private async getImage(text: string) {
 		const base = await loadImage('src/lib/assets/images/achievement.png');
-		
+
 		return createAttachment(base.width, base.height, 'advancement.png', async (ctx) => {
 			ctx.drawImage(base, 0, 0);
 			ctx.font = '20px Mojangles';

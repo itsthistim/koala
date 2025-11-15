@@ -18,17 +18,17 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 		.setIntegrationTypes(...integrationTypes)
 )
 export class UserCommand extends Command {
-	private getInviteLink(): string {
-		return `https://discord.com/oauth2/authorize?client_id=${container.client.user!.id}&permissions=8&scope=bot%20applications.commands`;
-	}
-
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const inviteLink = this.getInviteLink();
-		return interaction.reply({ content: `Invite me to your server using this link: ${inviteLink}`, ephemeral: true });
+		return await interaction.reply({ content: `Invite me to your server using this link: ${inviteLink}`, ephemeral: true }); // TODO use Flags
 	}
 
 	public override async messageRun(msg: Message) {
 		const inviteLink = this.getInviteLink();
-		return reply(msg, { content: `Invite me to your server using this link: ${inviteLink}` });
+		return await reply(msg, { content: `Invite me to your server using this link: ${inviteLink}` });
+	}
+
+	private getInviteLink(): string {
+		return `https://discord.com/oauth2/authorize?client_id=${container.client.user!.id}&permissions=8&scope=bot%20applications.commands`;
 	}
 }

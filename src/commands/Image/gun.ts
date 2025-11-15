@@ -55,7 +55,7 @@ export class UserCommand extends Command {
 		}
 
 		const attachment = await this.getImage(imageUrl);
-		return interaction.reply({ files: [attachment] });
+		return await interaction.reply({ files: [attachment] });
 	}
 
 	public override async messageRun(msg: Message, args: Args) {
@@ -72,13 +72,13 @@ export class UserCommand extends Command {
 		}
 
 		const attachment = await this.getImage(imageUrl);
-		return reply(msg, { files: [attachment] });
+		return await reply(msg, { files: [attachment] });
 	}
 
 	private async getImage(image: string) {
 		image = image
 			.replace(/^<(.+)>$/, '$1') // remove < >
-			.replace(/(\?|&)format=\w+/g, '') // remove format param
+			.replace(/([?&])format=\w+/g, '') // remove format param
 			.trim();
 
 		const base = await loadImage('src/lib/assets/images/gun.png');
