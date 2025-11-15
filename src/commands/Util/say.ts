@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
-import { reply } from '@sapphire/plugin-editable-commands';
+import { send } from '@sapphire/plugin-editable-commands';
 import { ApplicationIntegrationType, InteractionContextType, type Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
@@ -30,7 +30,7 @@ export class UserCommand extends Command {
 
 	public override async messageRun(msg: Message, args: Args) {
 		const content = await args.rest('string');
-		return reply(msg, content);
+		return send(msg, content);
 	}
 
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
