@@ -3,7 +3,7 @@ import { isNullish } from '@sapphire/utilities';
 import { User } from 'discord.js';
 import { resolveUser } from '#utils/discord';
 
-export class UserNameArgument extends Argument<User> {
+export default class UserNameArgument extends Argument<User> {
 	public async run(parameter: string, context: Argument.Context): Promise<ArgumentResult<User>> {
 		const users = container.client.users.cache.sort((a, b) => a.username.localeCompare(b.username));
 		let value = resolveUser(parameter, users);
@@ -42,4 +42,8 @@ export class UserNameArgument extends Argument<User> {
 	}
 }
 
-export default UserNameArgument;
+declare module '@sapphire/framework' {
+	interface ArgType {
+		userName: User;
+	}
+}
