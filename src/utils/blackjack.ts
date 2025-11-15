@@ -36,17 +36,29 @@ const computeHand = (ranks: string[]) => {
 };
 
 const suggest = (total: number, soft: boolean, dealerCard: number): 'hit' | 'stand' => {
-	if (!soft) {
-		// Hard totals
-		if (total >= 17) return 'stand';
-		if (total >= 13 && total <= 16) return dealerCard >= 2 && dealerCard <= 6 ? 'stand' : 'hit';
-		if (total === 12) return dealerCard >= 4 && dealerCard <= 6 ? 'stand' : 'hit';
-		return 'hit'; // 11 or less
+	// Soft totals (hands with an Ace counted as 11)
+	if (soft) {
+		if (total >= 19) return 'stand'; // A,8 or A,9 - always stand
+		if (total === 18) {
+			// A,7 - stand vs 2-8, hit vs 9,10,A
+			return dealerCard >= 9 || dealerCard === 11 ? 'hit' : 'stand';
+		}
+		// A,2 through A,6 - always hit
+		return 'hit';
 	}
-	// Soft totals
-	if (total >= 19) return 'stand'; // A,8 or A,9
-	if (total === 18) return dealerCard >= 9 || dealerCard === 11 ? 'hit' : 'stand';
-	return 'hit'; // soft 13-17
+
+	// Hard totals
+	if (total >= 17) return 'stand'; // 17+ always stand
+	if (total >= 13 && total <= 16) {
+		// 13-16: stand vs dealer 2-6, hit vs 7-A
+		return dealerCard >= 2 && dealerCard <= 6 ? 'stand' : 'hit';
+	}
+	if (total === 12) {
+		// 12: stand vs dealer 4-6, hit otherwise
+		return dealerCard >= 4 && dealerCard <= 6 ? 'stand' : 'hit';
+	}
+	// 11 or less: always hit
+	return 'hit';
 };
 
 const suggestionCache = new Map<string, Message>();
