@@ -51,8 +51,8 @@ export class UserCommand extends Command {
 	}
 
 	public override async messageRun(msg: Message, args: Args) {
-		const url = await args.rest('string').catch(() => null);
 		const user = await args.pick('userName').catch(() => null);
+		const url = await args.rest('string').catch(() => null);
 
 		let imageUrl: string;
 		if (user) {
