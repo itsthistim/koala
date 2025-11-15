@@ -1,0 +1,86 @@
+import { ApplicationIntegrationType, InteractionContextType, type Message } from 'discord.js';
+import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
+import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
+import { reply } from '@sapphire/plugin-editable-commands';
+import { loadImage } from 'canvas';
+import { createAttachment } from '#utils/canvas';
+
+const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
+const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
+
+@ApplyOptions<Command.Options>({
+	aliases: ['hand'],
+	description: 'Puts hands over an avatar or image',
+	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm]
+})
+@RegisterChatInputCommand((builder, command) =>
+	builder
+		.setName(command.name)
+		.setDescription(command.description)
+		.setContexts(...contexts)
+		.setIntegrationTypes(...integrationTypes)
+		.addStringOption((option) =>
+			option //
+				.setName('image')
+				.setDescription('The image URL to put hands on.')
+				.setRequired(true)
+		)
+		.addUserOption((option) =>
+			option //
+				.setName('user')
+				.setDescription('The user to get the avatar from.')
+				.setRequired(false)
+		)
+)
+export class UserCommand extends Command {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
+		const image = interaction.options.getString('image');
+		const user = interaction.options.getUser('user');
+
+		let imageUrl: string;
+		if (user) {
+			imageUrl = user.displayAvatarURL({ extension: 'png', size: 512 });
+		} else if (image) {
+			imageUrl = image;
+		} else {
+			imageUrl = interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
+		}
+
+		const attachment = await this.getImage(imageUrl);
+		return interaction.reply({ files: [attachment] });
+	}
+
+	public override async messageRun(msg: Message, args: Args) {
+		const user = await args.pick('userName').catch(() => null);
+		const url = await args.rest('string').catch(() => null);
+
+		let imageUrl: string;
+		if (user) {
+			imageUrl = user.displayAvatarURL({ extension: 'png', size: 512 });
+		} else if (url) {
+			imageUrl = url.replace(/^<(.+)>$/, '$1');
+		} else {
+			imageUrl = msg.author.displayAvatarURL({ extension: 'png', size: 512 });
+		}
+
+		const attachment = await this.getImage(imageUrl);
+		return reply(msg, { files: [attachment] });
+	}
+
+	private async getImage(image: string) {
+		image = image
+			.replace(/^<(.+)>$/, '$1') // remove < >
+			.replace(/(\?|&)format=\w+/g, '') // remove format param
+			.trim();
+
+		const base = await loadImage('src/lib/assets/images/hands.png');
+		const data = await loadImage(image);
+
+		return createAttachment(data.width, data.height, 'hands.png', async (ctx) => {
+			ctx.drawImage(data, 0, 0);
+			const ratio = data.width / base.width;
+			const height = base.height * ratio;
+			ctx.drawImage(base, 0, data.height - height, data.width, height);
+		});
+	}
+}
