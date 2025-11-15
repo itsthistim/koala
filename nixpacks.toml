@@ -1,0 +1,14 @@
+[phases.setup]
+nixPkgs = [
+	"nodejs",
+	"python3",
+	"pkg-config",
+	"cairo",
+	"pango",
+	"libjpeg",
+	"giflib",
+	"gnumake",
+	"gcc",
+	"sqlite",
+	"pnpm",
+]
