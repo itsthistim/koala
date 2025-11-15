@@ -27,7 +27,7 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 		)
 		.addStringOption((option) =>
 			option //
-				.setName('image')
+				.setName('url')
 				.setDescription('The image URL to draw.')
 				.setRequired(false)
 		)
