@@ -1,11 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
-import { GatewayDispatchEvents, type Client } from 'discord.js';
+import { Events, type Client } from 'discord.js';
 
 @ApplyOptions<Listener.Options>(({ container }) => ({
-	description: 'Handle Raw Message Delete events',
-	emitter: container.client.ws,
-	event: GatewayDispatchEvents.Ready
+	description: 'Handle Client Ready event',
+	emitter: container.client,
+	event: Events.ClientReady
 }))
 export class ClientListener extends Listener {
 	public run(client: Client) {

@@ -1,0 +1,101 @@
+import { reply } from '@sapphire/plugin-editable-commands';
+import type { Message } from 'discord.js';
+
+const rankToValue = (rankRaw: string): { value: number; isAce: boolean } => {
+	const rank = rankRaw.toLowerCase();
+	if (rank === 'a' || rank === 'ace') return { value: 11, isAce: true };
+	if (rank === 'k' || rank === 'q' || rank === 'j') return { value: 10, isAce: false };
+	const n = Number(rank);
+	if (!Number.isNaN(n)) return { value: Math.min(Math.max(n, 2), 11), isAce: false };
+	return { value: 0, isAce: false };
+};
+
+const parseCardRanksFromLine = (line: string): string[] => {
+	const afterMarker = line.split('~-~')[1] ?? '';
+	return afterMarker
+		.split('|')
+		.map((s) => s.trim())
+		.filter((s) => s && s !== '??')
+		.map((token) => token.split(':')[0]);
+};
+
+const computeHand = (ranks: string[]) => {
+	let total = 0;
+	let aces = 0;
+	for (const r of ranks) {
+		const { value, isAce } = rankToValue(r);
+		total += value;
+		if (isAce) aces++;
+	}
+	while (total > 21 && aces > 0) {
+		total -= 10;
+		aces--;
+	}
+	const isSoft = aces > 0; // at least one Ace counted as 11
+	return { total, isSoft };
+};
+
+const suggest = (total: number, soft: boolean, dealerCard: number): 'hit' | 'stand' => {
+	if (!soft) {
+		// Hard totals
+		if (total >= 17) return 'stand';
+		if (total >= 13 && total <= 16) return dealerCard >= 2 && dealerCard <= 6 ? 'stand' : 'hit';
+		if (total === 12) return dealerCard >= 4 && dealerCard <= 6 ? 'stand' : 'hit';
+		return 'hit'; // 11 or less
+	}
+	// Soft totals
+	if (total >= 19) return 'stand'; // A,8 or A,9
+	if (total === 18) return dealerCard >= 9 || dealerCard === 11 ? 'hit' : 'stand';
+	return 'hit'; // soft 13-17
+};
+
+const suggestionCache = new Map<string, Message>();
+
+export async function handleBlackjackSuggestion(msg: Message): Promise<void> {
+	if (!msg.embeds.length || !msg.embeds[0].fields.length) return;
+	const field = msg.embeds[0].fields[0];
+	const fieldValue = field.value;
+	const fieldName = field.name;
+
+	const lower = fieldValue.toLowerCase();
+	if (!lower.includes('epic dealer') || !lower.includes('total:')) return;
+
+	// check if game is over
+	const nameLower = fieldName.toLowerCase();
+	if (nameLower.includes('you lost') || nameLower.includes('you won')) {
+		// delete the suggestion message if it exists
+		const cachedSuggestion = suggestionCache.get(msg.id);
+		if (cachedSuggestion) {
+			await cachedSuggestion.delete().catch(() => {});
+			suggestionCache.delete(msg.id);
+		}
+		return;
+	}
+
+	const lines = fieldValue.split('\n').map((l) => l.trim());
+	if (lines.length < 2) return;
+
+	// extract player's hand and dealer upcard
+	const playerLine = lines[0];
+	const dealerLineIndex = lines.findIndex((l) => l.toLowerCase().includes('epic dealer'));
+	if (dealerLineIndex === -1) return;
+	const dealerLine = lines[dealerLineIndex];
+
+	const playerRanks = parseCardRanksFromLine(playerLine);
+	const { total: playerTotal, isSoft } = computeHand(playerRanks);
+
+	const dealerRanks = parseCardRanksFromLine(dealerLine);
+	const dealerUpRank = dealerRanks[0];
+	if (!dealerUpRank) return;
+	const { value: dealerUpValue, isAce: dealerIsAce } = rankToValue(dealerUpRank);
+	const dealerUp = dealerIsAce ? 11 : dealerUpValue >= 10 ? 10 : dealerUpValue;
+
+	const move = suggest(playerTotal, isSoft, dealerUp);
+	const suggestionMsg = await reply(
+		msg,
+		`Blackjack helper: ${move.toUpperCase()} (you: ${playerTotal}${isSoft ? ' soft' : ''}, dealer: ${dealerUp === 11 ? 'A' : dealerUp})`
+	);
+
+	// cache the suggestion message
+	suggestionCache.set(msg.id, suggestionMsg);
+}
