@@ -87,6 +87,14 @@ export class ReminderDatabase {
 		};
 	}
 
+	/**
+	 * Retrieves all reminders that are due for processing.
+	 *
+	 * Returns incomplete reminders whose timestamp has passed or is equal to the current time,
+	 * ordered by timestamp in ascending order (oldest first).
+	 *
+	 * @returns {Reminder[]} An array of due reminders sorted by timestamp.
+	 */
 	public getDueReminders(): Reminder[] {
 		const stmt = this.db.prepare(`
 			SELECT * FROM reminders
@@ -98,11 +106,21 @@ export class ReminderDatabase {
 		return rows as Reminder[];
 	}
 
+	/**
+	 * Marks a reminder as completed by its ID.
+	 * @param id - The unique identifier of the reminder to mark as completed.
+	 */
 	public markCompleted(id: number): void {
 		const stmt = this.db.prepare('UPDATE reminders SET completed = TRUE WHERE id = ?');
 		stmt.run(id);
 	}
 
+	/**
+	 * Retrieves reminders for a specific user.
+	 * @param user_id - The unique identifier of the user
+	 * @param includeCompleted - Whether to include completed reminders. Defaults to false
+	 * @returns An array of Reminder objects sorted by timestamp in ascending order
+	 */
 	public getUserReminders(user_id: string, includeCompleted = false): Reminder[] {
 		const stmt = this.db.prepare(`
 			SELECT * FROM reminders
@@ -114,24 +132,46 @@ export class ReminderDatabase {
 		return rows as Reminder[];
 	}
 
+	/**
+	 * Retrieves a reminder for a specific user by reminder ID.
+	 * @param id - The ID of the reminder to retrieve.
+	 * @param user_id - The ID of the user who owns the reminder.
+	 * @returns The reminder object if found, otherwise null.
+	 */
 	public getUserReminder(id: number, user_id: string): Reminder | null {
 		const stmt = this.db.prepare('SELECT * FROM reminders WHERE id = ? AND user_id = ?');
 		const row = stmt.get(id, user_id);
 		return (row as Reminder) || null;
 	}
 
+	/**
+	 * Deletes a reminder by its ID and user ID.
+	 * @param id - The ID of the reminder to delete.
+	 * @param user_id - The user ID associated with the reminder.
+	 * @returns `true` if the reminder was successfully deleted, `false` otherwise.
+	 */
 	public deleteReminder(id: number, user_id: string): boolean {
 		const stmt = this.db.prepare('DELETE FROM reminders WHERE id = ? AND user_id = ?');
 		const result = stmt.run(id, user_id);
 		return result.changes > 0;
 	}
 
+	/**
+	 * Deletes all completed reminders from the database.
+	 * @returns {boolean} True if one or more reminders were deleted, false otherwise.
+	 */
 	public deleteCompletedReminders(): boolean {
 		const stmt = this.db.prepare('DELETE FROM reminders WHERE completed = TRUE');
 		const result = stmt.run();
 		return result.changes > 0;
 	}
 
+	/**
+	 * Reinitializes the reminders table by dropping the existing table and creating a new one.
+	 * This will remove all existing reminder records.
+	 *
+	 * @returns {boolean} Always returns true if the operation completes successfully.
+	 */
 	public reinitialize(): boolean {
 		this.db.exec('DROP TABLE IF EXISTS reminders;');
 		this.db.exec(`
@@ -163,11 +203,14 @@ export class ReminderDatabase {
 	}
 }
 
-// Singleton instance of ReminderDatabase.
-// The database connection is intended to persist for the application's lifetime.
-// Do not call `close()` on this instance except during application shutdown.
 let reminderDb: ReminderDatabase | null = null;
 
+/**
+ * Retrieves the singleton instance of the reminder database.
+ * Initializes the database on first call if it hasn't been created yet.
+ * The database connection is intended to persist for the application's lifetime.
+ * @returns {ReminderDatabase} The reminder database instance.
+ */
 export function getReminderDatabase(): ReminderDatabase {
 	if (!reminderDb) {
 		reminderDb = new ReminderDatabase();

@@ -1,6 +1,6 @@
 import { colors } from '#lib/constants';
 import { getReminderDatabase, Reminder } from '#lib/database/reminders';
-import { Time } from '@sapphire/duration';
+import { Time } from '@sapphire/time-utilities';
 import { container } from '@sapphire/framework';
 import { EmbedBuilder, time, TimestampStyles, userMention } from 'discord.js';
 
