@@ -1,6 +1,6 @@
 import { getReminderDatabase, Reminder } from '#lib/database/reminders';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
-import { Duration, Time } from '@sapphire/duration';
+import { Duration, Time } from '@sapphire/time-utilities';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { Subcommand } from '@sapphire/plugin-subcommands';
@@ -21,14 +21,14 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 			default: true
 		},
 		{
-			name: 'list',
-			chatInputRun: 'chatInputList',
-			messageRun: 'messageList'
-		},
-		{
 			name: 'remove',
 			chatInputRun: 'chatInputRemove',
 			messageRun: 'messageRemove'
+		},
+		{
+			name: 'list',
+			chatInputRun: 'chatInputList',
+			messageRun: 'messageList'
 		}
 	]
 })
@@ -39,23 +39,37 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 		.setContexts(...contexts)
 		.setIntegrationTypes(...integrationTypes)
 		.addSubcommand((subcommand) =>
-			subcommand
+			subcommand //
 				.setName('create')
 				.setDescription('Create a new reminder')
-				.addStringOption((option) => option.setName('time').setDescription('When to remind you (e.g., "30m", "2h", "1d")').setRequired(true))
-				.addStringOption((option) => option.setName('message').setDescription('What to remind you about').setRequired(true))
+				.addStringOption((option) =>
+					option //
+						.setName('time')
+						.setDescription('When to remind you (e.g., "30m", "2h", "1d")')
+						.setRequired(true)
+				)
+				.addStringOption((option) =>
+					option //
+						.setName('message')
+						.setDescription('What to remind you about')
+						.setRequired(true)
+				)
 		)
-		.addSubcommand((subcommand) => subcommand.setName('list').setDescription('List your active reminders'))
 		.addSubcommand((subcommand) =>
-			subcommand
+			subcommand //
 				.setName('remove')
 				.setDescription('Remove a reminder by its ID')
 				.addIntegerOption((option) =>
-					option
+					option //
 						.setName('id')
 						.setDescription('The ID of the reminder to remove')
 						.setRequired(true)
 				)
+		)
+		.addSubcommand((subcommand) =>
+			subcommand //
+				.setName('list')
+				.setDescription('List your active reminders')
 		)
 )
 export class UserCommand extends Subcommand {
