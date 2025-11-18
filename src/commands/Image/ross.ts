@@ -2,7 +2,7 @@ import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { ApplicationIntegrationType, InteractionContextType, type Message } from 'discord.js';
-import { createAttachment } from '#utils/canvas';
+import { createAttachment } from '#lib/utils/canvas';
 import { loadImage } from 'canvas';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];

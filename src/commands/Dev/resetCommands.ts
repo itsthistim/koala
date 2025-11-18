@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { type Message } from 'discord.js';
-import deleteAllCommands from '#utils/deleteAllCommands';
+import deleteAllCommands from '#lib/utils/deleteAllCommands';
 
 @ApplyOptions<Command.Options>({
 	aliases: ['command-reset', 'commands-reset', 'reset-command', 'reset-commands'],

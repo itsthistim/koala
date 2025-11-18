@@ -1,7 +1,7 @@
 import { container, Argument, type ArgumentResult } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
 import { User } from 'discord.js';
-import { resolveUser } from '#utils/discord';
+import { resolveUser } from '#lib/utils/discord';
 
 export default class UserNameArgument extends Argument<User> {
 	public async run(parameter: string, context: Argument.Context): Promise<ArgumentResult<User>> {

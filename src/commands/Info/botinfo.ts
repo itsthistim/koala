@@ -1,5 +1,5 @@
 import { colors } from '#lib/constants';
-import { envParseArray } from '#utils/env';
+import { envParseArray } from '#lib/utils/env';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, container, version as sappVersion } from '@sapphire/framework';
 import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, User, version as djsVersion, type Message } from 'discord.js';
