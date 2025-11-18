@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
 import { Events, type Message } from 'discord.js';
-import { handleBlackjackSuggestion } from '#utils/blackjack';
+import { handleBlackjackSuggestion } from '#lib/utils/blackjack';
 
 @ApplyOptions<Listener.Options>(({ container }) => ({
 	description: 'Handle Message Create event',

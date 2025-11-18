@@ -13,7 +13,6 @@
 		"format": "prettier --write \"src/**/*.ts\""
 	},
 	"imports": {
-		"#utils/*": "./dist/utils/*.js",
 		"#lib/*": "./dist/lib/*.js",
 		"#services/*": "./dist/lib/services/*.js"
 	},
