@@ -37,7 +37,7 @@ export class ReminderService {
 
 			for (const reminder of dueReminders) {
 				await this.sendReminder(reminder);
-				db.markCompleted(reminder.id);
+				db.deleteReminder(reminder.id, reminder.user_id);
 			}
 		} catch (error) {
 			container.logger.error('[ReminderService] Error checking reminders:', error);

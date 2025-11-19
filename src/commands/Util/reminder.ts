@@ -161,7 +161,7 @@ export class UserCommand extends Subcommand {
 		}
 
 		return await interaction.reply({
-			content: result.error ?? result.success!,
+			content: `Reminder removed successfully: ${result.reminderText}`,
 			ephemeral: true
 		});
 	}
@@ -177,7 +177,7 @@ export class UserCommand extends Subcommand {
 			return reply(msg, 'Reminder not found.');
 		}
 
-		return await reply(msg, result.error ?? result.success!);
+		return await reply(msg, `Reminder removed successfully: ${result.reminderText}`);
 	}
 
 	private createReminder(
@@ -204,15 +204,17 @@ export class UserCommand extends Subcommand {
 		return { success: `I will remind you ${time(Math.floor(reminderTime / 1000), TimestampStyles.RelativeTime)}!\n> ${reminderText}` };
 	}
 
-	private removeReminder(user_id: string, reminder_id: number) {
+	// Now removes by reminder ID, not index.
+	private removeReminder(user_id: string, reminder_id: number): Reminder | null {
 		const db = getReminderDatabase();
-		const reminder = db.getUserReminder(reminder_id, user_id);
+		const reminders = db.getUserReminders(user_id);
+		const reminder = reminders.find((r) => r.id === reminder_id);
 		if (!reminder) {
-			return { error: 'Reminder not found.' };
+			return null;
 		}
 
 		db.deleteReminder(reminder_id, user_id);
-		return { success: 'Reminder removed successfully.' };
+		return reminder;
 	}
 
 	private getReminderList(user_id: string): Reminder[] {
