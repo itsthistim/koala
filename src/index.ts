@@ -26,7 +26,17 @@ const client = new SapphireClient({
 		GatewayIntentBits.MessageContent
 	],
 	partials: [Partials.Channel],
-	loadMessageCommandListeners: true
+	loadMessageCommandListeners: true,
+	tasks: {
+		bull: {
+			connection: {
+				host: process.env.REDIS_HOST,
+				port: Number(process.env.REDIS_PORT),
+				username: process.env.REDIS_USERNAME,
+				password: process.env.REDIS_PASSWORD
+			}
+		}
+	}
 });
 
 const main = async () => {

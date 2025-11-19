@@ -6,6 +6,7 @@ process.env.NODE_ENV ??= 'development';
 import { ApplicationCommandRegistries, RegisterBehavior } from '@sapphire/framework';
 import '@sapphire/plugin-editable-commands/register';
 import '@sapphire/plugin-subcommands/register';
+import '@sapphire/plugin-scheduled-tasks/register';
 import { inspect } from 'util';
 
 // Set default behavior to bulk overwrite

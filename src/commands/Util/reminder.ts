@@ -1,10 +1,10 @@
-import { getReminderDatabase, Reminder } from '#lib/database/reminders';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
-import { Duration, Time } from '@sapphire/time-utilities';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { Subcommand } from '@sapphire/plugin-subcommands';
-import { ApplicationIntegrationType, InteractionContextType, time, TimestampStyles, type Message } from 'discord.js';
+import { Duration } from '@sapphire/time-utilities';
+import { ApplicationIntegrationType, InteractionContextType, Message, time, TimestampStyles } from 'discord.js';
+import { Reminder } from 'scheduled-tasks/reminder';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
@@ -75,16 +75,9 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 export class UserCommand extends Subcommand {
 	public async chatInputCreate(interaction: Command.ChatInputCommandInteraction) {
 		const timeStr = interaction.options.getString('time', true);
-		const reminderText = interaction.options.getString('message', true);
+		const content = interaction.options.getString('message', true);
 
-		const result = this.createReminder(
-			interaction.user.id,
-			reminderText,
-			timeStr,
-			interaction.guildId ?? undefined,
-			interaction.channelId,
-			interaction.id
-		);
+		const result = this.createReminder(interaction, timeStr, content);
 
 		return await interaction.reply({
 			content: result.error ?? result.success!,
@@ -94,132 +87,69 @@ export class UserCommand extends Subcommand {
 
 	public async messageCreate(msg: Message, args: Args) {
 		const timeStr = await args.pick('string').catch(() => null);
-		const reminderText = await args.rest('string').catch(() => null);
+		const content = await args.rest('string').catch(() => null);
 
-		if (!timeStr && !reminderText) {
-			return this.messageList(msg);
-		}
+		// if (!timeStr && !content) {
+		// 	return this.messageList(msg);
+		// }
 
 		if (!timeStr) {
 			return reply(msg, 'Please provide a time (e.g., `30m`, `2h`, `1d`)');
 		}
 
-		if (!reminderText) {
+		if (!content) {
 			return await reply(msg, 'Please provide a reminder message');
 		}
 
-		const result = this.createReminder(msg.author.id, reminderText, timeStr, msg.guildId ?? undefined, msg.channelId, msg.id);
+		const result = this.createReminder(msg, timeStr, content);
 		return await reply(msg, result.error ?? result.success!);
 	}
 
-	public async chatInputList(interaction: Command.ChatInputCommandInteraction) {
-		const reminders = this.getReminderList(interaction.user.id);
-		if (reminders.length === 0) {
-			return interaction.reply({ content: 'You have no active reminders.', ephemeral: true });
-		}
-
-		return interaction.reply({
-			content:
-				`You have ${reminders.length} active reminders:` +
-				`\n${reminders
-					.map(
-						(reminder, index) =>
-							`${index + 1}. ${reminder.reminderText} - ${time(Math.floor(reminder.timestamp / 1000), TimestampStyles.RelativeTime)}`
-					)
-					.join('\n')}`,
-			ephemeral: true
-		});
-	}
-
-	public async messageList(msg: Message) {
-		const reminders = this.getReminderList(msg.author.id);
-		if (reminders.length === 0) {
-			return reply(msg, 'You have no active reminders.');
-		}
-
-		return reply(
-			msg,
-			`You have ${reminders.length} active reminders:` +
-				`\n${reminders
-					.map(
-						(reminder, index) =>
-							`${index + 1}. ${reminder.reminderText} - to be reminded ${time(Math.floor(reminder.timestamp / 1000), TimestampStyles.RelativeTime)}`
-					)
-					.join('\n')}`
-		);
-	}
-
-	public async chatInputRemove(interaction: Command.ChatInputCommandInteraction) {
-		const reminderId = interaction.options.getInteger('id', true);
-		const result = this.removeReminder(interaction.user.id, reminderId);
-
-		if (!result) {
-			return await interaction.reply({
-				content: 'Reminder not found.',
-				ephemeral: true
-			});
-		}
-
-		return await interaction.reply({
-			content: `Reminder removed successfully: ${result.reminderText}`,
-			ephemeral: true
-		});
-	}
-
-	public async messageRemove(msg: Message, args: Args) {
-		const reminderId = await args.pick('number').catch(() => null);
-		if (reminderId === null) {
-			return reply(msg, 'Please provide a valid reminder ID to remove.');
-		}
-		const result = this.removeReminder(msg.author.id, reminderId);
-
-		if (!result) {
-			return reply(msg, 'Reminder not found.');
-		}
-
-		return await reply(msg, `Reminder removed successfully: ${result.reminderText}`);
-	}
-
-	private createReminder(
-		user_id: string,
-		reminderText: string,
-		timeStr: string,
-		guild_id: string | undefined,
-		channel_id: string,
-		message_id?: string
-	) {
+	private createReminder(ctx: Message | Command.ChatInputCommandInteraction, timeStr: string, content: string) {
 		const duration = new Duration(timeStr);
 		if (!duration.offset || duration.offset <= 0) {
 			return { error: 'Invalid time format. Use formats like: `30m`, `2h`, `1d`, `1w`' };
 		}
 
-		if (duration.offset < 1 * Time.Minute) {
-			return { error: 'Reminder must be at least 1 minute in the future.' };
-		}
+		const now = Date.now();
+		const payload: Reminder = {
+			author: 'user' in ctx ? ctx.user : ctx.author,
+			content,
+			timestamp: now + duration.offset,
+			ctx
+		};
+
+		this.container.tasks.create({ name: 'reminder', payload }, duration.offset);
 
 		const reminderTime = Date.now() + duration.offset;
-		const db = getReminderDatabase();
-		db.addReminder(user_id, reminderText, reminderTime, guild_id, channel_id, message_id);
-
-		return { success: `I will remind you ${time(Math.floor(reminderTime / 1000), TimestampStyles.RelativeTime)}!\n> ${reminderText}` };
+		return { success: `I will remind you ${time(Math.floor(reminderTime / 1000), TimestampStyles.RelativeTime)}!\n> ${content}` };
 	}
 
-	// Now removes by reminder ID, not index.
-	private removeReminder(user_id: string, reminder_id: number): Reminder | null {
-		const db = getReminderDatabase();
-		const reminders = db.getUserReminders(user_id);
-		const reminder = reminders.find((r) => r.id === reminder_id);
-		if (!reminder) {
-			return null;
+	private async listReminders(userId: string) {
+		const jobs = await this.container.tasks.list({ types: ['delayed', 'waiting'], asc: true });
+		
+		const reminderJobs = jobs.filter((job) => job.name === 'reminder');
+		const userJobs = reminderJobs.filter((job) => (job.data as Reminder).author.id === userId);
+		
+		return userJobs.map((job, index) => {
+			const data = job.data as Reminder;
+			return `${index + 1}. ${data.content} - ${time(Math.floor(data.timestamp / 1000), TimestampStyles.RelativeTime)}`;
+		});
+	}
+
+	public async chatInputList(interaction: Command.ChatInputCommandInteraction) {
+		const lines = await this.listReminders(interaction.user.id);
+		if (lines.length === 0) {
+			return interaction.reply({ content: 'You have no active reminders.', ephemeral: true });
 		}
-
-		db.deleteReminder(reminder_id, user_id);
-		return reminder;
+		return interaction.reply({ content: `You have ${lines.length} active reminders:\n${lines.join('\n')}`, ephemeral: true });
 	}
 
-	private getReminderList(user_id: string): Reminder[] {
-		const db = getReminderDatabase();
-		const reminders = db.getUserReminders(user_id);
-		return reminders;
+	public async messageList(msg: Message) {
+		const lines = await this.listReminders(msg.author.id);
+		if (lines.length === 0) {
+			return reply(msg, 'You have no active reminders.');
+		}
+		return reply(msg, `You have ${lines.length} active reminders:\n${lines.join('\n')}`);
 	}
 }
