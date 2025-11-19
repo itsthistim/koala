@@ -85,6 +85,19 @@ export class UserCommand extends Subcommand {
 		});
 	}
 
+	public async chatInputRemove(interaction: Command.ChatInputCommandInteraction) {
+		const id = interaction.options.getInteger('id', true);
+		try {
+			await this.removeReminderById(interaction.user.id, id);
+			return interaction.reply({ content: `Removed reminder #${id}.`, ephemeral: true });
+		} catch {
+			return interaction.reply({
+				content: `Could not find a reminder with ID #${id}. Use the \`${this.name} list\` command to see your active reminders.`,
+				ephemeral: true
+			});
+		}
+	}
+
 	public async chatInputList(interaction: Command.ChatInputCommandInteraction) {
 		const lines = await this.listReminders(interaction.user.id);
 		if (lines.length === 0) {
@@ -111,6 +124,20 @@ export class UserCommand extends Subcommand {
 
 		const result = this.createReminder(msg, timeStr, content);
 		return await reply(msg, result.error ?? result.success!);
+	}
+
+	public async messageRemove(msg: Message, args: Args) {
+		const id = await args.pick('number').catch(() => null);
+		if (id === null) {
+			return this.messageList(msg);
+		}
+
+		try {
+			await this.removeReminderById(msg.author.id, id);
+			return reply(msg, `Removed reminder #${id}.`);
+		} catch {
+			return reply(msg, `Could not find a reminder with ID #${id}. Use the \`${this.name} list\` command to see your active reminders.`);
+		}
 	}
 
 	public async messageList(msg: Message) {
@@ -151,5 +178,17 @@ export class UserCommand extends Subcommand {
 			const data = job.data as Reminder;
 			return `${index + 1}. ${data.content} - ${time(Math.floor(data.timestamp / 1000), TimestampStyles.RelativeTime)}`;
 		});
+	}
+
+	private async removeReminderById(userId: string, id: number) {
+		const jobs = await this.container.tasks.list({ types: ['delayed', 'waiting'], asc: true });
+		const reminderJobs = jobs.filter((job) => job.name === 'reminder');
+		const userJobs = reminderJobs.filter((job) => (job.data as Reminder).author.id === userId);
+
+		if (id < 1 || id > userJobs.length) {
+			throw new Error('Invalid reminder ID');
+		}
+
+		return await userJobs[id - 1].remove();
 	}
 }
