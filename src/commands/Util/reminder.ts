@@ -16,8 +16,8 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	subcommands: [
 		{
 			name: 'create',
-			chatInputRun: 'chatInputCreate',
-			messageRun: 'messageCreate',
+			chatInputRun: 'chatInputRemind',
+			messageRun: 'messageRemind',
 			default: true
 		},
 		{
@@ -73,7 +73,7 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 		)
 )
 export class UserCommand extends Subcommand {
-	public async chatInputCreate(interaction: Command.ChatInputCommandInteraction) {
+	public async chatInputRemind(interaction: Command.ChatInputCommandInteraction) {
 		const timeStr = interaction.options.getString('time', true);
 		const content = interaction.options.getString('message', true);
 
@@ -85,13 +85,21 @@ export class UserCommand extends Subcommand {
 		});
 	}
 
-	public async messageCreate(msg: Message, args: Args) {
+	public async chatInputList(interaction: Command.ChatInputCommandInteraction) {
+		const lines = await this.listReminders(interaction.user.id);
+		if (lines.length === 0) {
+			return interaction.reply({ content: 'You have no active reminders.', ephemeral: true });
+		}
+		return interaction.reply({ content: `You have ${lines.length} active reminders:\n${lines.join('\n')}`, ephemeral: true });
+	}
+
+	public async messageRemind(msg: Message, args: Args) {
 		const timeStr = await args.pick('string').catch(() => null);
 		const content = await args.rest('string').catch(() => null);
 
-		// if (!timeStr && !content) {
-		// 	return this.messageList(msg);
-		// }
+		if (!timeStr && !content) {
+			return this.messageList(msg);
+		}
 
 		if (!timeStr) {
 			return reply(msg, 'Please provide a time (e.g., `30m`, `2h`, `1d`)');
@@ -103,6 +111,14 @@ export class UserCommand extends Subcommand {
 
 		const result = this.createReminder(msg, timeStr, content);
 		return await reply(msg, result.error ?? result.success!);
+	}
+
+	public async messageList(msg: Message) {
+		const lines = await this.listReminders(msg.author.id);
+		if (lines.length === 0) {
+			return reply(msg, 'You have no active reminders.');
+		}
+		return reply(msg, `You have ${lines.length} active reminders:\n${lines.join('\n')}`);
 	}
 
 	private createReminder(ctx: Message | Command.ChatInputCommandInteraction, timeStr: string, content: string) {
@@ -127,29 +143,13 @@ export class UserCommand extends Subcommand {
 
 	private async listReminders(userId: string) {
 		const jobs = await this.container.tasks.list({ types: ['delayed', 'waiting'], asc: true });
-		
+
 		const reminderJobs = jobs.filter((job) => job.name === 'reminder');
 		const userJobs = reminderJobs.filter((job) => (job.data as Reminder).author.id === userId);
-		
+
 		return userJobs.map((job, index) => {
 			const data = job.data as Reminder;
 			return `${index + 1}. ${data.content} - ${time(Math.floor(data.timestamp / 1000), TimestampStyles.RelativeTime)}`;
 		});
-	}
-
-	public async chatInputList(interaction: Command.ChatInputCommandInteraction) {
-		const lines = await this.listReminders(interaction.user.id);
-		if (lines.length === 0) {
-			return interaction.reply({ content: 'You have no active reminders.', ephemeral: true });
-		}
-		return interaction.reply({ content: `You have ${lines.length} active reminders:\n${lines.join('\n')}`, ephemeral: true });
-	}
-
-	public async messageList(msg: Message) {
-		const lines = await this.listReminders(msg.author.id);
-		if (lines.length === 0) {
-			return reply(msg, 'You have no active reminders.');
-		}
-		return reply(msg, `You have ${lines.length} active reminders:\n${lines.join('\n')}`);
 	}
 }
