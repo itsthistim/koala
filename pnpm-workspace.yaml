@@ -5,3 +5,4 @@ onlyBuiltDependencies:
   - '@sapphire/type'
   - better-sqlite3
   - canvas
+  - msgpackr-extract
