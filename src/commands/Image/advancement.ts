@@ -2,7 +2,7 @@ import { ApplicationIntegrationType, InteractionContextType, type Message } from
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { loadImage } from 'canvas';
+import { loadImage, registerFont } from 'canvas';
 import { shortenText, createAttachment } from '#lib/utils/canvas';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
@@ -41,6 +41,7 @@ export class UserCommand extends Command {
 
 	private async getImage(text: string) {
 		const base = await loadImage('src/lib/assets/images/achievement.png');
+		registerFont('src/lib/assets/fonts/Mojangles.ttf', { family: 'Mojangles' });
 
 		return createAttachment(base.width, base.height, 'advancement.png', async (ctx) => {
 			ctx.drawImage(base, 0, 0);
