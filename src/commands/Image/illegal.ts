@@ -45,7 +45,7 @@ export class UserCommand extends Command {
 		return createAttachment(base.width, base.height, 'illegal.png', async (ctx) => {
 			ctx.drawImage(base, 0, 0);
 
-			ctx.font = 'bold 28px Arial';
+			ctx.font = 'bold 28px';
 			ctx.fillStyle = '#000000';
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'middle';
