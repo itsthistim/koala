@@ -4,7 +4,7 @@ import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { GatewayIntentBits, Partials } from 'discord.js';
 
 const client = new SapphireClient({
-	defaultPrefix: process.env.NODE_ENV === 'production' ? '-' : '+',
+	defaultPrefix: process.env.NODE_ENV === 'PRODUCTION' ? '-' : '+',
 	regexPrefix: /^(hey +)?bot[,! ]/i,
 	caseInsensitivePrefixes: true,
 	caseInsensitiveCommands: true,
