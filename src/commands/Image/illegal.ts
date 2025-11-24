@@ -2,7 +2,7 @@ import { ApplicationIntegrationType, InteractionContextType, type Message } from
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { loadImage } from 'canvas';
+import { loadImage, registerFont } from 'canvas';
 import { createAttachment, fitText } from '#lib/utils/canvas';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
@@ -41,11 +41,12 @@ export class UserCommand extends Command {
 
 	private async getImage(text: string) {
 		const base = await loadImage('src/lib/assets/images/illegal.png');
+		registerFont('src/lib/assets/fonts/Roboto.ttf', { family: 'Roboto' });
 
 		return createAttachment(base.width, base.height, 'illegal.png', async (ctx) => {
 			ctx.drawImage(base, 0, 0);
 
-			ctx.font = 'bold 28px Arial';
+			ctx.font = 'bold 28px Roboto';
 			ctx.fillStyle = '#000000';
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'middle';

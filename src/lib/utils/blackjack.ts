@@ -83,7 +83,7 @@ export async function handleBlackjackSuggestion(msg: Message): Promise<void> {
 
 	// check if game is over
 	const nameLower = fieldName.toLowerCase();
-	if (nameLower.includes('you lost') || nameLower.includes('you won')) {
+	if (nameLower.includes('you lost') || nameLower.includes('you won') || nameLower.includes("1/1! it's a tie lmao")) {
 		// delete the suggestion message if it exists
 		const cachedSuggestion = suggestionCache.get(msg.id);
 		if (cachedSuggestion) {
