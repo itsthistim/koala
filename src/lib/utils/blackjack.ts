@@ -65,13 +65,18 @@ const suggestionCache = new Map<string, Message>();
 
 export async function handleBlackjackSuggestion(msg: Message): Promise<void> {
 	if (!msg.embeds.length || !msg.embeds[0].fields.length) return;
-	
+
 	const allowedGuilds = ['1430805361094426666', '502208815937224715'];
 	if (msg.guild && !allowedGuilds.includes(msg.guild.id)) return;
-	
+
 	const field = msg.embeds[0].fields[0];
 	const fieldValue = field.value;
 	const fieldName = field.name;
+
+	if (fieldValue.toLowerCase().includes("**epic dealer**'s total: 21")) {
+		msg.react('💀').catch(() => {});
+		return;
+	}
 
 	const lower = fieldValue.toLowerCase();
 	if (!lower.includes('epic dealer') || !lower.includes('total:')) return;
