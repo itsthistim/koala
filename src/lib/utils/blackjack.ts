@@ -75,7 +75,6 @@ export async function handleBlackjackSuggestion(msg: Message): Promise<void> {
 
 	if (fieldValue.toLowerCase().includes("**epic dealer**'s total: 21")) {
 		msg.react('💀').catch(() => {});
-		return;
 	}
 
 	const lower = fieldValue.toLowerCase();
