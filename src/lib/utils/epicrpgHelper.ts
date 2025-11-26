@@ -157,7 +157,7 @@ export async function trainingHelper(msg: Message): Promise<void> {
 	if (!(await shouldRun(msg))) return;
 
 	// count emoji challenge
-	if (msg.content.includes('How many')) {
+	if (msg.content.includes('is training') && msg.content.includes('How many')) {
 		let emojiResult = msg.content.match(/How many\s+<:([^:]+):\d+>/i);
 		let emojiName = emojiResult ? emojiResult[1] : null;
 
