@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
 import { Events, type Message } from 'discord.js';
-import { handleBlackjackSuggestion } from '#lib/utils/blackjack';
+import { blackjackHelper } from '#lib/utils/epicrpgHelper';
 
 @ApplyOptions<Listener.Options>(({ container }) => ({
 	description: 'Handle Message Update event',
@@ -10,6 +10,6 @@ import { handleBlackjackSuggestion } from '#lib/utils/blackjack';
 }))
 export class ClientListener extends Listener {
 	public async run(_oldMsg: Message, newMsg: Message) {
-		await handleBlackjackSuggestion(newMsg);
+		await blackjackHelper(newMsg);
 	}
 }

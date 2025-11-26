@@ -1,12 +1,33 @@
 import { reply } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
 
-const rankToValue = (rankRaw: string): { value: number; isAce: boolean } => {
-	const rank = rankRaw.toLowerCase();
-	if (rank === 'a' || rank === 'ace') return { value: 11, isAce: true };
-	if (rank === 'k' || rank === 'q' || rank === 'j') return { value: 10, isAce: false };
+async function shouldRun(msg: Message) {
+	const allowedGuilds = ['1430805361094426666', '502208815937224715'];
+	const allowedAuthors = ['555955826880413696', '319183644331606016'];
+
+	if (msg.guild && !allowedGuilds.includes(msg.guild.id)) return false;
+	if (!allowedAuthors.includes(msg.author.id)) return false;
+
+	return true;
+}
+
+const rankToValue = (rank: string): { value: number; isAce: boolean } => {
+	rank = rank.toUpperCase();
+
+	// aces
+	if (rank === 'A') {
+		return { value: 11, isAce: true };
+	}
+
+	// face cards
+	if (rank === 'K' || rank === 'Q' || rank === 'J') {
+		return { value: 10, isAce: false };
+	}
+
 	const n = Number(rank);
-	if (!Number.isNaN(n)) return { value: Math.min(Math.max(n, 2), 11), isAce: false };
+	if (!Number.isNaN(n)) {
+		return { value: Math.min(Math.max(n, 2), 11), isAce: false };
+	}
 	return { value: 0, isAce: false };
 };
 
@@ -63,11 +84,10 @@ const suggest = (total: number, soft: boolean, dealerCard: number): 'hit' | 'sta
 
 const suggestionCache = new Map<string, Message>();
 
-export async function handleBlackjackSuggestion(msg: Message): Promise<void> {
-	if (!msg.embeds.length || !msg.embeds[0].fields.length) return;
+export async function blackjackHelper(msg: Message): Promise<void> {
+	if (!(await shouldRun(msg))) return;
 
-	const allowedGuilds = ['1430805361094426666', '502208815937224715'];
-	if (msg.guild && !allowedGuilds.includes(msg.guild.id)) return;
+	if (!msg.embeds.length || !msg.embeds[0].fields.length) return;
 
 	const field = msg.embeds[0].fields[0];
 	const fieldValue = field.value;
@@ -118,4 +138,55 @@ export async function handleBlackjackSuggestion(msg: Message): Promise<void> {
 
 	// cache the suggestion message
 	suggestionCache.set(msg.id, suggestionMsg);
+}
+
+const indexes = {
+	first: 1,
+	second: 2,
+	third: 3,
+	fourth: 4,
+	fifth: 5,
+	sixth: 6,
+	seventh: 7,
+	eighth: 8,
+	ninth: 9,
+	tenth: 10
+} as { [key: string]: number };
+
+export async function trainingHelper(msg: Message): Promise<void> {
+	if (!(await shouldRun(msg))) return;
+
+	// count emoji challenge
+	if (msg.content.includes('How many')) {
+		let emojiResult = msg.content.match(/How many\s+<:([^:]+):\d+>/i);
+		let emojiName = emojiResult ? emojiResult[1] : null;
+
+		if (emojiName) {
+			const emojiCount = (msg.content.match(new RegExp(`<:${emojiName}:\\d+>`, 'g')) || []).length - 1;
+			await reply(msg, `**${emojiCount}**`);
+		}
+
+		return;
+	}
+
+	// letter challenge
+	if (msg.content.includes('is training') && msg.content.includes('letter of')) {
+		let emojiResult = msg.content.match(/letter of\s+<:([^:]+):\d+>/i);
+		let emojiName = emojiResult ? emojiResult[1] : null;
+
+		if (emojiName) {
+			emojiName = emojiName?.toLowerCase().replace(/[^a-z]/g, '');
+
+			let indexResult = msg.content.match(/What's the \*\*(.+?)\*\*/i);
+			let indexWord = indexResult ? indexResult[1].toLowerCase() : null;
+			let index = indexWord ? indexes[indexWord] : null;
+
+			if (index && index >= 1 && index <= emojiName.length) {
+				const letter = emojiName.charAt(index - 1).toUpperCase();
+				await reply(msg, `**${letter}**`);
+			}
+		}
+
+		return;
+	}
 }
