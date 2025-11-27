@@ -77,7 +77,7 @@ export class UserCommand extends Subcommand {
 		const timeStr = interaction.options.getString('time', true);
 		const content = interaction.options.getString('message', true);
 
-		const result = this.createReminder(interaction, timeStr, content);
+		const result = await this.createReminder(interaction, timeStr, content);
 
 		return await interaction.reply({
 			content: result.error ?? result.success!,
@@ -122,7 +122,7 @@ export class UserCommand extends Subcommand {
 			return await reply(msg, 'Please provide a reminder message');
 		}
 
-		const result = this.createReminder(msg, timeStr, content);
+		const result = await this.createReminder(msg, timeStr, content);
 		return await reply(msg, result.error ?? result.success!);
 	}
 
@@ -148,8 +148,11 @@ export class UserCommand extends Subcommand {
 		return reply(msg, `You have ${lines.length} active reminders:\n${lines.join('\n')}`);
 	}
 
-	private createReminder(ctx: Message | Command.ChatInputCommandInteraction, timeStr: string, content: string) {
+	private async createReminder(ctx: Message | Command.ChatInputCommandInteraction, timeStr: string, content: string) {
 		const duration = new Duration(timeStr);
+
+		console.log("Duration", duration);
+
 		if (!duration.offset || duration.offset <= 0) {
 			return { error: 'Invalid time format. Use formats like: `30m`, `2h`, `1d`, `1w`' };
 		}
@@ -162,7 +165,11 @@ export class UserCommand extends Subcommand {
 			ctx
 		};
 
-		this.container.tasks.create({ name: 'reminder', payload }, duration.offset);
+		console.log("Creating reminder with payload:", payload, "and duration offset:", duration.offset);
+
+		await this.container.tasks.create({ name: 'reminder', payload }, duration.offset);
+
+		console.log("Reminder task created successfully.");
 
 		const reminderTime = Date.now() + duration.offset;
 		return { success: `I will remind you ${time(Math.floor(reminderTime / 1000), TimestampStyles.RelativeTime)}!\n> ${content}` };
