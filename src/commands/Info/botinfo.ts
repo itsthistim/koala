@@ -2,11 +2,11 @@ import { colors } from '#lib/constants';
 import { envParseArray } from '#lib/utils/env';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, container, version as sappVersion } from '@sapphire/framework';
-import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, User, version as djsVersion, type Message } from 'discord.js';
-import { DurationFormatter } from '@sapphire/time-utilities';
 import { reply } from '@sapphire/plugin-editable-commands';
-import os from 'os';
+import moment from 'moment';
 import { execSync } from 'child_process';
+import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, User, version as djsVersion, type Message } from 'discord.js';
+import os from 'os';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
@@ -36,7 +36,8 @@ export class UserCommand extends Command {
 
 	private async getInfoEmbed() {
 		const dev = container.client.users.cache.get(envParseArray('OWNERS')[0]) as User | undefined;
-		const uptime = new DurationFormatter().format(container.client.uptime!);
+
+		const uptime = moment.duration(container.client.uptime).format('d[d], h[h], m[m], s[s]');
 
 		const diskUsage = (() => {
 			try {
