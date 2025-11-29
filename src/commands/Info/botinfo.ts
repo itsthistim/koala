@@ -37,7 +37,7 @@ export class UserCommand extends Command {
 	private async getInfoEmbed() {
 		const dev = container.client.users.cache.get(envParseArray('OWNERS')[0]) as User | undefined;
 
-		const uptime = moment.duration(container.client.uptime).format('d[d], h[h], m[m], s[s]');
+		const uptime = moment.duration(container.client.uptime).format('d[d] h[h] m[m] s[s]');
 
 		const diskUsage = (() => {
 			try {
