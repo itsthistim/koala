@@ -1,7 +1,7 @@
 import { reply } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
 
-async function shouldRun(msg: Message) {
+function shouldRun(msg: Message) {
 	const allowedGuilds = ['1430805361094426666', '502208815937224715'];
 	const allowedAuthors = ['555955826880413696', '319183644331606016'];
 
@@ -11,48 +11,43 @@ async function shouldRun(msg: Message) {
 	return true;
 }
 
-const rankToValue = (rank: string): { value: number; isAce: boolean } => {
+const rankToValue = (rank: string): number => {
 	rank = rank.toUpperCase();
 
-	// aces
-	if (rank === 'A') {
-		return { value: 11, isAce: true };
-	}
-
-	// face cards
-	if (rank === 'K' || rank === 'Q' || rank === 'J') {
-		return { value: 10, isAce: false };
-	}
+	if (rank === 'A') return 11;
+	if (rank === 'K' || rank === 'Q' || rank === 'J') return 10;
 
 	const n = Number(rank);
-	if (!Number.isNaN(n)) {
-		return { value: Math.min(Math.max(n, 2), 11), isAce: false };
-	}
-	return { value: 0, isAce: false };
+	if (!Number.isNaN(n)) return Math.min(Math.max(n, 2), 11);
+
+	return 0;
 };
 
-const parseCardRanksFromLine = (line: string): string[] => {
-	const afterMarker = line.split('~-~')[1] ?? '';
-	return afterMarker
-		.split('|')
-		.map((s) => s.trim())
-		.filter((s) => s && s !== '??')
-		.map((token) => token.split(':')[0]);
+const getHand = (line: string | null): string[] => {
+	const cardSection = (line ?? '').split('~-~')[1] ?? '';
+	const cards = cardSection.split('|').map((s) => s.trim());
+
+	// extract card ranks, ignore face down cards ('??')
+	return cards.map((token) => token.split(':')[0]).filter((card) => card && card !== '??');
 };
 
-const computeHand = (ranks: string[]) => {
+const getHandValue = (hand: string[]) => {
 	let total = 0;
 	let aces = 0;
-	for (const r of ranks) {
-		const { value, isAce } = rankToValue(r);
+
+	for (const card of hand) {
+		const value = rankToValue(card);
 		total += value;
-		if (isAce) aces++;
+		if (value === 11) aces++;
 	}
+
 	while (total > 21 && aces > 0) {
 		total -= 10;
 		aces--;
 	}
-	const isSoft = aces > 0; // at least one Ace counted as 11
+
+	const isSoft = aces > 0;
+
 	return { total, isSoft };
 };
 
@@ -82,18 +77,28 @@ const suggest = (total: number, soft: boolean, dealerCard: number): 'hit' | 'sta
 	return 'hit';
 };
 
-const suggestionCache = new Map<string, Message>();
+const suggestionMessages = new Map<string, Message>();
 
 export async function blackjackHelper(msg: Message): Promise<void> {
-	if (!(await shouldRun(msg))) return;
+	if (!shouldRun(msg)) {
+		return;
+	}
 
-	if (!msg.embeds.length || !msg.embeds[0].fields.length) return;
+	if (!msg.embeds.length || !msg.embeds[0].fields.length) {
+		return;
+	}
 
 	const field = msg.embeds[0].fields[0];
-	const fieldValue = field.value;
-	const fieldName = field.name;
+	const fieldContent = field.value.toLowerCase();
+	const fieldTitle = field.name.toLowerCase();
 
-	if (fieldValue.toLowerCase().includes("**epic dealer**'s total: 21")) {
+	// check if it's a blackjack game message
+	if (!fieldContent.includes('epic dealer') || !fieldContent.includes('total:')) {
+		return;
+	}
+
+	// react with skull if dealer gets blackjack
+	if (fieldContent.includes("**epic dealer**'s total: 21")) {
 		msg.react('💀').catch(() => {});
 	}
 
@@ -101,43 +106,51 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 	if (fieldTitle.includes('you won') && fieldContent.includes('total: 21')) {
 		msg.react('🖕').catch(() => {});
 	}
-	const nameLower = fieldName.toLowerCase();
-	if (nameLower.includes('you lost') || nameLower.includes('you won') || nameLower.includes("1/1! it's a tie lmao")) {
-		// delete the suggestion message if it exists
-		const cachedSuggestion = suggestionCache.get(msg.id);
-		if (cachedSuggestion) {
-			await cachedSuggestion.delete().catch(() => {});
-			suggestionCache.delete(msg.id);
+
+	// remove suggestion if game is over
+	if (fieldTitle.includes('you lost') || fieldTitle.includes('you won') || fieldTitle.includes("1/1! it's a tie lmao")) {
+		const suggestionMessage = suggestionMessages.get(msg.id);
+		if (suggestionMessage) {
+			await suggestionMessage.delete().catch(() => {});
+			suggestionMessages.delete(msg.id);
 		}
+
 		return;
 	}
 
-	const lines = fieldValue.split('\n').map((l) => l.trim());
-	if (lines.length < 2) return;
+	const lines = fieldContent.split('\n').map((l) => l.trim());
+	if (lines.length < 2) {
+		return;
+	}
 
 	// extract player's hand and dealer upcard
 	const playerLine = lines[0];
-	const dealerLineIndex = lines.findIndex((l) => l.toLowerCase().includes('epic dealer'));
-	if (dealerLineIndex === -1) return;
-	const dealerLine = lines[dealerLineIndex];
+	const dealerIndex = lines.findIndex((l) => l.includes('epic dealer'));
+	const dealerLine = dealerIndex !== -1 ? lines[dealerIndex] : null;
 
-	const playerRanks = parseCardRanksFromLine(playerLine);
-	const { total: playerTotal, isSoft } = computeHand(playerRanks);
+	if (!playerLine || dealerIndex === -1) {
+		return;
+	}
 
-	const dealerRanks = parseCardRanksFromLine(dealerLine);
-	const dealerUpRank = dealerRanks[0];
-	if (!dealerUpRank) return;
-	const { value: dealerUpValue, isAce: dealerIsAce } = rankToValue(dealerUpRank);
-	const dealerUp = dealerIsAce ? 11 : dealerUpValue >= 10 ? 10 : dealerUpValue;
+	const playerHand = getHand(playerLine);
+	const { total: playerTotal, isSoft } = getHandValue(playerHand);
 
-	const move = suggest(playerTotal, isSoft, dealerUp);
+	const dealerHand = getHand(dealerLine);
+	const dealerShowingCard = dealerHand[0];
+	if (!dealerShowingCard) {
+		return;
+	}
+
+	const dealerShowingCardValue = rankToValue(dealerShowingCard);
+
+	const move = suggest(playerTotal, isSoft, dealerShowingCardValue);
 	const suggestionMsg = await reply(
 		msg,
-		`Blackjack helper: ${move.toUpperCase()} (you: ${playerTotal}${isSoft ? ' soft' : ''}, dealer: ${dealerUp === 11 ? 'A' : dealerUp})`
+		`**${move.toUpperCase()}** (${isSoft ? 'soft ' : ''}${playerTotal} vs ${dealerShowingCard === 'A' ? 'A' : dealerShowingCardValue})`
 	);
 
 	// cache the suggestion message
-	suggestionCache.set(msg.id, suggestionMsg);
+	suggestionMessages.set(msg.id, suggestionMsg);
 }
 
 const indexes = {
@@ -154,7 +167,7 @@ const indexes = {
 } as { [key: string]: number };
 
 export async function trainingHelper(msg: Message): Promise<void> {
-	if (!(await shouldRun(msg))) return;
+	if (!shouldRun(msg)) return;
 
 	// count emoji challenge
 	if (msg.content.includes('is training') && msg.content.includes('How many')) {
