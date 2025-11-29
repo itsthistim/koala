@@ -97,10 +97,10 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 		msg.react('💀').catch(() => {});
 	}
 
-	const lower = fieldValue.toLowerCase();
-	if (!lower.includes('epic dealer') || !lower.includes('total:')) return;
-
-	// check if game is over
+	// react with middle finger if player gets blackjack and wins
+	if (fieldTitle.includes('you won') && fieldContent.includes('total: 21')) {
+		msg.react('🖕').catch(() => {});
+	}
 	const nameLower = fieldName.toLowerCase();
 	if (nameLower.includes('you lost') || nameLower.includes('you won') || nameLower.includes("1/1! it's a tie lmao")) {
 		// delete the suggestion message if it exists
