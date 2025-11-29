@@ -11,7 +11,7 @@ function shouldRun(msg: Message) {
 	return true;
 }
 
-const rankToValue = (rank: string): number => {
+function rankToValue(rank: string): number {
 	rank = rank.toUpperCase();
 
 	if (rank === 'A') return 11;
@@ -21,17 +21,17 @@ const rankToValue = (rank: string): number => {
 	if (!Number.isNaN(n)) return Math.min(Math.max(n, 2), 11);
 
 	return 0;
-};
+}
 
-const getHand = (line: string | null): string[] => {
+function getHand(line: string | null): string[] {
 	const cardSection = (line ?? '').split('~-~')[1] ?? '';
 	const cards = cardSection.split('|').map((s) => s.trim());
 
 	// extract card ranks, ignore face down cards ('??')
 	return cards.map((token) => token.split(':')[0]).filter((card) => card && card !== '??');
-};
+}
 
-const getHandValue = (hand: string[]) => {
+function getHandValue(hand: string[]): { total: number; isSoft: boolean } {
 	let total = 0;
 	let aces = 0;
 
@@ -49,33 +49,33 @@ const getHandValue = (hand: string[]) => {
 	const isSoft = aces > 0;
 
 	return { total, isSoft };
-};
+}
 
-const suggest = (total: number, soft: boolean, dealerCard: number): 'hit' | 'stand' => {
+function suggest(total: number, soft: boolean, dealerCard: number): 'HIT' | 'STAND' {
 	// Soft totals (hands with an Ace counted as 11)
 	if (soft) {
-		if (total >= 19) return 'stand'; // A,8 or A,9 - always stand
+		if (total >= 19) return 'STAND'; // A,8 or A,9 - always stand
 		if (total === 18) {
 			// A,7 - stand vs 2-8, hit vs 9,10,A
-			return dealerCard >= 9 || dealerCard === 11 ? 'hit' : 'stand';
+			return dealerCard >= 9 || dealerCard === 11 ? 'HIT' : 'STAND';
 		}
 		// A,2 through A,6 - always hit
-		return 'hit';
+		return 'HIT';
 	}
 
 	// Hard totals
-	if (total >= 17) return 'stand'; // 17+ always stand
+	if (total >= 17) return 'STAND'; // 17+ always stand
 	if (total >= 13 && total <= 16) {
 		// 13-16: stand vs dealer 2-6, hit vs 7-A
-		return dealerCard >= 2 && dealerCard <= 6 ? 'stand' : 'hit';
+		return dealerCard >= 2 && dealerCard <= 6 ? 'STAND' : 'HIT';
 	}
 	if (total === 12) {
 		// 12: stand vs dealer 4-6, hit otherwise
-		return dealerCard >= 4 && dealerCard <= 6 ? 'stand' : 'hit';
+		return dealerCard >= 4 && dealerCard <= 6 ? 'STAND' : 'HIT';
 	}
 	// 11 or less: always hit
-	return 'hit';
-};
+	return 'HIT';
+}
 
 const suggestionMessages = new Map<string, Message>();
 
@@ -137,6 +137,7 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 
 	const dealerHand = getHand(dealerLine);
 	const dealerShowingCard = dealerHand[0];
+
 	if (!dealerShowingCard) {
 		return;
 	}
@@ -146,7 +147,7 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 	const move = suggest(playerTotal, isSoft, dealerShowingCardValue);
 	const suggestionMsg = await reply(
 		msg,
-		`**${move.toUpperCase()}** (${isSoft ? 'soft ' : ''}${playerTotal} vs ${dealerShowingCard === 'A' ? 'A' : dealerShowingCardValue})`
+		`**${move}** (${isSoft ? 'soft ' : ''}${playerTotal} vs ${dealerShowingCard === 'A' ? 'A' : dealerShowingCardValue})`
 	);
 
 	// cache the suggestion message
@@ -201,5 +202,31 @@ export async function trainingHelper(msg: Message): Promise<void> {
 		}
 
 		return;
+	}
+
+	// emoji name challenge
+	if (msg.content.includes('is training') && msg.content.includes('What is the name of')) {
+		let emojiResult = msg.content.match(/(<a:)?<?:([^:]+)(:\d+)?:/i);
+		let emojiName = emojiResult ? emojiResult[2] : null;
+
+		if (emojiName) {
+			emojiName = emojiName.toLowerCase().replace(/[^a-z]/g, '');
+
+			const option1Result = msg.content.match(/\*\*1\*\*\s*-\s*(.+)/i);
+			const option2Result = msg.content.match(/\*\*2\*\*\s*-\s*(.+)/i);
+			const option3Result = msg.content.match(/\*\*3\*\*\s*-\s*(.+)/i);
+
+			const options: { [key: string]: string } = {};
+			if (option1Result) options['1'] = option1Result[1].toLowerCase().replace(/[^a-z]/g, '');
+			if (option2Result) options['2'] = option2Result[1].toLowerCase().replace(/[^a-z]/g, '');
+			if (option3Result) options['3'] = option3Result[1].toLowerCase().replace(/[^a-z]/g, '');
+
+			for (const [key, value] of Object.entries(options)) {
+				if (value === emojiName) {
+					await reply(msg, `**${key}**`);
+					break;
+				}
+			}
+		}
 	}
 }
