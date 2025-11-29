@@ -50,6 +50,12 @@ importers:
       mathjs:
         specifier: ^15.1.0
         version: 15.1.0
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
+      moment-duration-format:
+        specifier: ^2.3.2
+        version: 2.3.2
     devDependencies:
       '@sapphire/cli':
         specifier: ^1.9.3
@@ -60,6 +66,9 @@ importers:
       '@sapphire/ts-config':
         specifier: ^5.0.1
         version: 5.0.1
+      '@types/moment-duration-format':
+        specifier: ^2.2.7
+        version: 2.2.7
       '@types/node':
         specifier: ^22.19.1
         version: 22.19.1
@@ -279,6 +288,9 @@ packages:
   '@skyra/editable-commands@3.0.4':
     resolution: {integrity: sha512-wQQqOt/GVnKTY0yfL9AmBCvoNIRa/4COxMDYS/TcQexabdZlIfxG4up2zKz8A1or5+73meDZ/D/SvUav36/V2w==}
     engines: {node: '>=16.6', npm: '>=7.24.2'}
+
+  '@types/moment-duration-format@2.2.7':
+    resolution: {integrity: sha512-BSxkbKI8ucqqxi4ZCfmFPilUDPoL85YVrOvn/AhCQoeqNfnRsRLGkk68TpoC7L6GwU27RltYiQV5dtfPTv/RHw==}
 
   '@types/node@22.19.1':
     resolution: {integrity: sha512-LCCV0HdSZZZb34qifBsyWlUmok6W7ouER+oQIGBScS8EsZsQbrtFTUrDX4hOl+CS6p7cnNC4td+qrSVGSCTUfQ==}
@@ -594,6 +606,12 @@ packages:
 
   mkdirp-classic@0.5.3:
     resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==}
+
+  moment-duration-format@2.3.2:
+    resolution: {integrity: sha512-cBMXjSW+fjOb4tyaVHuaVE/A5TqkukDWiOfxxAjY+PEqmmBQlLwn+8OzwPiG3brouXKY5Un4pBjAeB6UToXHaQ==}
+
+  moment@2.30.1:
+    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -1113,6 +1131,10 @@ snapshots:
 
   '@skyra/editable-commands@3.0.4': {}
 
+  '@types/moment-duration-format@2.2.7':
+    dependencies:
+      moment: 2.30.1
+
   '@types/node@22.19.1':
     dependencies:
       undici-types: 6.21.0
@@ -1423,6 +1445,10 @@ snapshots:
   minipass@7.1.2: {}
 
   mkdirp-classic@0.5.3: {}
+
+  moment-duration-format@2.3.2: {}
+
+  moment@2.30.1: {}
 
   ms@2.1.3: {}
 
