@@ -121,6 +121,7 @@ export class UserCommand extends Command {
 						member.roles.cache.size > 1
 							? member.roles.cache
 									.filter((r) => r.id !== interaction.guild!.id)
+									.sort((a, b) => b.position - a.position)
 									.map((r) => r.toString())
 									.join(' ')
 							: 'None',
