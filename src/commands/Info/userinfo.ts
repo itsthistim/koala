@@ -55,7 +55,7 @@ export class UserCommand extends Command {
 
 	public override async contextMenuRun(interaction: Command.ContextMenuCommandInteraction) {
 		if (!interaction.isUserContextMenuCommand()) return;
-		
+
 		const user = interaction.targetUser;
 		let embed = await this.getInfoEmbed(interaction, user);
 		return interaction.reply({ embeds: [embed] });
@@ -100,9 +100,7 @@ export class UserCommand extends Command {
 			})
 			.setThumbnail(user.displayAvatarURL())
 			.setDescription(`${user}`)
-			.addFields({ name: 'Joined Discord', value: `<t:${Math.floor(user.createdTimestamp / 1000)}:R>`, inline: true })
-			.setFooter({ text: 'Octopus Bot' })
-			.setTimestamp();
+			.addFields({ name: 'Joined Discord', value: `<t:${Math.floor(user.createdTimestamp / 1000)}:R>`, inline: true });
 
 		if (member !== null) {
 			embed.setColor(member.displayColor === 0 ? colors.default : member.displayColor);
