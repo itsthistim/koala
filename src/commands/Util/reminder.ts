@@ -151,7 +151,7 @@ export class UserCommand extends Subcommand {
 	private async createReminder(ctx: Message | Command.ChatInputCommandInteraction, timeStr: string, content: string) {
 		const duration = new Duration(timeStr);
 
-		console.log("Duration", duration);
+		console.log('Duration', duration);
 
 		if (!duration.offset || duration.offset <= 0) {
 			return { error: 'Invalid time format. Use formats like: `30m`, `2h`, `1d`, `1w`' };
@@ -165,11 +165,11 @@ export class UserCommand extends Subcommand {
 			ctx
 		};
 
-		console.log("Creating reminder with payload:", payload, "and duration offset:", duration.offset);
+		console.log('Creating reminder with payload:', payload, 'and duration offset:', duration.offset);
 
 		await this.container.tasks.create({ name: 'reminder', payload }, duration.offset);
 
-		console.log("Reminder task created successfully.");
+		console.log('Reminder task created successfully.');
 
 		const reminderTime = Date.now() + duration.offset;
 		return { success: `I will remind you ${time(Math.floor(reminderTime / 1000), TimestampStyles.RelativeTime)}!\n> ${content}` };

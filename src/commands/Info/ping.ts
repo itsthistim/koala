@@ -4,11 +4,7 @@ import { reply } from '@sapphire/plugin-editable-commands';
 import { ApplicationIntegrationType, InteractionContextType, type Message } from 'discord.js';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [
-	InteractionContextType.BotDM,
-	InteractionContextType.Guild,
-	InteractionContextType.PrivateChannel
-];
+const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Command.Options>({
 	description: "Shows the bot's latency and API response time.",
@@ -23,7 +19,6 @@ const contexts: InteractionContextType[] = [
 		.setIntegrationTypes(...integrationTypes)
 )
 export class UserCommand extends Command {
-
 	public override async messageRun(message: Message) {
 		const msg = await reply(message, 'Pinging...');
 
