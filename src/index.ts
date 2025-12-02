@@ -39,6 +39,7 @@ const client = new SapphireClient({
 	}
 });
 
+// main
 const main = async () => {
 	try {
 		client.logger.info('Logging in');
