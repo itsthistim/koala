@@ -7,6 +7,7 @@ import {
 	GuildMember,
 	Interaction,
 	InteractionContextType,
+	MessageFlags,
 	PermissionFlagsBits,
 	User,
 	type Message
@@ -58,7 +59,7 @@ export class UserCommand extends Command {
 
 		const user = interaction.targetUser;
 		let embed = await this.getInfoEmbed(interaction, user);
-		return interaction.reply({ embeds: [embed] });
+		return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
 	}
 
 	private async getInfoEmbed(interaction: Interaction | Message, user: User) {
