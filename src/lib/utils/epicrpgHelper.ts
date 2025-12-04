@@ -93,8 +93,6 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 	const fieldTitle = field.name.toLowerCase();
 	const fieldContent = field.value.toLowerCase();
 
-	console.log({ fieldTitle, fieldContent });
-
 	// check if it's a blackjack game message
 	if (!fieldContent.includes('epic dealer') || !fieldContent.includes('total:')) {
 		return;
@@ -137,8 +135,6 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 
 	const playerHand = getHand(playerLine);
 	const { total: playerTotal, isSoft } = getHandValue(playerHand);
-
-	console.log({ playerHand, playerTotal, isSoft });
 
 	const dealerHand = getHand(dealerLine);
 	const dealerShowingCard = dealerHand[0];
@@ -187,6 +183,10 @@ export async function trainingHelper(msg: Message): Promise<void> {
 
 		return;
 	}
+
+	console.log();
+	console.log(msg.content);
+	console.log();
 
 	// letter challenge
 	if (msg.content.includes('is training') && msg.content.includes('letter of')) {
