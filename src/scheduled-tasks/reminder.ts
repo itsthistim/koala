@@ -1,14 +1,17 @@
 import { colors } from '#lib/constants';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, container } from '@sapphire/framework';
+import { container } from '@sapphire/framework';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
-import { EmbedBuilder, Message, time, TimestampStyles, User, userMention } from 'discord.js';
+import { EmbedBuilder, time, TimestampStyles, userMention } from 'discord.js';
 
 export interface Reminder {
-	author: User;
+	authorId: string;
 	content: string;
 	timestamp: number;
-	ctx: Message | Command.ChatInputCommandInteraction;
+	guildId?: string | null;
+	channelId: string;
+	messageId: string;
+	createdAt: number;
 }
 
 @ApplyOptions<ScheduledTask.Options>({
@@ -17,30 +20,38 @@ export interface Reminder {
 export class ReminderTask extends ScheduledTask {
 	public async run(reminder: Reminder) {
 		try {
-			const user = await container.client.users.fetch(reminder.author.id).catch(() => null);
-			if (!user) return this.container.logger.warn(`[ReminderTask] User ${reminder.author.id} not found`);
+			const user = await container.client.users.fetch(reminder.authorId).catch(() => null);
+			if (!user) return;
 
-			const relativeTime = time(Math.floor(reminder.timestamp / 1000), TimestampStyles.RelativeTime);
-			const jumpLink = `https://discord.com/channels/${reminder.ctx.guildId ?? '@me'}/${reminder.ctx.channelId}/${'id' in reminder.ctx ? reminder.ctx.id : ''}`;
+			const relativeTime = time(Math.floor(reminder.createdAt / 1000), TimestampStyles.RelativeTime);
+			const jumpLink = `https://discord.com/channels/${reminder.guildId ?? '@me'}/${reminder.channelId}/${reminder.messageId}`;
 
-			const content = `${jumpLink}`;
+			const content = `${relativeTime} ${jumpLink}`;
 			const embed = new EmbedBuilder() //
 				.setColor(colors.default)
 				.setTitle('Reminder')
-				.setDescription(`${reminder.content}\n\n${relativeTime}`);
+				.setDescription(reminder.content);
 
 			await user.send({ content, embeds: [embed] }).catch(() => {
 				// attempt to send in the original context if DMs are closed
-				if (reminder.ctx instanceof Message) {
-					if (reminder.ctx.channel?.isSendable?.()) {
-						reminder.ctx.channel.send({ content: `${userMention(user.id)}\n${content}`, embeds: [embed] }).catch((err) => {
-							this.container.logger.error(`[ReminderTask] Failed to send reminder for user ${user.id}: ${err.message}`);
-						});
-					}
-				} else {
-					reminder.ctx.reply({ content, embeds: [embed], ephemeral: true }).catch((err) => {
-						this.container.logger.error(`[ReminderTask] Failed to send reminder for user ${user.id}: ${err.message}`);
+				const channel = container.client.channels.cache.get(reminder.channelId);
+				const originMessage = channel?.isTextBased() ? channel.messages.cache.get(reminder.messageId) : null;
+
+				if (channel?.isSendable?.()) {
+					channel.send({ content: `${userMention(user.id)}\n${content}`, embeds: [embed] }).catch((error) => {
+						this.container.logger.warn(error);
 					});
+				} else if (originMessage) {
+					originMessage?.reply({ content: `${userMention(user.id)}\n${content}`, embeds: [embed] }).catch((error) => {
+						this.container.logger.warn(
+							`[ReminderTask] Could not reply to original message ${reminder.messageId} in channel ${reminder.channelId} for user ${reminder.authorId}:`,
+							error
+						);
+					});
+				} else {
+					this.container.logger.warn(
+						`[ReminderTask] Could not send reminder to user ${reminder.authorId} in channel ${reminder.channelId}`
+					);
 				}
 			});
 		} catch (error) {
