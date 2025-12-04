@@ -24,11 +24,12 @@ function rankToValue(rank: string): number {
 }
 
 function getHand(line: string | null): string[] {
-	const cardSection = (line ?? '').split('~-~')[1] ?? '';
-	const cards = cardSection.split('|').map((s) => s.trim());
-
-	// extract card ranks, ignore face down cards ('??')
-	return cards.map((token) => token.split(':')[0]).filter((card) => card && card !== '??');
+	const hand = line!.match(/(\d+|j|q|k|a)((♠️|♣️|♥️|♦️)|(<a:)?<?:([^:]+)(:\d+)?:)/gim);
+	const cardValues = hand!.map((card) => {
+		const rankMatch = card.match(/(\d+|j|q|k|a)/i);
+		return rankMatch ? rankMatch[1].toUpperCase() : '';
+	});
+	return cardValues;
 }
 
 function getHandValue(hand: string[]): { total: number; isSoft: boolean } {
@@ -89,8 +90,10 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 	}
 
 	const field = msg.embeds[0].fields[0];
-	const fieldContent = field.value.toLowerCase();
 	const fieldTitle = field.name.toLowerCase();
+	const fieldContent = field.value.toLowerCase();
+
+	console.log({ fieldTitle, fieldContent });
 
 	// check if it's a blackjack game message
 	if (!fieldContent.includes('epic dealer') || !fieldContent.includes('total:')) {
@@ -134,6 +137,8 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 
 	const playerHand = getHand(playerLine);
 	const { total: playerTotal, isSoft } = getHandValue(playerHand);
+
+	console.log({ playerHand, playerTotal, isSoft });
 
 	const dealerHand = getHand(dealerLine);
 	const dealerShowingCard = dealerHand[0];
