@@ -184,10 +184,6 @@ export async function trainingHelper(msg: Message): Promise<void> {
 		return;
 	}
 
-	console.log();
-	console.log(msg.content);
-	console.log();
-
 	// letter challenge
 	if (msg.content.includes('is training') && msg.content.includes('letter of')) {
 		let emojiResult = msg.content.match(/letter of\s+<:([^:]+):\d+>/i);
@@ -232,6 +228,22 @@ export async function trainingHelper(msg: Message): Promise<void> {
 					break;
 				}
 			}
+		}
+	}
+
+	// what is this emoji challenge
+	if (msg.content.toLowerCase().includes('is training') && msg.content.toLowerCase().includes('is this a')) {
+		let emojiName: string | null = null;
+
+		const emoji = msg.content.match(/(<a:)?<?:([^:]+)(:\d+)?:/i);
+		if (emoji) emojiName = emoji[2];
+
+		const lines = msg.content.split('\n').map((l) => l.trim());
+		let lookingFor = lines[1]?.match(/(?<=\*\*).+(?=\*\*)/i)?.[0] ?? null;
+
+		if (emojiName && lookingFor) {
+			const answer = emojiName.toLowerCase() === lookingFor.toLowerCase() ? 'yes' : 'no';
+			await reply(msg, `**${answer}**`);
 		}
 	}
 }
