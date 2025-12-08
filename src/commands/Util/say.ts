@@ -1,8 +1,11 @@
 import { colors } from '#lib/constants';
-import { ApplyOptions } from '@sapphire/decorators';
+import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, PermissionFlagsBits, type Message } from 'discord.js';
+
+const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
+const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Command.Options>({
 	aliases: ['s', 'echo', 'repeat'],
@@ -12,21 +15,29 @@ import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, Permi
 	flags: ['d', 'delete', 'tts', 'embed', 'e'],
 	options: []
 })
+@RegisterChatInputCommand((builder, command) =>
+	builder
+		.setName(command.name)
+		.setDescription(command.description)
+		.setContexts(...contexts)
+		.setIntegrationTypes(...integrationTypes)
+		.addStringOption((option) => option.setName('message').setDescription('The message to repeat').setRequired(true))
+		.addBooleanOption((option) => option.setName('embed').setDescription('Send as an embed').setRequired(false))
+		.addBooleanOption((option) => option.setName('tts').setDescription('Send as TTS').setRequired(false))
+)
 export class UserCommand extends Command {
-	public override registerApplicationCommands(registry: Command.Registry) {
-		const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-		const contexts: InteractionContextType[] = [
-			InteractionContextType.BotDM,
-			InteractionContextType.Guild,
-			InteractionContextType.PrivateChannel
-		];
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
+		const content = interaction.options.getString('message', true);
+		const embedFlag = interaction.options.getBoolean('embed');
+		const ttsFlag = interaction.options.getBoolean('tts');
+		const ttsAllowed = ttsFlag && interaction.memberPermissions?.has(PermissionFlagsBits.SendTTSMessages);
 
-		registry.registerChatInputCommand({
-			name: this.name,
-			description: this.description,
-			integrationTypes,
-			contexts
-		});
+		if (embedFlag) {
+			const embed = new EmbedBuilder().setColor(colors.default).setDescription(content);
+			return interaction.reply({ embeds: [embed] });
+		}
+
+		return interaction.reply({ content, tts: !!ttsAllowed });
 	}
 
 	public override async messageRun(msg: Message, args: Args) {
@@ -45,14 +56,9 @@ export class UserCommand extends Command {
 			const embed = new EmbedBuilder()
 				.setColor(colors.default)
 				.setDescription(content);
-			return await send(msg, { embeds: [embed] });
+			return await send(msg, { embeds: [embed] }); // tts not possible for embeds
 		}
 
 		return await send(msg, { content, tts: ttsAllowed, allowedMentions: { parse: [], repliedUser: true } });
-	}
-
-	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-		const content = interaction.options.getString('text', true);
-		return interaction.reply({ content });
 	}
 }
