@@ -13,6 +13,7 @@ export class UserCommand extends Command {
 			const result = await pool.query('SELECT NOW()');
 			return msg.reply(`Database connection successful! Time: ${result.rows[0].now}`);
 		} catch (error) {
+			this.container.logger.error(error);
 			return msg.reply(`Database connection failed: ${error}`);
 		}
 	}
