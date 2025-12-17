@@ -9,7 +9,8 @@ const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationTy
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Command.Options>({
-	aliases: ['bobross', 'bob-ross'],
+	aliases: ['bob-ross'],
+	generateDashLessAliases: true,
 	description: 'Makes Bob Ross draw an avatar or an image from a link.',
 	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm]
 })

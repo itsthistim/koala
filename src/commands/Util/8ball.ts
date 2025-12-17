@@ -15,6 +15,7 @@ const answers = [
 	'Signs point to yes.',
 	'Most likely.',
 	'Outlook good.',
+	'You cannot get to the top by sitting on your bottom.',
 
 	'No.',
 	'Absolutely not.',
@@ -25,7 +26,7 @@ const answers = [
 	'No, definitely not.',
 	"Don't count on it.",
 
-	'Maybe.',
+	'Maybe some day.',
 	'Ask again later.',
 	'Cannot predict now.',
 	'Concentrate and ask again.',
@@ -33,7 +34,8 @@ const answers = [
 ];
 
 @ApplyOptions<Command.Options>({
-	aliases: ['8ball', 'magische-miesmuschel', 'magischemiesmuschel', 'magic-mussel', 'random-answer', 'oracle'],
+	aliases: ['8-ball', 'magic-8-ball', 'magische-miesmuschel', 'magic-conch-shell', 'magic-shell', 'random-answer', 'oracle'],
+	generateDashLessAliases: true,
 	description: 'Get a random answer to your question',
 	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm],
 	preconditions: [],

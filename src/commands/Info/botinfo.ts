@@ -13,6 +13,7 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 
 @ApplyOptions<Command.Options>({
 	aliases: ['stats', 'bot-info'],
+	generateDashLessAliases: true,
 	description: 'Shows information about the bot.',
 	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm]
 })

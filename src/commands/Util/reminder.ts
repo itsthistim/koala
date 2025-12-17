@@ -10,7 +10,8 @@ const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationTy
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Subcommand.Options>({
-	aliases: ['remindme', 'remind', 'notifyme', 'notify', 'rm'],
+	aliases: ['remind-me', 'remind', 'notify-me', 'notify', 'rm'],
+	generateDashLessAliases: true,
 	description: 'Set a reminder to be notified later',
 	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm],
 	subcommands: [
