@@ -26,11 +26,17 @@ export class UserCommand extends Command {
 		let output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
 		if (args.getFlags('silent', 's')) return null;
 
-		// replace discord token with placeholder
-		const token = process.env.DISCORD_TOKEN;
-		const tokenRegex = token ? new RegExp(token, 'g') : null;
-		output = tokenRegex ? output.replace(tokenRegex, '[REDACTED TOKEN]') : output;
+		// redact secrets
+		const secrets = Object.values(process.env)
+			.filter((value): value is string => typeof value === 'string' && value.length >= 3)
+			.sort((a, b) => b.length - a.length);
 
+		for (const secret of secrets) {
+			const regex = new RegExp(secret.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+			output = output.replace(regex, '[REDACTED]');
+		}
+
+		// send output as file if too long
 		if (output.length > 2000) {
 			return send(msg, {
 				content: `Output was too long... sent the result as a file.\n\n${time}`,
