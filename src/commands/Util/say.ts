@@ -53,9 +53,7 @@ export class UserCommand extends Command {
 		}
 
 		if (embedFlag) {
-			const embed = new EmbedBuilder()
-				.setColor(colors.default)
-				.setDescription(content);
+			const embed = new EmbedBuilder().setColor(colors.default).setDescription(content);
 			return await send(msg, { embeds: [embed] }); // tts not possible for embeds
 		}
 
