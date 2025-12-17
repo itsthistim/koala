@@ -32,7 +32,7 @@ const answers = [
 ];
 
 @ApplyOptions<Command.Options>({
-	aliases: ['8ball', 'magische-miesmuschel', 'magische-miesmuschel', 'magic-mussel', 'random-answer', 'oracle'],
+	aliases: ['8ball', 'magische-miesmuschel', 'magischemiesmuschel', 'magic-mussel', 'random-answer', 'oracle'],
 	description: 'Get a random answer to your question',
 	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm],
 	preconditions: [],
