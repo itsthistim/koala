@@ -7,28 +7,29 @@ const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationTy
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 const answers = [
-	'Yes.', // y
-	'Definitely.', // y
-	'It is certain.', // y
-	'Without a doubt.', // y
-	'Yes, definitely.', // y
-	'Signs point to yes.', // y
-	'Most likely.', // y
-	'Outlook good.', // y
-	'No.', // n
-	'Absolutely not.', // n
-	'My reply is no.', // n
-	'Very doubtful.', // n
-	'My sources say no.', // n
-	'Outlook not so good.', // n
-	'No, definitely not.', // n
-	"Don't count on it.", // n
-	'Reply unclear, try again.', // m
-	'Maybe.', // m
-	'Ask again later.', // m
-	'Cannot predict now.', // m
-	'Concentrate and ask again.', // m
-	'Reply hazy, try again.' // m
+	'Yes.',
+	'Definitely.',
+	'It is certain.',
+	'Without a doubt.',
+	'Yes, definitely.',
+	'Signs point to yes.',
+	'Most likely.',
+	'Outlook good.',
+
+	'No.',
+	'Absolutely not.',
+	'My reply is no.',
+	'Very doubtful.',
+	'My sources say no.',
+	'Outlook not so good.',
+	'No, definitely not.',
+	"Don't count on it.",
+
+	'Maybe.',
+	'Ask again later.',
+	'Cannot predict now.',
+	'Concentrate and ask again.',
+	'Reply hazy, try again.'
 ];
 
 @ApplyOptions<Command.Options>({
