@@ -2,7 +2,7 @@ import { colors } from '#lib/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { container } from '@sapphire/framework';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
-import { EmbedBuilder, time, TimestampStyles, userMention } from 'discord.js';
+import { EmbedBuilder, MessageMentionOptions, time, TimestampStyles, userMention } from 'discord.js';
 
 export interface Reminder {
 	authorId: string;
@@ -35,18 +35,22 @@ export class ReminderTask extends ScheduledTask {
 			if (reminder.public) {
 				const srcChannel = await container.client.channels.fetch(reminder.channelId).catch(() => null);
 				const srcMessage = srcChannel?.isTextBased() ? await srcChannel.messages.fetch(reminder.messageId).catch(() => null) : null;
+				let mentionUsers: string[] = srcMessage ? srcMessage.mentions.users.map((u) => u.id) : [];
+				// always mention the reminder author
+				if (!mentionUsers.includes(reminder.authorId)) mentionUsers.push(reminder.authorId);
+				const allowedMentions: MessageMentionOptions = { users: mentionUsers };
 
 				if (srcMessage) {
 					return await srcMessage.reply({
 						// reply to original message
 						content: `${userMention(reminder.authorId)}, ${reminder.content}`,
-						allowedMentions: { users: [reminder.authorId] }
+						allowedMentions
 					});
 				} else if (srcChannel?.isSendable()) {
 					// if no message to reply to, just send in channel (happens with slash commands)
 					return await srcChannel.send({
 						content: `${userMention(reminder.authorId)}, ${reminder.content}`,
-						allowedMentions: { users: [reminder.authorId] }
+						allowedMentions
 					});
 				} else {
 					// could not send, fallback to DM
