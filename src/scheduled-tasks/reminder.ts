@@ -9,6 +9,7 @@ export interface Reminder {
 	content: string;
 	timestamp: number;
 	guildId?: string | null;
+	public?: boolean;
 	channelId: string;
 	messageId: string;
 	createdAt: number;
@@ -24,38 +25,38 @@ export class ReminderTask extends ScheduledTask {
 			if (!user) return;
 
 			const relativeTime = time(Math.floor(reminder.createdAt / 1000), TimestampStyles.RelativeTime);
-			const jumpLink = `https://discord.com/channels/${reminder.guildId ?? '@me'}/${reminder.channelId}/${reminder.messageId}`;
+			const jumpLink = `<https://discord.com/channels/${reminder.guildId ?? '@me'}/${reminder.channelId}/${reminder.messageId}>`;
 
-			const content = `${relativeTime} ${jumpLink}`;
 			const embed = new EmbedBuilder() //
 				.setColor(colors.default)
 				.setTitle('Reminder')
-				.setDescription(reminder.content);
+				.setDescription(`${reminder.content}\n\n[Jump to message](${jumpLink})\n-# Reminder set ${relativeTime}`);
 
-			await user.send({ content, embeds: [embed] }).catch(() => {
-				// attempt to send in the original context if DMs are closed
-				const channel = container.client.channels.cache.get(reminder.channelId);
-				const originMessage = channel?.isTextBased() ? channel.messages.cache.get(reminder.messageId) : null;
+			if (reminder.public) {
+				const srcChannel = await container.client.channels.fetch(reminder.channelId).catch(() => null);
+				const srcMessage = srcChannel?.isTextBased() ? await srcChannel.messages.fetch(reminder.messageId).catch(() => null) : null;
 
-				if (channel?.isSendable?.()) {
-					channel.send({ content: `${userMention(user.id)}\n${content}`, embeds: [embed] }).catch((error) => {
-						this.container.logger.warn(error);
+				if (srcMessage) {
+					return await srcMessage.reply({
+						// reply to original message
+						content: `${userMention(reminder.authorId)}, ${reminder.content}`,
+						allowedMentions: { users: [reminder.authorId] }
 					});
-				} else if (originMessage) {
-					originMessage?.reply({ content: `${userMention(user.id)}\n${content}`, embeds: [embed] }).catch((error) => {
-						this.container.logger.warn(
-							`[ReminderTask] Could not reply to original message ${reminder.messageId} in channel ${reminder.channelId} for user ${reminder.authorId}:`,
-							error
-						);
+				} else if (srcChannel?.isSendable()) {
+					// if no message to reply to, just send in channel (happens with slash commands)
+					return await srcChannel.send({
+						content: `${userMention(reminder.authorId)}, ${reminder.content}`,
+						allowedMentions: { users: [reminder.authorId] }
 					});
 				} else {
-					this.container.logger.warn(
-						`[ReminderTask] Could not send reminder to user ${reminder.authorId} in channel ${reminder.channelId}`
-					);
+					// could not send, fallback to DM
+					return await user.send({ embeds: [embed] });
 				}
-			});
+			} else {
+				return await user.send({ embeds: [embed] });
+			}
 		} catch (error) {
-			this.container.logger.error('[ReminderTask] Error running reminder task:', error);
+			return this.container.logger.error('[ReminderTask] Error running reminder task:', error);
 		}
 	}
 }

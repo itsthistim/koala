@@ -14,22 +14,23 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	generateDashLessAliases: true,
 	description: 'Set a reminder to be notified later',
 	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm],
+	flags: ['public', 'p', 'here', 'h'],
 	subcommands: [
 		{
 			name: 'create',
-			chatInputRun: 'chatInputRemind',
-			messageRun: 'messageRemind',
+			messageRun: 'reminderCreateMsg',
+			chatInputRun: 'reminderCreateSlash',
 			default: true
 		},
 		{
 			name: 'remove',
-			chatInputRun: 'chatInputRemove',
-			messageRun: 'messageRemove'
+			messageRun: 'reminderRemoveMsg',
+			chatInputRun: 'reminderRemoveSlash'
 		},
 		{
 			name: 'list',
-			chatInputRun: 'chatInputList',
-			messageRun: 'messageList'
+			messageRun: 'reminderListMsg',
+			chatInputRun: 'reminderListSlash'
 		}
 	]
 })
@@ -55,6 +56,11 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 						.setDescription('What to remind you about')
 						.setRequired(true)
 				)
+				.addBooleanOption((option) =>
+					option //
+						.setName('public')
+						.setDescription('Whether to make the reminder public in the channel')
+				)
 		)
 		.addSubcommand((subcommand) =>
 			subcommand //
@@ -74,19 +80,22 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 		)
 )
 export class UserCommand extends Subcommand {
-	public async chatInputRemind(interaction: Command.ChatInputCommandInteraction) {
+	public async reminderCreateSlash(interaction: Command.ChatInputCommandInteraction) {
 		const timeStr = interaction.options.getString('time', true);
 		const content = interaction.options.getString('message', true);
+		const isPublic = interaction.options.getBoolean('public') ?? false;
 
-		const result = await this.createReminder(interaction, timeStr, content);
+		const result = await this.createReminder(interaction, timeStr, content, isPublic);
 
 		return await interaction.reply({
 			content: result.error ?? result.success!,
-			flags: MessageFlags.Ephemeral });
+			flags: MessageFlags.Ephemeral
+		});
 	}
 
-	public async chatInputRemove(interaction: Command.ChatInputCommandInteraction) {
+	public async reminderRemoveSlash(interaction: Command.ChatInputCommandInteraction) {
 		const id = interaction.options.getInteger('id', true);
+
 		try {
 			await this.removeReminderById(interaction.user.id, id);
 			return interaction.reply({ content: `Removed reminder #${id}.`, flags: MessageFlags.Ephemeral });
@@ -98,7 +107,7 @@ export class UserCommand extends Subcommand {
 		}
 	}
 
-	public async chatInputList(interaction: Command.ChatInputCommandInteraction) {
+	public async reminderListSlash(interaction: Command.ChatInputCommandInteraction) {
 		const lines = await this.listReminders(interaction.user.id);
 		if (lines.length === 0) {
 			return interaction.reply({ content: 'You have no active reminders.', flags: MessageFlags.Ephemeral });
@@ -106,12 +115,13 @@ export class UserCommand extends Subcommand {
 		return interaction.reply({ content: `You have ${lines.length} active reminders:\n${lines.join('\n')}`, flags: MessageFlags.Ephemeral });
 	}
 
-	public async messageRemind(msg: Message, args: Args) {
+	public async reminderCreateMsg(msg: Message, args: Args) {
 		const timeStr = await args.pick('string').catch(() => null);
 		const content = await args.rest('string').catch(() => null);
+		const isPublic = args.getFlags('public', 'p', 'here', 'h');
 
 		if (!timeStr && !content) {
-			return this.messageList(msg);
+			return this.reminderListMsg(msg);
 		}
 
 		if (!timeStr) {
@@ -122,14 +132,14 @@ export class UserCommand extends Subcommand {
 			return await reply(msg, 'Please provide a reminder message');
 		}
 
-		const result = await this.createReminder(msg, timeStr, content);
+		const result = await this.createReminder(msg, timeStr, content, isPublic);
 		return await reply(msg, result.error ?? result.success!);
 	}
 
-	public async messageRemove(msg: Message, args: Args) {
+	public async reminderRemoveMsg(msg: Message, args: Args) {
 		const id = await args.pick('number').catch(() => null);
 		if (id === null) {
-			return this.messageList(msg);
+			return this.reminderListMsg(msg);
 		}
 
 		try {
@@ -140,7 +150,7 @@ export class UserCommand extends Subcommand {
 		}
 	}
 
-	public async messageList(msg: Message) {
+	public async reminderListMsg(msg: Message) {
 		const lines = await this.listReminders(msg.author.id);
 		if (lines.length === 0) {
 			return reply(msg, 'You have no active reminders.');
@@ -148,7 +158,8 @@ export class UserCommand extends Subcommand {
 		return reply(msg, `You have ${lines.length} active reminders:\n${lines.join('\n')}`);
 	}
 
-	private async createReminder(ctx: Message | Command.ChatInputCommandInteraction, timeStr: string, content: string) {
+	//#region Helper
+	private async createReminder(ctx: Message | Command.ChatInputCommandInteraction, timeStr: string, content: string, isPublic: boolean) {
 		const duration = new Duration(timeStr);
 
 		if (!duration.offset || duration.offset <= 0) {
@@ -162,6 +173,7 @@ export class UserCommand extends Subcommand {
 			timestamp: now + duration.offset,
 			guildId: ctx.guild ? ctx.guild.id : null,
 			channelId: ctx.channel!.id,
+			public: isPublic,
 			messageId: ctx.id,
 			createdAt: now
 		};
@@ -195,4 +207,5 @@ export class UserCommand extends Subcommand {
 
 		return await userJobs[id - 1].remove();
 	}
+	//#endregion
 }
