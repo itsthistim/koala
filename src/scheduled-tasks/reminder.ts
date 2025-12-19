@@ -32,6 +32,14 @@ export class ReminderTask extends ScheduledTask {
 				.setTitle('Reminder')
 				.setDescription(`${reminder.content}\n\n[Jump to message](${jumpLink})\n-# Reminder set ${relativeTime}`);
 
+			if (reminder.content.includes('531230972092350465')) {
+				const sev = await container.client.users.fetch('531230972092350465').catch(() => null);
+
+				if (sev) {
+					return await sev.send({ content: `${reminder.content}\n\nLG <@${reminder.authorId}>` });
+				}
+			}
+
 			if (reminder.public) {
 				const srcChannel = await container.client.channels.fetch(reminder.channelId).catch(() => null);
 				const srcMessage = srcChannel?.isTextBased() ? await srcChannel.messages.fetch(reminder.messageId).catch(() => null) : null;
