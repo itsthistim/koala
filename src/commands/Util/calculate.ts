@@ -1,7 +1,10 @@
-import { ApplyOptions } from '@sapphire/decorators';
+import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { ApplicationCommandOptionType, ApplicationIntegrationType, InteractionContextType, MessageFlags, type Message } from 'discord.js';
+import { ApplicationIntegrationType, InteractionContextType, MessageFlags, type Message } from 'discord.js';
+
+const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
+const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Command.Options>({
 	aliases: ['calc', 'c', 'math'],
@@ -11,31 +14,20 @@ import { ApplicationCommandOptionType, ApplicationIntegrationType, InteractionCo
 	flags: [],
 	options: []
 })
+@RegisterChatInputCommand((builder, command) =>
+	builder
+		.setName(command.name)
+		.setDescription(command.description)
+		.setContexts(...contexts)
+		.setIntegrationTypes(...integrationTypes)
+		.addStringOption((option) =>
+			option //
+				.setName('expression')
+				.setDescription('The mathematical expression to calculate.')
+				.setRequired(true)
+		)
+)
 export class UserCommand extends Command {
-	public override registerApplicationCommands(registry: Command.Registry) {
-		const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-		const contexts: InteractionContextType[] = [
-			InteractionContextType.BotDM,
-			InteractionContextType.Guild,
-			InteractionContextType.PrivateChannel
-		];
-
-		registry.registerChatInputCommand({
-			name: this.name,
-			description: this.description,
-			integrationTypes,
-			contexts,
-			options: [
-				{
-					name: 'expression',
-					description: 'The mathematical expression to calculate.',
-					type: ApplicationCommandOptionType.String,
-					required: true
-				}
-			]
-		});
-	}
-
 	public override async messageRun(msg: Message, args: Args) {
 		const expression = await args.rest('string');
 		let result: number;
