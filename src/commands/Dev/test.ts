@@ -9,9 +9,8 @@ import { db } from '../../lib/database';
 })
 export class UserCommand extends Command {
 	public override async messageRun(msg: Message) {
-		
 		console.log('Testing database connection...');
-		
+
 		try {
 			const result = await db.query('SELECT NOW()');
 			return msg.reply(`Database connection successful! Time: ${result.rows[0].now}`);
