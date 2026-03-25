@@ -10,13 +10,18 @@ import { type Message } from 'discord.js';
 })
 export class UserCommand extends Command {
 	public override async messageRun(msg: Message, args: Args) {
-		const amount = await args.pick('integer').catch(() => 1);
+		const amountResult = await args.pickResult('integer');
+		const amount = amountResult.isOk() ? amountResult.unwrap() : 1;
 
-		// add to count
-		db.query('UPDATE "dagi_count" SET "count" = "count" + $1 WHERE id = 1', [amount]);
+		const result = await db.query(`
+			INSERT INTO "dagi_count" (id, count)
+			VALUES (1, $1)
+			ON CONFLICT (id)
+			DO UPDATE SET count = "dagi_count".count + $1
+			RETURNING count;
+		`, [amount]);
 
-		// get count
-		const count = await db.query('SELECT "count" FROM "dagi_count" WHERE id = 1').then((res) => res.rows[0].count);
-		return reply(msg, `Dagi count: ${count}`);
+		const newCount = result.rows[0].count;
+		return reply(msg, `Dagi counter: **${newCount}**!`);
 	}
 }
