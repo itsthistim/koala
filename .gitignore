@@ -1,10 +1,8 @@
 .vscode
+.github
 .idea
 node_modules
 dist
-
-data
-settings.sqlite
 
 .env*
 !.env.example
