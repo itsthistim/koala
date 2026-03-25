@@ -22,6 +22,6 @@ export class UserCommand extends Command {
 		`, [amount]);
 
 		const newCount = result.rows[0].count;
-		return reply(msg, `Dagi counter: **${newCount}**!`);
+		return reply(msg, `Dagi counter: **${newCount}**`);
 	}
 }
