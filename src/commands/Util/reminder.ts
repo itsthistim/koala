@@ -4,9 +4,17 @@ import { reply } from '@sapphire/plugin-editable-commands';
 import { Subcommand } from '@sapphire/plugin-subcommands';
 import { Duration } from '@sapphire/time-utilities';
 import { ApplicationIntegrationType, InteractionContextType, Message, MessageFlags, time, TimestampStyles } from 'discord.js';
+import moment from 'moment';
 import { Reminder } from 'scheduled-tasks/reminder';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
+
+function formatReminderTime(offsetMs: number, futureMs: number): string {
+	if (offsetMs <= 60_000) {
+		return `in ${moment.duration(offsetMs).format('d[d] h[h] m[m] s[s]')}`;
+	}
+	return time(Math.floor(futureMs / 1000), TimestampStyles.RelativeTime);
+}
 
 function formatDuration(d: Duration): string {
 	const units: [number, string][] = [
@@ -207,7 +215,7 @@ export class UserCommand extends Subcommand {
 			createdAt: now
 		};
 
-		const reminderTime = time(Math.floor((now + duration.offset) / 1000), TimestampStyles.RelativeTime);
+		const reminderTime = formatReminderTime(duration.offset, now + duration.offset);
 
 		if (repeatInterval) {
 			return this.createRepeatedReminder(payload, duration, repeatInterval, content, reminderTime);
@@ -241,7 +249,8 @@ export class UserCommand extends Subcommand {
 
 		return userJobs.map((job, index) => {
 			const data = job.data as Reminder;
-			return `${index + 1}. ${data.content} - ${time(Math.floor(data.timestamp / 1000), TimestampStyles.RelativeTime)}`;
+			const scheduledAt = Math.floor((job.timestamp + job.delay) / 1000);
+			return `${index + 1}. ${data.content} - ${time(scheduledAt, TimestampStyles.RelativeTime)}`;
 		});
 	}
 
