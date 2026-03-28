@@ -24,7 +24,7 @@ function rankToValue(rank: string): number {
 }
 
 function getHand(line: string | null): string[] {
-	const hand = line!.match(/(\d+|[jqka])([♠♣♥♦]?|(<a:)?<?:([^:]+)(:\d+)?:)/gim);
+	const hand = line!.match(/(\d+|[jqka])([♠♣♥♦]\uFE0F?|(<a:)?<?:([^:]+)(:\d+)?:)/gim);
 	const cardValues = hand!.map((card) => {
 		const rankMatch = new RegExp(/(\d+|j|q|k|a)/i).exec(card);
 		return rankMatch ? rankMatch[1].toUpperCase() : '';
