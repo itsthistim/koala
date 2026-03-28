@@ -7,6 +7,21 @@ import { ApplicationIntegrationType, InteractionContextType, Message, MessageFla
 import { Reminder } from 'scheduled-tasks/reminder';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
+
+function formatDuration(d: Duration): string {
+	const units: [number, string][] = [
+		[d.months, 'month'],
+		[d.weeks, 'week'],
+		[d.days, 'day'],
+		[d.hours, 'hour'],
+		[d.minutes, 'minute'],
+		[d.seconds, 'second']
+	];
+	return units
+		.filter(([n]) => n)
+		.map(([n, unit]) => `${n} ${unit}${n > 1 ? 's' : ''}`)
+		.join(', ');
+}
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Subcommand.Options>({
@@ -15,6 +30,7 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	description: 'Set a reminder to be notified later',
 	runIn: [CommandOptionsRunTypeEnum.GuildAny, CommandOptionsRunTypeEnum.Dm],
 	flags: ['public', 'p', 'here', 'h'],
+	options: ['repeat', 'r'],
 	subcommands: [
 		{
 			name: 'create',
@@ -58,8 +74,13 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 				)
 				.addBooleanOption((option) =>
 					option //
-						.setName('public')
-						.setDescription('Whether to make the reminder public in the channel')
+						.setName('here')
+						.setDescription('Whether to remind you here instead of DMing you')
+				)
+				.addStringOption((option) =>
+					option //
+						.setName('repeat')
+						.setDescription('The interval at which to repeat the reminder (e.g., "6h", "2w", "1m")')
 				)
 		)
 		.addSubcommand((subcommand) =>
@@ -84,11 +105,12 @@ export class UserCommand extends Subcommand {
 		const timeStr = interaction.options.getString('time', true);
 		const content = interaction.options.getString('message', true);
 		const isPublic = interaction.options.getBoolean('public') ?? false;
+		const repeatInterval = interaction.options.getString('repeat');
 
-		const result = await this.createReminder(interaction, timeStr, content, isPublic);
+		const result = await this.createReminder(interaction, timeStr, content, isPublic, repeatInterval ?? undefined);
 
 		return await interaction.reply({
-			content: result.error ?? result.success!,
+			content: result.error ?? result.success,
 			flags: MessageFlags.Ephemeral
 		});
 	}
@@ -119,6 +141,7 @@ export class UserCommand extends Subcommand {
 		const timeStr = await args.pick('string').catch(() => null);
 		const content = await args.rest('string').catch(() => null);
 		const isPublic = args.getFlags('public', 'p', 'here', 'h');
+		const repeatInterval = args.getOption('repeat', 'r');
 
 		if (!timeStr && !content) {
 			return this.reminderListMsg(msg);
@@ -132,8 +155,8 @@ export class UserCommand extends Subcommand {
 			return await reply(msg, 'Please provide a reminder message');
 		}
 
-		const result = await this.createReminder(msg, timeStr, content, isPublic);
-		return await reply(msg, result.error ?? result.success!);
+		const result = await this.createReminder(msg, timeStr, content, isPublic, repeatInterval ?? undefined);
+		return await reply(msg, result.error ?? result.success);
 	}
 
 	public async reminderRemoveMsg(msg: Message, args: Args) {
@@ -159,7 +182,13 @@ export class UserCommand extends Subcommand {
 	}
 
 	//#region Helper
-	private async createReminder(ctx: Message | Command.ChatInputCommandInteraction, timeStr: string, content: string, isPublic: boolean) {
+	private async createReminder(
+		ctx: Message | Command.ChatInputCommandInteraction,
+		timeStr: string,
+		content: string,
+		isPublic: boolean,
+		repeatInterval?: string
+	) {
 		const duration = new Duration(timeStr);
 
 		if (!duration.offset || duration.offset <= 0) {
@@ -178,10 +207,30 @@ export class UserCommand extends Subcommand {
 			createdAt: now
 		};
 
-		await this.container.tasks.create({ name: 'reminder', payload }, duration.offset);
+		const reminderTime = time(Math.floor((now + duration.offset) / 1000), TimestampStyles.RelativeTime);
 
-		const reminderTime = Date.now() + duration.offset;
-		return { success: `I will remind you ${time(Math.floor(reminderTime / 1000), TimestampStyles.RelativeTime)}!\n> ${content}` };
+		if (repeatInterval) {
+			return this.createRepeatedReminder(payload, duration, repeatInterval, content, reminderTime);
+		}
+
+		await this.container.tasks.create({ name: 'reminder', payload }, duration.offset);
+		return { success: `I will remind you ${reminderTime}!\n> ${content}` };
+	}
+
+	private async createRepeatedReminder(payload: Reminder, duration: Duration, repeatInterval: string, content: string, reminderTime: string) {
+		const interval = new Duration(repeatInterval);
+		const intervalOffset = interval.offset;
+
+		if (!intervalOffset || Number.isNaN(intervalOffset) || intervalOffset <= 0) {
+			return { error: 'Invalid repeat format. Use formats like: `30m`, `2h`, `1d`, `1w`' };
+		}
+
+		await this.container.tasks.create(
+			{ name: 'reminder', payload },
+			{ repeated: true, interval: intervalOffset, customJobOptions: { delay: duration.offset } }
+		);
+
+		return { success: `I will remind you every ${formatDuration(interval)} starting ${reminderTime}!\n> ${content}` };
 	}
 
 	private async listReminders(userId: string) {
@@ -205,7 +254,12 @@ export class UserCommand extends Subcommand {
 			throw new Error('Invalid reminder ID');
 		}
 
-		return await userJobs[id - 1].remove();
+		const job = userJobs[id - 1];
+		if (job.repeatJobKey) {
+			return await (this.container.tasks.client as any).removeRepeatableByKey(job.repeatJobKey);
+		}
+
+		return await job.remove();
 	}
 	//#endregion
 }
