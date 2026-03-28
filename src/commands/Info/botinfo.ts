@@ -4,9 +4,9 @@ import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, container, version as sappVersion } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import moment from 'moment';
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
 import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, User, version as djsVersion, type Message } from 'discord.js';
-import os from 'os';
+import os from 'node:os';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
 const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
@@ -48,14 +48,14 @@ export class UserCommand extends Command {
 						`powershell -Command "(Get-ChildItem -Path '${__dirname}' -Recurse | Measure-Object -Property Length -Sum).Sum"`,
 						{ encoding: 'utf-8' }
 					);
-					const sizeBytes = parseInt(output.trim());
-					if (sizeBytes === 0 || isNaN(sizeBytes)) return null;
+					const sizeBytes = Number.parseInt(output.trim());
+					if (sizeBytes === 0 || Number.isNaN(sizeBytes)) return null;
 					const sizeMB = sizeBytes / 1024 / 1024;
 					return sizeMB > 1024 ? `${(sizeMB / 1024).toFixed(2)}GB` : `${sizeMB.toFixed(2)}MB`;
 				} else {
 					// UNIX-like
 					const output = execSync(`du -sb "${__dirname}"`, { encoding: 'utf-8' });
-					const sizeBytes = parseInt(output.split('\t')[0]);
+					const sizeBytes = Number.parseInt(output.split('\t')[0]);
 					if (sizeBytes === 0) return null;
 					const sizeMB = sizeBytes / 1024 / 1024;
 					return sizeMB > 1024 ? `${(sizeMB / 1024).toFixed(2)}GB` : `${sizeMB.toFixed(2)}MB`;
