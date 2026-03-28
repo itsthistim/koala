@@ -54,7 +54,7 @@ function getHandValue(hand: string[]): { total: number; isSoft: boolean } {
 
 function suggestSoft(total: number, dealerCard: number): 'HIT' | 'STAND' {
 	if (total >= 19) return 'STAND';
-	if (total === 18) return dealerCard >= 9 || dealerCard === 11 ? 'HIT' : 'STAND';
+	if (total === 18) return dealerCard >= 9 ? 'HIT' : 'STAND';
 	return 'HIT';
 }
 
