@@ -24,9 +24,9 @@ function rankToValue(rank: string): number {
 }
 
 function getHand(line: string | null): string[] {
-	const hand = line!.match(/(\d+|j|q|k|a)((♠️|♣️|♥️|♦️)|(<a:)?<?:([^:]+)(:\d+)?:)/gim);
+	const hand = line!.match(/(\d+|[jqka])([♠♣♥♦]?|(<a:)?<?:([^:]+)(:\d+)?:)/gim);
 	const cardValues = hand!.map((card) => {
-		const rankMatch = card.match(/(\d+|j|q|k|a)/i);
+		const rankMatch = new RegExp(/(\d+|j|q|k|a)/i).exec(card);
 		return rankMatch ? rankMatch[1].toUpperCase() : '';
 	});
 	return cardValues;
@@ -52,29 +52,17 @@ function getHandValue(hand: string[]): { total: number; isSoft: boolean } {
 	return { total, isSoft };
 }
 
-function suggest(total: number, soft: boolean, dealerCard: number): 'HIT' | 'STAND' {
-	// Soft totals (hands with an Ace counted as 11)
-	if (soft) {
-		if (total >= 19) return 'STAND'; // A,8 or A,9 - always stand
-		if (total === 18) {
-			// A,7 - stand vs 2-8, hit vs 9,10,A
-			return dealerCard >= 9 || dealerCard === 11 ? 'HIT' : 'STAND';
-		}
-		// A,2 through A,6 - always hit
-		return 'HIT';
-	}
+function suggestSoft(total: number, dealerCard: number): 'HIT' | 'STAND' {
+	if (total >= 19) return 'STAND';
+	if (total === 18) return dealerCard >= 9 || dealerCard === 11 ? 'HIT' : 'STAND';
+	return 'HIT';
+}
 
-	// Hard totals
-	if (total >= 17) return 'STAND'; // 17+ always stand
-	if (total >= 13 && total <= 16) {
-		// 13-16: stand vs dealer 2-6, hit vs 7-A
-		return dealerCard >= 2 && dealerCard <= 6 ? 'STAND' : 'HIT';
-	}
-	if (total === 12) {
-		// 12: stand vs dealer 4-6, hit otherwise
-		return dealerCard >= 4 && dealerCard <= 6 ? 'STAND' : 'HIT';
-	}
-	// 11 or less: always hit
+function suggest(total: number, soft: boolean, dealerCard: number): 'HIT' | 'STAND' {
+	if (soft) return suggestSoft(total, dealerCard);
+	if (total >= 17) return 'STAND';
+	if (total >= 13 && total <= 16) return dealerCard >= 2 && dealerCard <= 6 ? 'STAND' : 'HIT';
+	if (total === 12) return dealerCard >= 4 && dealerCard <= 6 ? 'STAND' : 'HIT';
 	return 'HIT';
 }
 
@@ -127,7 +115,7 @@ export async function blackjackHelper(msg: Message): Promise<void> {
 	// extract player's hand and dealer upcard
 	const playerLine = lines[0];
 	const dealerIndex = lines.findIndex((l) => l.includes('epic dealer'));
-	const dealerLine = dealerIndex !== -1 ? lines[dealerIndex] : null;
+	const dealerLine = dealerIndex === -1 ? null : lines[dealerIndex];
 
 	if (!playerLine || dealerIndex === -1) {
 		return;
@@ -168,82 +156,73 @@ const indexes = {
 	tenth: 10
 } as { [key: string]: number };
 
+async function countEmojiChallenge(msg: Message): Promise<void> {
+	const emojiResult = /How many\s+<:([^:]+):\d+>/i.exec(msg.content);
+	const emojiName = emojiResult?.[1];
+	if (!emojiName) return;
+	const emojiCount = (new RegExp(String.raw`<:${emojiName}:\d+>`, 'g').exec(msg.content) || []).length - 1;
+	await reply(msg, `**${emojiCount}**`);
+}
+
+async function letterChallenge(msg: Message): Promise<void> {
+	const emojiResult = /letter of\s+<:([^:]+):\d+>/i.exec(msg.content);
+	const emojiName = emojiResult?.[1]?.toLowerCase().replaceAll(/[^a-z]/g, '') ?? null;
+	if (!emojiName) return;
+
+	const indexResult = /What's the \*\*(.+?)\*\*/i.exec(msg.content);
+	const indexWord = indexResult?.[1].toLowerCase() ?? null;
+	const index = indexWord ? indexes[indexWord] : null;
+
+	if (index && index >= 1 && index <= emojiName.length) {
+		await reply(msg, `**${emojiName.charAt(index - 1).toUpperCase()}**`);
+	}
+}
+
+async function emojiNameChallenge(msg: Message): Promise<void> {
+	const emojiResult = /(<a:)?<?:([^:]+)(:\d+)?:/i.exec(msg.content);
+	const emojiName = emojiResult?.[2]?.toLowerCase().replaceAll(/[^a-z]/g, '') ?? null;
+	if (!emojiName) return;
+
+	const options: Record<string, string> = {};
+	const o1 = /\*\*1\*\*\s*-\s*(.+)/i.exec(msg.content);
+	const o2 = /\*\*2\*\*\s*-\s*(.+)/i.exec(msg.content);
+	const o3 = /\*\*3\*\*\s*-\s*(.+)/i.exec(msg.content);
+	if (o1) options['1'] = o1[1].toLowerCase().replaceAll(/[^a-z]/g, '');
+	if (o2) options['2'] = o2[1].toLowerCase().replaceAll(/[^a-z]/g, '');
+	if (o3) options['3'] = o3[1].toLowerCase().replaceAll(/[^a-z]/g, '');
+
+	for (const [key, value] of Object.entries(options)) {
+		if (value === emojiName) {
+			await reply(msg, `**${key}**`);
+			break;
+		}
+	}
+}
+
+async function isEmojiChallenge(msg: Message): Promise<void> {
+	const emoji = /(<a:)?<?:([^:]+)(:\d+)?:/i.exec(msg.content);
+	const emojiName = emoji?.[2] ?? null;
+
+	const lines = msg.content.split('\n').map((l) => l.trim());
+	const lookingFor = /(?<=\*\*).+(?=\*\*)/i.exec(lines[1])?.[0] ?? null;
+
+	if (emojiName && lookingFor) {
+		const answer = emojiName.toLowerCase() === lookingFor.toLowerCase() ? 'yes' : 'no';
+		await reply(msg, `**${answer}**`);
+	}
+}
+
 export async function trainingHelper(msg: Message): Promise<void> {
-	if (!shouldRun(msg)) return;
+	if (!shouldRun(msg) || !msg.content.toLowerCase().includes('is training')) return;
 
-	// count emoji challenge
-	if (msg.content.includes('is training') && msg.content.includes('How many')) {
-		let emojiResult = msg.content.match(/How many\s+<:([^:]+):\d+>/i);
-		let emojiName = emojiResult ? emojiResult[1] : null;
-
-		if (emojiName) {
-			const emojiCount = (msg.content.match(new RegExp(`<:${emojiName}:\\d+>`, 'g')) || []).length - 1;
-			await reply(msg, `**${emojiCount}**`);
-		}
-
+	if (msg.content.includes('How many')) {
+		await countEmojiChallenge(msg);
 		return;
 	}
-
-	// letter challenge
-	if (msg.content.includes('is training') && msg.content.includes('letter of')) {
-		let emojiResult = msg.content.match(/letter of\s+<:([^:]+):\d+>/i);
-		let emojiName = emojiResult ? emojiResult[1] : null;
-
-		if (emojiName) {
-			emojiName = emojiName?.toLowerCase().replace(/[^a-z]/g, '');
-
-			let indexResult = msg.content.match(/What's the \*\*(.+?)\*\*/i);
-			let indexWord = indexResult ? indexResult[1].toLowerCase() : null;
-			let index = indexWord ? indexes[indexWord] : null;
-
-			if (index && index >= 1 && index <= emojiName.length) {
-				const letter = emojiName.charAt(index - 1).toUpperCase();
-				await reply(msg, `**${letter}**`);
-			}
-		}
-
+	if (msg.content.includes('letter of')) {
+		await letterChallenge(msg);
 		return;
 	}
-
-	// emoji name challenge
-	if (msg.content.includes('is training') && msg.content.includes('What is the name of')) {
-		let emojiResult = msg.content.match(/(<a:)?<?:([^:]+)(:\d+)?:/i);
-		let emojiName = emojiResult ? emojiResult[2] : null;
-
-		if (emojiName) {
-			emojiName = emojiName.toLowerCase().replace(/[^a-z]/g, '');
-
-			const option1Result = msg.content.match(/\*\*1\*\*\s*-\s*(.+)/i);
-			const option2Result = msg.content.match(/\*\*2\*\*\s*-\s*(.+)/i);
-			const option3Result = msg.content.match(/\*\*3\*\*\s*-\s*(.+)/i);
-
-			const options: { [key: string]: string } = {};
-			if (option1Result) options['1'] = option1Result[1].toLowerCase().replace(/[^a-z]/g, '');
-			if (option2Result) options['2'] = option2Result[1].toLowerCase().replace(/[^a-z]/g, '');
-			if (option3Result) options['3'] = option3Result[1].toLowerCase().replace(/[^a-z]/g, '');
-
-			for (const [key, value] of Object.entries(options)) {
-				if (value === emojiName) {
-					await reply(msg, `**${key}**`);
-					break;
-				}
-			}
-		}
-	}
-
-	// what is this emoji challenge
-	if (msg.content.toLowerCase().includes('is training') && msg.content.toLowerCase().includes('is this a')) {
-		let emojiName: string | null = null;
-
-		const emoji = msg.content.match(/(<a:)?<?:([^:]+)(:\d+)?:/i);
-		if (emoji) emojiName = emoji[2];
-
-		const lines = msg.content.split('\n').map((l) => l.trim());
-		let lookingFor = lines[1]?.match(/(?<=\*\*).+(?=\*\*)/i)?.[0] ?? null;
-
-		if (emojiName && lookingFor) {
-			const answer = emojiName.toLowerCase() === lookingFor.toLowerCase() ? 'yes' : 'no';
-			await reply(msg, `**${answer}**`);
-		}
-	}
+	if (msg.content.includes('What is the name of')) await emojiNameChallenge(msg);
+	if (msg.content.toLowerCase().includes('is this a')) await isEmojiChallenge(msg);
 }

@@ -26,7 +26,7 @@ export function checkUser(text: string, user: User, caseSensitive = false, whole
 	if (user.id === text) return true;
 
 	const reg = /<@!?(\d{17,19})>/;
-	const match = text.match(reg);
+	const match = reg.exec(text);
 
 	if (match && user.id === match[1]) return true;
 
@@ -72,7 +72,7 @@ export function checkMember(text: string, member: GuildMember, caseSensitive = f
 	if (member.id === text) return true;
 
 	const reg = /<@!?(\d{17,19})>/;
-	const match = text.match(reg);
+	const match = reg.exec(text);
 
 	if (match && member.id === match[1]) return true;
 
@@ -127,7 +127,7 @@ export function checkChannel(text: string, channel: Channel, caseSensitive = fal
 	if (channel.id === text) return true;
 
 	const reg = /<#(\d{17,19})>/;
-	const match = text.match(reg);
+	const match = reg.exec(text);
 
 	if (match && channel.id === match[1]) return true;
 
@@ -172,7 +172,7 @@ export function checkRole(text: string, role: Role, caseSensitive = false, whole
 	if (role.id === text) return true;
 
 	const reg = /<@&(\d{17,19})>/;
-	const match = text.match(reg);
+	const match = reg.exec(text);
 
 	if (match && role.id === match[1]) return true;
 
@@ -211,8 +211,8 @@ export function resolveEmojis(
 export function checkEmoji(text: string, emoji: Emoji, caseSensitive = false, wholeWord = false): boolean {
 	if (emoji.id === text) return true;
 
-	const reg = /<a?:[a-zA-Z0-9_]+:(\d{17,19})>/;
-	const match = text.match(reg);
+	const reg = /<a?:\w+:(\d{17,19})>/;
+	const match = reg.exec(text);
 
 	if (match && emoji.id === match[1]) return true;
 

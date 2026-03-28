@@ -17,7 +17,7 @@ import { ApplicationCommandRegistries, RegisterBehavior } from '@sapphire/framew
 import '@sapphire/plugin-editable-commands/register';
 import '@sapphire/plugin-scheduled-tasks/register';
 import '@sapphire/plugin-subcommands/register';
-import { inspect } from 'util';
+import { inspect } from 'node:util';
 
 console.info(`[INFO] Starting bot in ${process.env.NODE_ENV} mode...`);
 

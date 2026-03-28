@@ -5,7 +5,7 @@ import { envParseArray } from '#lib/utils/env';
 const OWNERS = envParseArray('OWNERS');
 
 export class UserPrecondition extends AllFlowsPrecondition {
-	#message = 'This command can only be used by the owner.';
+	readonly #message = 'This command can only be used by the owner.';
 
 	public override chatInputRun(interaction: CommandInteraction) {
 		return this.doOwnerCheck(interaction.user.id);

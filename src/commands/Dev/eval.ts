@@ -1,10 +1,11 @@
+import { db as database } from '#lib/database';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Stopwatch } from '@sapphire/stopwatch';
 import { codeBlock, isThenable } from '@sapphire/utilities';
 import type { Message } from 'discord.js';
-import { inspect } from 'util';
+import { inspect } from 'node:util';
 
 @ApplyOptions<Command.Options>({
 	aliases: ['e', 'ev'],
@@ -18,7 +19,7 @@ export class UserCommand extends Command {
 	public override async messageRun(msg: Message, args: Args) {
 		const code = await args.rest('string');
 		const isAsync = args.getFlags('async');
-		const depth = Number(args.getOption('depth')) ?? 0;
+		const depth = Number(args.getOption('depth')) || 0;
 		const showHidden = args.getFlags('hidden', 'showHidden');
 
 		const { success, time, result } = await this.eval(code, msg, isAsync, depth, showHidden);
@@ -32,7 +33,7 @@ export class UserCommand extends Command {
 			.sort((a, b) => b.length - a.length);
 
 		for (const secret of secrets) {
-			const regex = new RegExp(secret.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+			const regex = new RegExp(secret.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`), 'g');
 			output = output.replace(regex, '[REDACTED]');
 		}
 
@@ -60,9 +61,14 @@ export class UserCommand extends Command {
 		let result: any = null;
 		let thenable = false;
 
-		// @ts-expect-error value is never read, this is so `msg` is possible as an alias when running eval.
+		// @ts-expect-error value is never read, this is for aliases inside of the command
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const msg = _context;
+		
+		// @ts-expect-error value is never read, this is for aliases inside of the command
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const db = database;
+		
 
 		const stopwatch = new Stopwatch();
 		try {
