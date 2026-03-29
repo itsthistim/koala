@@ -36,6 +36,7 @@
 		"@sapphire/utilities": "^3.18.2",
 		"canvas": "^3.2.2",
 		"discord.js": "^14.25.1",
+		"expr-eval": "^2.0.2",
 		"mathjs": "^15.1.1",
 		"moment": "^2.30.1",
 		"moment-duration-format": "^2.3.2",

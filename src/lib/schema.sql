@@ -23,9 +23,16 @@ create table if not exists dagi_count (
 	count integer default 0 not null
 );
 
+create table if not exists user_formulas (
+	user_id varchar(20) not null,
+	name varchar(50) not null,
+	expression text not null,
+	primary key (user_id, name)
+);
+
 ---
 
-select * from channel_filters;
+select * from user_formulas;
 
 select * from server_settings;
 
