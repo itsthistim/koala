@@ -1,3 +1,4 @@
+import { Reminder } from '#tasks/reminder';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
@@ -5,7 +6,6 @@ import { Subcommand } from '@sapphire/plugin-subcommands';
 import { Duration } from '@sapphire/time-utilities';
 import { ApplicationIntegrationType, InteractionContextType, Message, MessageFlags, time, TimestampStyles } from 'discord.js';
 import moment from 'moment';
-import { Reminder } from 'scheduled-tasks/reminder';
 
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
 

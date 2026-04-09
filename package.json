@@ -16,7 +16,8 @@
 	},
 	"imports": {
 		"#lib/*": "./dist/lib/*.js",
-		"#services/*": "./dist/lib/services/*.js"
+		"#services/*": "./dist/lib/services/*.js",
+		"#tasks/*": "./dist/scheduled-tasks/*.js"
 	},
 	"keywords": [],
 	"author": "",
