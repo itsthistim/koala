@@ -133,7 +133,7 @@ export class UserCommand extends Subcommand {
 
 	public async calcEvalMsg(msg: Message, args: Args) {
 		const expression = await args.rest('string').catch(() => null);
-		if (!expression) return reply(msg, '**ERROR**: No expression provided.');
+		if (!expression) return reply(msg, this.getHelpMessage());
 		const result = this.evaluate(expression);
 		if (result.error) return reply(msg, `**ERROR**: ${result.error}`);
 		return reply(msg, `**Result**: ${result.value}`);
