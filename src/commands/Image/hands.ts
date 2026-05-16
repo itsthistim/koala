@@ -79,7 +79,7 @@ export class UserCommand extends Command {
 	private async getImage(image: string) {
 		image = image
 			.replace(/^<(.+)>$/, '$1') // remove < >
-			.replace(/([?&])format=\w+/g, '') // remove format param
+			.replaceAll(/([?&])format=\w+/g, '') // remove format param
 			.trim();
 
 		const base = await loadImage('src/lib/assets/images/hands.png');

@@ -51,7 +51,7 @@ export function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: n
 		const testWidth = metrics.width;
 
 		// Check if maxHeight is exceeded
-		const lineHeight = parseInt(ctx.font.match(/(\d+)px/)?.[1] || '16', 10);
+		const lineHeight = Number.parseInt(new RegExp(/(\d+)px/).exec(ctx.font)?.[1] || '16', 10);
 		const currentHeight = (fittedText.split('\n').length + 1) * lineHeight;
 		if (currentHeight > maxHeight) {
 			return shortenText(ctx, fittedText.trim(), maxWidth);
@@ -184,7 +184,7 @@ export function fishEye(ctx: CanvasRenderingContext2D, level: number, x: number,
 		const sy = Math.floor(i / 4 / frame.width);
 		const dx = Math.floor(frame.width / 2) - sx;
 		const dy = Math.floor(frame.height / 2) - sy;
-		const dist = Math.sqrt(dx * dx + dy * dy);
+		const dist = Math.hypot(dx, dy);
 		const x2 = Math.round(frame.width / 2 - dx * Math.sin(dist / (level * Math.PI) / 2));
 		const y2 = Math.round(frame.height / 2 - dy * Math.sin(dist / (level * Math.PI) / 2));
 		const i2 = (y2 * frame.width + x2) * 4;
@@ -288,11 +288,9 @@ export function centerImage(base: Image, data: Image): { x: number; y: number; w
 		height = data.height;
 		width = base.width * (height / base.height);
 		x = (data.width - width) / 2;
-		y = 0;
 	} else if (baseRatio > dataRatio) {
 		width = data.width;
 		height = base.height * (width / base.width);
-		x = 0;
 		y = (data.height - height) / 2;
 	}
 	return { x, y, width, height };
