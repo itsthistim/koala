@@ -141,7 +141,13 @@ export class UserCommand extends Command {
 			msg.id
 		);
 
-		return reply(msg, { embeds: [embed] });
+		// Message commands can't be ephemeral, so approximate it: drop the invocation and
+		// auto-delete the confirmation after a few seconds so nothing lingers in the channel.
+		if (msg.deletable) await msg.delete().catch(() => null);
+
+		const sent = await (msg.channel as GuildTextBasedChannel).send({ embeds: [embed] }).catch(() => null);
+		if (sent) setTimeout(() => sent.delete().catch(() => null), 7000);
+		return sent;
 	}
 
 	public override async contextMenuRun(interaction: Command.ContextMenuCommandInteraction) {
