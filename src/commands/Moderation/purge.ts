@@ -18,13 +18,9 @@ import { colors } from '#lib/constants';
 const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall];
 const contexts: InteractionContextType[] = [InteractionContextType.Guild];
 
-/** Discord only allows bulk-deleting messages younger than 14 days. */
 const BULK_DELETE_MAX_AGE = 14 * 24 * 60 * 60 * 1000;
-/** Largest amount accepted in a single command. */
 const MAX_AMOUNT = 1000;
-/** Safety net so a rare filter can't scan a channel's entire history forever. */
 const MAX_SCAN_PER_CHANNEL = 10_000;
-/** How many messages the context-menu action removes (it has no amount input). */
 const CONTEXT_MENU_AMOUNT = 100;
 
 interface PurgeRequest {
@@ -32,14 +28,8 @@ interface PurgeRequest {
 	user: User | null;
 	role: Role | null;
 	bots: boolean;
-	/**
-	 * Where to purge. `auto` (the default) stays in the current channel for an unfiltered purge
-	 * and spans the whole server once an author/content filter is set; `local`/`global` force it.
-	 */
 	scope: 'auto' | 'local' | 'global';
-	/** Keyword/regex the message content must match. */
 	filter: string | null;
-	/** Only delete messages newer than this window (e.g. "10m", "2h", "1d"). */
 	timeframe: string | null;
 }
 
@@ -107,13 +97,15 @@ export class UserCommand extends Command {
 	public override async messageRun(msg: Message, args: Args) {
 		const amount = await args.pick('integer').catch(() => null);
 		if (amount === null) {
-			return reply(msg, 'Please provide how many messages to delete.\nUsage: `purge <count> [user|role|bots] [--local|--global] [--filter=<regex>] [--timeframe=<10m>]`');
+			return reply(
+				msg,
+				'Please provide how many messages to delete.\nUsage: `purge <count> [user|role|bots] [--local|--global] [--filter=<regex>] [--timeframe=<10m>]`'
+			);
 		}
 		if (amount < 1 || amount > MAX_AMOUNT) {
 			return reply(msg, `Count must be between 1 and ${MAX_AMOUNT}.`);
 		}
 
-		// `purge <count> [user|role|bots]` — the optional second argument may be a user, a role or the literal "bots".
 		let user: User | null = null;
 		let role: Role | null = null;
 		let bots = args.getFlags('bots');
@@ -141,8 +133,6 @@ export class UserCommand extends Command {
 			msg.id
 		);
 
-		// Message commands can't be ephemeral, so approximate it: drop the invocation and
-		// auto-delete the confirmation after a few seconds so nothing lingers in the channel.
 		if (msg.deletable) await msg.delete().catch(() => null);
 
 		const sent = await (msg.channel as GuildTextBasedChannel).send({ embeds: [embed] }).catch(() => null);
@@ -170,7 +160,6 @@ export class UserCommand extends Command {
 	private async run(source: GuildTextBasedChannel | null, request: PurgeRequest, excludeId?: string): Promise<EmbedBuilder> {
 		if (!source?.guild) return this.errorEmbed('This command can only be used in a server.');
 
-		// Compile the optional content filter and time window up front so bad input fails fast.
 		let regex: RegExp | null = null;
 		if (request.filter) {
 			try {
@@ -212,11 +201,9 @@ export class UserCommand extends Command {
 		return this.buildResultEmbed(request, result, local);
 	}
 
-	/** Resolve the requested scope to a concrete "current channel only?" decision. */
 	private resolveLocal(request: PurgeRequest): boolean {
 		if (request.scope === 'local') return true;
 		if (request.scope === 'global') return false;
-		// auto: a bare count purge stays local; any author/content filter goes server-wide.
 		return !this.isFiltered(request);
 	}
 
@@ -224,14 +211,12 @@ export class UserCommand extends Command {
 		return Boolean(request.user || request.role || request.bots || request.filter);
 	}
 
-	/** Translate the message command's scope flags into a scope. `--local` wins over `--global`. */
 	private scopeFromFlags(args: Args): PurgeRequest['scope'] {
 		if (args.getFlags('l', 'local')) return 'local';
 		if (args.getFlags('g', 'global')) return 'global';
 		return 'auto';
 	}
 
-	/** Determine which channels to purge in, keeping only ones the bot can actually manage. */
 	private resolveChannels(source: GuildTextBasedChannel, local: boolean): GuildTextBasedChannel[] {
 		const guild = source.guild;
 		const me = guild.members.me;
@@ -243,13 +228,11 @@ export class UserCommand extends Command {
 			return canManage(source) ? [source] : [];
 		}
 
-		// Server-wide (default): every text-based channel the bot can manage, current channel first.
 		return [...guild.channels.cache.values()]
 			.filter((channel): channel is GuildTextBasedChannel => channel.isTextBased() && canManage(channel))
 			.sort((a, b) => this.compareChannels(a, b, source.id));
 	}
 
-	/** Sort comparator that keeps the current channel first, then orders the rest newest-first. */
 	private compareChannels(a: GuildTextBasedChannel, b: GuildTextBasedChannel, currentId: string): number {
 		if (a.id === currentId) return -1;
 		if (b.id === currentId) return 1;
@@ -268,11 +251,6 @@ export class UserCommand extends Command {
 		};
 	}
 
-	/**
-	 * Recursively scans a channel in batches of 100, deleting matching messages until `limit`
-	 * is reached or the channel is exhausted. This is what lets a purge exceed Discord's
-	 * 100-message bulk-delete cap.
-	 */
 	private async purgeChannel(
 		channel: GuildTextBasedChannel,
 		predicate: (msg: Message) => boolean,
@@ -302,8 +280,6 @@ export class UserCommand extends Command {
 				if (removed) deleted += removed.size;
 			}
 
-			// Messages are returned newest-first; once the batch crosses the 14-day line everything
-			// older is undeletable, so there's nothing left worth scanning.
 			const oldest = batch.last();
 			if (oldest && oldest.createdTimestamp <= cutoff) break;
 		}
