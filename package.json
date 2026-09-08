@@ -22,7 +22,7 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"packageManager": "pnpm@10.0.0",
+	"packageManager": "pnpm@12.3.4",
 	"dependencies": {
 		"@sapphire/decorators": "^6.2.0",
 		"@sapphire/discord.js-utilities": "^7.3.3",
