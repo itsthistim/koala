@@ -7,7 +7,8 @@ if (process.argv.includes('--production')) {
 process.env.NODE_ENV ??= 'DEVELOPMENT';
 
 dotenv.config({
-	path: process.env.NODE_ENV === 'DEVELOPMENT' ? '.env.dev' : '.env.prod'
+	path: [process.env.NODE_ENV === 'DEVELOPMENT' ? '.env.dev' : '.env.prod', '.env'],
+	quiet: true
 });
 
 import moment from 'moment';
