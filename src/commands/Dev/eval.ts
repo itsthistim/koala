@@ -5,10 +5,14 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { Stopwatch } from '@sapphire/stopwatch';
 import { codeBlock, isThenable } from '@sapphire/utilities';
 import * as discord from 'discord.js';
+import { parse } from 'dotenv';
 import type { Message } from 'discord.js';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { inspect } from 'node:util';
 
-const SENSITIVE_ENV = /token|secret|key|password|passwd|pass|auth|credential|dsn|webhook|url/i;
+const ENV_FILES = ['.env', '.env.dev', '.env.prod', '.env.example'] as const;
+
 const CODE_BLOCK = /^```(?:\w+\n)?([\s\S]*?)\n?```$|^`([^`]+)`$/;
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor as FunctionConstructor;
@@ -123,13 +127,23 @@ export class UserCommand extends Command {
 	}
 
 	private redact(content: string): string {
-		const secrets = Object.entries(process.env)
-			.filter((entry): entry is [string, string] => SENSITIVE_ENV.test(entry[0]) && typeof entry[1] === 'string' && entry[1].length >= 6)
-			.map(([, value]) => value)
-			.sort((a, b) => b.length - a.length);
-
-		for (const secret of secrets) content = content.replaceAll(secret, '[REDACTED]');
+		for (const secret of this.envSecrets()) content = content.replaceAll(secret, '[REDACTED]');
 		return content;
+	}
+
+	private envSecrets(): string[] {
+		const keys = new Set<string>();
+
+		for (const file of ENV_FILES) {
+			try {
+				for (const key of Object.keys(parse(readFileSync(resolve(process.cwd(), file), 'utf8')))) keys.add(key);
+			} catch {}
+		}
+
+		return [...keys]
+			.map((key) => process.env[key])
+			.filter((value): value is string => typeof value === 'string' && value.length >= 3)
+			.sort((a, b) => b.length - a.length);
 	}
 
 	private formatTime(syncTime: string, asyncTime: string): string {
