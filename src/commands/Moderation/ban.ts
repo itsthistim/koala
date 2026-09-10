@@ -2,22 +2,8 @@ import { ApplyOptions, RegisterChatInputCommand, RegisterUserContextMenuCommand 
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { Duration } from '@sapphire/time-utilities';
-import {
-	ApplicationIntegrationType,
-	EmbedBuilder,
-	type GuildMember,
-	InteractionContextType,
-	MessageFlags,
-	PermissionFlagsBits,
-	time,
-	TimestampStyles,
-	type Message,
-	type User
-} from 'discord.js';
-import { colors } from '#lib/constants';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.Guild];
+import { EmbedBuilder, type GuildMember, MessageFlags, PermissionFlagsBits, time, TimestampStyles, type Message, type User } from 'discord.js';
+import { availability, colors } from '#lib/constants';
 
 const DELETE_MESSAGE_SECONDS = 604800; // 7 days
 
@@ -40,23 +26,19 @@ interface BanOptions {
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.guildOnly.contexts)
+		.setIntegrationTypes(...availability.guildOnly.integrationTypes)
 		.setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
 		.addUserOption((option) => option.setName('user').setDescription('The user to ban').setRequired(true))
 		.addStringOption((option) => option.setName('reason').setDescription('Reason for the ban'))
-		.addBooleanOption((option) =>
-			option.setName('delete_messages').setDescription("Delete the last 7 days of the user's messages")
-		)
-		.addStringOption((option) =>
-			option.setName('duration').setDescription('How long to ban (e.g. 1h, 7d, 1w). Omit for permanent.')
-		)
+		.addBooleanOption((option) => option.setName('delete_messages').setDescription("Delete the last 7 days of the user's messages"))
+		.addStringOption((option) => option.setName('duration').setDescription('How long to ban (e.g. 1h, 7d, 1w). Omit for permanent.'))
 )
 @RegisterUserContextMenuCommand((builder, command) =>
 	builder
 		.setName(command.name)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.guildOnly.contexts)
+		.setIntegrationTypes(...availability.guildOnly.integrationTypes)
 		.setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
 )
 export class UserCommand extends Command {
@@ -121,9 +103,7 @@ export class UserCommand extends Command {
 		const { banDuration, error: durationError } = this.parseDuration(opts.duration);
 		if (durationError) return this.errorEmbed(durationError);
 
-		const auditReason = opts.reason
-			? `${opts.reason} | Banned by ${executor.username}`.slice(0, 512)
-			: `Banned by ${executor.username}`;
+		const auditReason = opts.reason ? `${opts.reason} | Banned by ${executor.username}`.slice(0, 512) : `Banned by ${executor.username}`;
 
 		try {
 			await guild.bans.create(target, {
@@ -135,27 +115,20 @@ export class UserCommand extends Command {
 		}
 
 		if (banDuration) {
-			await this.container.tasks.create(
-				{ name: 'unban', payload: { guildId: guild.id, userId: target.id } },
-				banDuration.offset
-			);
+			await this.container.tasks.create({ name: 'unban', payload: { guildId: guild.id, userId: target.id } }, banDuration.offset);
 		}
 
 		return this.buildSuccessEmbed(target, opts, banDuration);
 	}
 
-	private checkHierarchy(
-		targetMember: GuildMember | null,
-		executorMember: GuildMember | null,
-		botMember: GuildMember | null
-	): string | null {
+	private checkHierarchy(targetMember: GuildMember | null, executorMember: GuildMember | null, botMember: GuildMember | null): string | null {
 		if (!targetMember) return null;
 
 		if (botMember && targetMember.roles.highest.position >= botMember.roles.highest.position) {
-			return "I cannot ban this user — their highest role is at or above mine.";
+			return 'I cannot ban this user — their highest role is at or above mine.';
 		}
 		if (executorMember && targetMember.roles.highest.position >= executorMember.roles.highest.position) {
-			return "You cannot ban this user — their highest role is at or above yours.";
+			return 'You cannot ban this user — their highest role is at or above yours.';
 		}
 		return null;
 	}
