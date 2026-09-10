@@ -1,13 +1,12 @@
+import { availability } from '#lib/constants';
 import { Reminder } from '#tasks/reminder';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { Subcommand } from '@sapphire/plugin-subcommands';
 import { Duration } from '@sapphire/time-utilities';
-import { ApplicationIntegrationType, InteractionContextType, Message, MessageFlags, time, TimestampStyles } from 'discord.js';
+import { Message, MessageFlags, time, TimestampStyles } from 'discord.js';
 import moment from 'moment';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
 
 function formatReminderTime(offsetMs: number, futureMs: number): string {
 	if (offsetMs <= 60_000) {
@@ -30,7 +29,6 @@ function formatDuration(d: Duration): string {
 		.map(([n, unit]) => `${n} ${unit}${n > 1 ? 's' : ''}`)
 		.join(', ');
 }
-const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Subcommand.Options>({
 	aliases: ['remind-me', 'remind', 'notify-me', 'notify', 'rm'],
@@ -62,8 +60,8 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 		.addSubcommand((subcommand) =>
 			subcommand //
 				.setName('create')

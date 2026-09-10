@@ -2,21 +2,8 @@ import { ApplyOptions, RegisterChatInputCommand, RegisterUserContextMenuCommand 
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { Duration } from '@sapphire/time-utilities';
-import {
-	ApplicationIntegrationType,
-	EmbedBuilder,
-	type GuildTextBasedChannel,
-	InteractionContextType,
-	type Message,
-	MessageFlags,
-	PermissionFlagsBits,
-	type Role,
-	type User
-} from 'discord.js';
-import { colors } from '#lib/constants';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.Guild];
+import { EmbedBuilder, type GuildTextBasedChannel, type Message, MessageFlags, PermissionFlagsBits, type Role, type User } from 'discord.js';
+import { availability, colors } from '#lib/constants';
 
 const BULK_DELETE_MAX_AGE = 14 * 24 * 60 * 60 * 1000;
 const MAX_AMOUNT = 1000;
@@ -52,8 +39,8 @@ interface PurgeResult {
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.guildOnly.contexts)
+		.setIntegrationTypes(...availability.guildOnly.integrationTypes)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 		.addIntegerOption((option) =>
 			option.setName('count').setDescription('How many messages to delete (1-1000)').setRequired(true).setMinValue(1).setMaxValue(MAX_AMOUNT)
@@ -73,8 +60,8 @@ interface PurgeResult {
 @RegisterUserContextMenuCommand((builder) =>
 	builder
 		.setName('Purge messages')
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.guildOnly.contexts)
+		.setIntegrationTypes(...availability.guildOnly.integrationTypes)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 )
 export class UserCommand extends Command {

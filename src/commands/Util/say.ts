@@ -1,11 +1,8 @@
-import { colors } from '#lib/constants';
+import { availability, colors } from '#lib/constants';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, PermissionFlagsBits, type Message } from 'discord.js';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
+import { EmbedBuilder, PermissionFlagsBits, type Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
 	aliases: ['s', 'echo', 'repeat'],
@@ -19,8 +16,8 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 		.addStringOption((option) => option.setName('message').setDescription('The message to repeat').setRequired(true))
 		.addBooleanOption((option) => option.setName('embed').setDescription('Send as an embed').setRequired(false))
 		.addBooleanOption((option) => option.setName('tts').setDescription('Send as TTS').setRequired(false))
