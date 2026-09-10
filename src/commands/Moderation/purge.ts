@@ -9,15 +9,20 @@ const BULK_DELETE_MAX_AGE = 14 * 24 * 60 * 60 * 1000;
 const MAX_AMOUNT = 1000;
 const MAX_SCAN_PER_CHANNEL = 10_000;
 const CONTEXT_MENU_AMOUNT = 100;
+const RESULT_LIFETIME = 7000;
+const USAGE = '`purge <count> [user|role|bots] [--local|--global] [--filter=<regex>] [--timeframe=<10m>] [--silent]`';
+
+const plural = (count: number) => (count === 1 ? '' : 's');
 
 interface PurgeRequest {
 	amount: number;
-	user: User | null;
-	role: Role | null;
-	bots: boolean;
-	scope: 'auto' | 'local' | 'global';
-	filter: string | null;
-	timeframe: string | null;
+	user?: User | null;
+	role?: Role | null;
+	bots?: boolean;
+	filter?: string | null;
+	timeframe?: string | null;
+	scope?: 'local' | 'global' | null;
+	excludeId?: string;
 }
 
 interface PurgeResult {
@@ -32,7 +37,7 @@ interface PurgeResult {
 	requiredClientPermissions: [PermissionFlagsBits.ManageMessages],
 	runIn: [CommandOptionsRunTypeEnum.GuildAny],
 	preconditions: ['OwnerOnly'], // TODO owner only as still wip
-	flags: ['l', 'local', 'g', 'global', 'bots'],
+	flags: ['l', 'local', 'g', 'global', 'bots', 's', 'silent'],
 	options: ['filter', 'timeframe']
 })
 @RegisterChatInputCommand((builder, command) =>
@@ -68,14 +73,14 @@ export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		const embed = await this.run(interaction.channel as GuildTextBasedChannel | null, {
+		const embed = await this.purge(interaction.channel as GuildTextBasedChannel | null, {
 			amount: interaction.options.getInteger('count', true),
 			user: interaction.options.getUser('user'),
 			role: interaction.options.getRole('role') as Role | null,
 			bots: interaction.options.getBoolean('bots') ?? false,
-			scope: (interaction.options.getString('scope') as 'local' | 'global' | null) ?? 'auto',
 			filter: interaction.options.getString('filter'),
-			timeframe: interaction.options.getString('timeframe')
+			timeframe: interaction.options.getString('timeframe'),
+			scope: interaction.options.getString('scope') as PurgeRequest['scope']
 		});
 
 		return interaction.editReply({ embeds: [embed] });
@@ -83,47 +88,25 @@ export class UserCommand extends Command {
 
 	public override async messageRun(msg: Message, args: Args) {
 		const amount = await args.pick('integer').catch(() => null);
-		if (amount === null) {
-			return reply(
-				msg,
-				'Please provide how many messages to delete.\nUsage: `purge <count> [user|role|bots] [--local|--global] [--filter=<regex>] [--timeframe=<10m>]`'
-			);
-		}
-		if (amount < 1 || amount > MAX_AMOUNT) {
-			return reply(msg, `Count must be between 1 and ${MAX_AMOUNT}.`);
+		if (amount === null || amount < 1 || amount > MAX_AMOUNT) {
+			return reply(msg, `Tell me how many messages to delete, between 1 and ${MAX_AMOUNT}.\nUsage: ${USAGE}`);
 		}
 
-		let user: User | null = null;
-		let role: Role | null = null;
-		let bots = args.getFlags('bots');
-
-		if (!args.finished) {
-			user = await args.pick('userName').catch(() => null);
-			if (!user) role = await args.pick('role').catch(() => null);
-			if (!user && !role) {
-				const word = await args.pick('string').catch(() => null);
-				if (word?.toLowerCase() === 'bots') bots = true;
-			}
-		}
-
-		const embed = await this.run(
-			msg.channel as GuildTextBasedChannel,
-			{
-				amount,
-				user,
-				role,
-				bots,
-				scope: this.scopeFromFlags(args),
-				filter: args.getOption('filter'),
-				timeframe: args.getOption('timeframe')
-			},
-			msg.id
-		);
+		const silent = args.getFlags('s', 'silent');
+		const embed = await this.purge(msg.channel as GuildTextBasedChannel, {
+			amount,
+			...(await this.pickTarget(args)),
+			filter: args.getOption('filter'),
+			timeframe: args.getOption('timeframe'),
+			scope: this.pickScope(args),
+			excludeId: msg.id
+		});
 
 		if (msg.deletable) await msg.delete().catch(() => null);
+		if (silent) return null;
 
 		const sent = await (msg.channel as GuildTextBasedChannel).send({ embeds: [embed] }).catch(() => null);
-		if (sent) setTimeout(() => sent.delete().catch(() => null), 7000);
+		if (sent) setTimeout(() => sent.delete().catch(() => null), RESULT_LIFETIME);
 		return sent;
 	}
 
@@ -131,20 +114,34 @@ export class UserCommand extends Command {
 		if (!interaction.isUserContextMenuCommand()) return;
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		const embed = await this.run(interaction.channel as GuildTextBasedChannel | null, {
+		const embed = await this.purge(interaction.channel as GuildTextBasedChannel | null, {
 			amount: CONTEXT_MENU_AMOUNT,
-			user: interaction.targetUser,
-			role: null,
-			bots: false,
-			scope: 'auto',
-			filter: null,
-			timeframe: null
+			user: interaction.targetUser
 		});
 
 		return interaction.editReply({ embeds: [embed] });
 	}
 
-	private async run(source: GuildTextBasedChannel | null, request: PurgeRequest, excludeId?: string): Promise<EmbedBuilder> {
+	private async pickTarget(args: Args): Promise<Pick<PurgeRequest, 'user' | 'role' | 'bots'>> {
+		const bots = args.getFlags('bots');
+
+		const user = await args.pick('userName').catch(() => null);
+		if (user) return { user, bots };
+
+		const role = await args.pick('role').catch(() => null);
+		if (role) return { role, bots };
+
+		const word = await args.pick('string').catch(() => null);
+		return { bots: bots || word?.toLowerCase() === 'bots' };
+	}
+
+	private pickScope(args: Args): PurgeRequest['scope'] {
+		if (args.getFlags('l', 'local')) return 'local';
+		if (args.getFlags('g', 'global')) return 'global';
+		return null;
+	}
+
+	private async purge(source: GuildTextBasedChannel | null, request: PurgeRequest): Promise<EmbedBuilder> {
 		if (!source?.guild) return this.errorEmbed('This command can only be used in a server.');
 
 		let regex: RegExp | null = null;
@@ -152,151 +149,116 @@ export class UserCommand extends Command {
 			try {
 				regex = new RegExp(request.filter, 'i');
 			} catch {
-				return this.errorEmbed(`Invalid regex pattern: \`${request.filter}\``);
+				return this.errorEmbed(`\`${request.filter}\` is not a valid regex. Use a plain keyword like \`discord.gg\` instead.`);
 			}
 		}
 
-		let timeLimit: number | null = null;
+		let after = 0;
 		if (request.timeframe) {
 			const offset = new Duration(request.timeframe).offset;
 			if (Number.isNaN(offset) || offset <= 0) {
 				return this.errorEmbed('Invalid timeframe format. Use things like `15m`, `2h`, `1d`.');
 			}
-			timeLimit = Date.now() - offset;
+			after = Date.now() - offset;
 		}
 
-		const local = this.resolveLocal(request);
+		const filtered = Boolean(request.user || request.role || request.bots || request.filter);
+		const local = request.scope ? request.scope === 'local' : !filtered;
+
 		const channels = this.resolveChannels(source, local);
 		if (channels.length === 0) {
 			return this.errorEmbed(local ? 'I cannot manage messages in this channel.' : 'I have no channels where I can manage messages.');
 		}
 
-		const predicate = this.buildPredicate(request, regex, timeLimit, excludeId);
+		const result = await this.deleteAcross(channels, this.buildPredicate(request, regex, after), request);
+		return this.resultEmbed(request, result, local);
+	}
 
+	private async deleteAcross(channels: GuildTextBasedChannel[], matches: (msg: Message) => boolean, request: PurgeRequest): Promise<PurgeResult> {
 		const result: PurgeResult = { deleted: 0, oldSkipped: 0, channels: 0 };
+
 		for (const channel of channels) {
 			if (result.deleted >= request.amount) break;
 
-			const remaining = request.amount - result.deleted;
-			const channelResult = await this.purgeChannel(channel, predicate, remaining, excludeId);
-
-			result.deleted += channelResult.deleted;
-			result.oldSkipped += channelResult.oldSkipped;
-			if (channelResult.deleted > 0) result.channels++;
+			const batch = await this.deleteIn(channel, matches, request.amount - result.deleted, request.excludeId);
+			result.deleted += batch.deleted;
+			result.oldSkipped += batch.oldSkipped;
+			if (batch.deleted > 0) result.channels++;
 		}
 
-		return this.buildResultEmbed(request, result, local);
-	}
-
-	private resolveLocal(request: PurgeRequest): boolean {
-		if (request.scope === 'local') return true;
-		if (request.scope === 'global') return false;
-		return !this.isFiltered(request);
-	}
-
-	private isFiltered(request: PurgeRequest): boolean {
-		return Boolean(request.user || request.role || request.bots || request.filter);
-	}
-
-	private scopeFromFlags(args: Args): PurgeRequest['scope'] {
-		if (args.getFlags('l', 'local')) return 'local';
-		if (args.getFlags('g', 'global')) return 'global';
-		return 'auto';
+		return result;
 	}
 
 	private resolveChannels(source: GuildTextBasedChannel, local: boolean): GuildTextBasedChannel[] {
-		const guild = source.guild;
-		const me = guild.members.me;
-
+		const me = source.guild.members.me;
 		const canManage = (channel: GuildTextBasedChannel) =>
 			!!me && channel.permissionsFor(me).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ManageMessages]);
 
-		if (local) {
-			return canManage(source) ? [source] : [];
-		}
+		const first = canManage(source) ? [source] : [];
+		if (local) return first;
 
-		return [...guild.channels.cache.values()]
-			.filter((channel): channel is GuildTextBasedChannel => channel.isTextBased() && canManage(channel))
-			.sort((a, b) => this.compareChannels(a, b, source.id));
+		const rest = [...source.guild.channels.cache.values()].filter(
+			(channel): channel is GuildTextBasedChannel => channel.isTextBased() && channel.id !== source.id && canManage(channel)
+		);
+
+		return [...first, ...rest];
 	}
 
-	private compareChannels(a: GuildTextBasedChannel, b: GuildTextBasedChannel, currentId: string): number {
-		if (a.id === currentId) return -1;
-		if (b.id === currentId) return 1;
-		return Number(BigInt(b.id) - BigInt(a.id));
-	}
-
-	private buildPredicate(request: PurgeRequest, regex: RegExp | null, timeLimit: number | null, excludeId?: string): (msg: Message) => boolean {
+	private buildPredicate(request: PurgeRequest, regex: RegExp | null, after: number) {
 		return (msg: Message) => {
-			if (excludeId && msg.id === excludeId) return false;
+			if (msg.id === request.excludeId) return false;
 			if (request.user && msg.author.id !== request.user.id) return false;
 			if (request.bots && !msg.author.bot) return false;
 			if (request.role && !msg.member?.roles.cache.has(request.role.id)) return false;
-			if (timeLimit && msg.createdTimestamp < timeLimit) return false;
+			if (after && msg.createdTimestamp < after) return false;
 			if (regex && !regex.test(msg.content)) return false;
 			return true;
 		};
 	}
 
-	private async purgeChannel(
-		channel: GuildTextBasedChannel,
-		predicate: (msg: Message) => boolean,
-		limit: number,
-		excludeId?: string
-	): Promise<{ deleted: number; oldSkipped: number }> {
+	private async deleteIn(channel: GuildTextBasedChannel, matches: (msg: Message) => boolean, limit: number, before?: string) {
 		const cutoff = Date.now() - BULK_DELETE_MAX_AGE;
 		let deleted = 0;
 		let oldSkipped = 0;
 		let scanned = 0;
-		let before = excludeId;
 
 		while (deleted < limit && scanned < MAX_SCAN_PER_CHANNEL) {
 			const batch = await channel.messages.fetch({ limit: 100, before }).catch(() => null);
-			if (!batch || batch.size === 0) break;
+			if (!batch?.size) break;
 
-			before = batch.last()?.id;
+			const oldest = batch.last()!;
+			before = oldest.id;
 			scanned += batch.size;
 
-			const matching = [...batch.values()].filter(predicate);
-			const deletable = matching.filter((msg) => msg.createdTimestamp > cutoff);
-			oldSkipped += matching.length - deletable.length;
+			const attempted = [...batch.values()].filter(matches).slice(0, limit - deleted);
+			const deletable = attempted.filter((msg) => msg.createdTimestamp > cutoff);
+			oldSkipped += attempted.length - deletable.length;
 
-			const toDelete = deletable.slice(0, limit - deleted);
-			if (toDelete.length > 0) {
-				const removed = await channel.bulkDelete(toDelete, true).catch(() => null);
-				if (removed) deleted += removed.size;
-			}
+			const removed = await channel.bulkDelete(deletable, true).catch(() => null);
+			deleted += removed?.size ?? 0;
 
-			const oldest = batch.last();
-			if (oldest && oldest.createdTimestamp <= cutoff) break;
+			if (oldest.createdTimestamp <= cutoff) break;
 		}
 
 		return { deleted, oldSkipped };
 	}
 
-	private buildResultEmbed(request: PurgeRequest, result: PurgeResult, local: boolean): EmbedBuilder {
+	private resultEmbed(request: PurgeRequest, result: PurgeResult, local: boolean): EmbedBuilder {
 		let target = '';
-		if (request.user) target = `from ${request.user}`;
-		else if (request.role) target = `from members with ${request.role}`;
-		else if (request.bots) target = 'sent by bots';
+		if (request.user) target = ` from ${request.user}`;
+		else if (request.role) target = ` from members with ${request.role}`;
+		else if (request.bots) target = ' sent by bots';
 
-		const channelPlural = result.channels === 1 ? '' : 's';
-		const scope = local ? 'in this channel' : `across ${result.channels} channel${channelPlural}`;
-
-		let description: string;
-		if (result.deleted > 0) {
-			const messagePlural = result.deleted === 1 ? '' : 's';
-			description = `Purged **${result.deleted}** message${messagePlural} ${target} ${scope}.`.replace(/\s+/g, ' ').trim();
+		const embed = new EmbedBuilder();
+		if (result.deleted === 0) {
+			embed.setColor(colors.yellow).setDescription(`Found no messages${target} to delete ${local ? 'in this channel' : 'in this server'}.`);
 		} else {
-			description = `Found no messages matching the given criteria ${local ? 'in this channel' : 'in this server'}.`;
+			const where = local ? 'in this channel' : `across ${result.channels} channel${plural(result.channels)}`;
+			embed.setColor(colors.green).setDescription(`Purged **${result.deleted}** message${plural(result.deleted)}${target} ${where}.`);
 		}
 
-		const embed = new EmbedBuilder().setColor(result.deleted > 0 ? colors.green : colors.yellow).setDescription(description);
-
 		if (result.oldSkipped > 0) {
-			embed.setFooter({
-				text: `${result.oldSkipped} message${result.oldSkipped === 1 ? '' : 's'} older than 14 days could not be deleted.`
-			});
+			embed.setFooter({ text: `${result.oldSkipped} message${plural(result.oldSkipped)} older than 14 days could not be deleted.` });
 		}
 
 		return embed;
