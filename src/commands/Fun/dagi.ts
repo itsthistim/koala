@@ -13,13 +13,16 @@ export class UserCommand extends Command {
 		const amountResult = await args.pickResult('integer');
 		const amount = amountResult.isOk() ? amountResult.unwrap() : 1;
 
-		const result = await db.query(`
+		const result = await db.query(
+			`
 			INSERT INTO "dagi_count" (id, count)
 			VALUES (1, $1)
 			ON CONFLICT (id)
 			DO UPDATE SET count = "dagi_count".count + $1
 			RETURNING count;
-		`, [amount]);
+		`,
+			[amount]
+		);
 
 		const newCount = result.rows[0].count;
 		return reply(msg, `Dagi counter: **${newCount}**`);

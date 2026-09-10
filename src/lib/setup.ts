@@ -28,4 +28,3 @@ ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior
 
 // set default inspection depth
 inspect.defaultOptions.depth = 1;
-
