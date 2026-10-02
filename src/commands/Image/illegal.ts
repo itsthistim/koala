@@ -1,12 +1,10 @@
-import { ApplicationIntegrationType, InteractionContextType, type Message } from 'discord.js';
+import { availability } from '#lib/constants';
+import { type Message } from 'discord.js';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { loadImage, registerFont } from 'canvas';
 import { createAttachment, fitText } from '#lib/utils/canvas';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Command.Options>({
 	aliases: ['trump'],
@@ -17,8 +15,8 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 		.addStringOption((option) =>
 			option //
 				.setName('text')

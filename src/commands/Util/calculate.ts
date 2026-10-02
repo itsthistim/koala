@@ -1,13 +1,11 @@
+import { availability } from '#lib/constants';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import { Subcommand } from '@sapphire/plugin-subcommands';
-import { ApplicationIntegrationType, InteractionContextType, MessageFlags, type Message, type AutocompleteInteraction } from 'discord.js';
+import { MessageFlags, type Message, type AutocompleteInteraction } from 'discord.js';
 import { db } from '#lib/database';
 import { mathParser } from '#lib/utils/math';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Subcommand.Options>({
 	aliases: ['calc', 'c', 'math'],
@@ -26,8 +24,8 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 		.addSubcommand((sub) =>
 			sub //
 				.setName('eval')
@@ -66,7 +64,6 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 						.setDescription('Name of the saved formula.')
 						.setRequired(true)
 						.setAutocomplete(true)
-
 				)
 				.addStringOption((opt) =>
 					opt //
@@ -114,9 +111,7 @@ export class UserCommand extends Subcommand {
 					formulas = formulas.filter((name: string) => name.toLowerCase().includes(query));
 				}
 
-				return interaction.respond(
-					formulas.slice(0, 25).map((name: string) => ({ name, value: name }))
-				);
+				return interaction.respond(formulas.slice(0, 25).map((name: string) => ({ name, value: name })));
 			} catch {
 				return interaction.respond([]);
 			}

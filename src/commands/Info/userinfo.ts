@@ -1,21 +1,8 @@
 import { ApplyOptions, RegisterChatInputCommand, RegisterUserContextMenuCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, type Args } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
-import {
-	ApplicationIntegrationType,
-	EmbedBuilder,
-	GuildMember,
-	Interaction,
-	InteractionContextType,
-	MessageFlags,
-	PermissionFlagsBits,
-	User,
-	type Message
-} from 'discord.js';
-import { colors } from '#lib/constants';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
+import { EmbedBuilder, GuildMember, Interaction, MessageFlags, PermissionFlagsBits, User, type Message } from 'discord.js';
+import { availability, colors } from '#lib/constants';
 
 @ApplyOptions<Command.Options>({
 	aliases: ['whois', 'user-info'],
@@ -26,15 +13,15 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 		.addUserOption((option) => option.setName('user').setDescription('The user to get information about').setRequired(false))
 )
 @RegisterUserContextMenuCommand((builder, command) =>
 	builder
 		.setName(command.name)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 )
 export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {

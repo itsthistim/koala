@@ -1,15 +1,12 @@
-import { colors } from '#lib/constants';
+import { availability, colors } from '#lib/constants';
 import { envParseArray } from '#lib/utils/env';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum, container, version as sappVersion } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
 import moment from 'moment';
 import { execSync } from 'node:child_process';
-import { ApplicationIntegrationType, EmbedBuilder, InteractionContextType, User, version as djsVersion, type Message } from 'discord.js';
+import { EmbedBuilder, User, version as djsVersion, type Message } from 'discord.js';
 import os from 'node:os';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
 
 @ApplyOptions<Command.Options>({
 	aliases: ['stats', 'bot-info'],
@@ -21,8 +18,8 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 )
 export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {

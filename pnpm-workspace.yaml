@@ -1,6 +1,10 @@
 packages:
   - .
 
+allowBuilds:
+  canvas: true
+  msgpackr-extract: true
+
 onlyBuiltDependencies:
   - '@sapphire/type'
   - better-sqlite3

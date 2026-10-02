@@ -1,10 +1,8 @@
+import { availability } from '#lib/constants';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { container, Command, CommandOptionsRunTypeEnum } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { ApplicationIntegrationType, InteractionContextType, MessageFlags, type Message } from 'discord.js';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
+import { MessageFlags, type Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
 	description: 'Get an invite link to add the bot to your server.',
@@ -14,8 +12,8 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 )
 export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {

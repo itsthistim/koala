@@ -25,17 +25,13 @@ import { db } from '#lib/database';
 			subcommand
 				.setName('disable')
 				.setDescription('Disable automatic deletion of messages.')
-				.addChannelOption((option) =>
-					option.setName('channel').setDescription('Where to disable automatic deletion.').setRequired(false)
-				)
+				.addChannelOption((option) => option.setName('channel').setDescription('Where to disable automatic deletion.').setRequired(false))
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName('view')
 				.setDescription('View current autodelete configuration for a channel.')
-				.addChannelOption((option) =>
-					option.setName('channel').setDescription('The channel to inspect.').setRequired(false)
-				)
+				.addChannelOption((option) => option.setName('channel').setDescription('The channel to inspect.').setRequired(false))
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
@@ -45,11 +41,11 @@ import { db } from '#lib/database';
 					option.setName('duration').setDescription('Delete messages after a certain duration (e.g. 10m, 2h). Use "none" to disable.')
 				)
 				.addBooleanOption((option) => option.setName('bots').setDescription('Delete all messages sent by bots.'))
-				.addStringOption((option) => option.setName('filter').setDescription('Keyword or regex to match messages for deletion. Use "none" to disable.'))
-				.addChannelOption((option) => option.setName('log_channel').setDescription('Channel to log deletions to.').setRequired(false))
-				.addChannelOption((option) =>
-					option.setName('channel').setDescription('The channel to configure.').setRequired(false)
+				.addStringOption((option) =>
+					option.setName('filter').setDescription('Keyword or regex to match messages for deletion. Use "none" to disable.')
 				)
+				.addChannelOption((option) => option.setName('log_channel').setDescription('Channel to log deletions to.').setRequired(false))
+				.addChannelOption((option) => option.setName('channel').setDescription('The channel to configure.').setRequired(false))
 		)
 		.addSubcommandGroup((group) =>
 			group
@@ -71,9 +67,7 @@ import { db } from '#lib/database';
 						.addRoleOption((option) =>
 							option.setName('ignore_role').setDescription('Role whose messages will NEVER be deleted.').setRequired(false)
 						)
-						.addChannelOption((option) =>
-							option.setName('channel').setDescription('The channel to configure.').setRequired(false)
-						)
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to configure.').setRequired(false))
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
@@ -81,9 +75,7 @@ import { db } from '#lib/database';
 						.setDescription('Remove a user or role from delete/ignore lists.')
 						.addUserOption((option) => option.setName('user').setDescription('User to remove.').setRequired(false))
 						.addRoleOption((option) => option.setName('role').setDescription('Role to remove from either list.').setRequired(false))
-						.addChannelOption((option) =>
-							option.setName('channel').setDescription('The channel to configure.').setRequired(false)
-						)
+						.addChannelOption((option) => option.setName('channel').setDescription('The channel to configure.').setRequired(false))
 				)
 		)
 )

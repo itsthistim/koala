@@ -68,63 +68,70 @@ export function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: n
 	return fittedText;
 }
 
-export function greyscale(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
-	const data = ctx.getImageData(x, y, width, height);
-	for (let i = 0; i < data.data.length; i += 4) {
-		const brightness = 0.34 * data.data[i] + 0.5 * data.data[i + 1] + 0.16 * data.data[i + 2];
-		data.data[i] = brightness;
-		data.data[i + 1] = brightness;
-		data.data[i + 2] = brightness;
+type PixelTransform = (data: Uint8ClampedArray, offset: number) => void;
+
+function applyPixelFilter(
+	ctx: CanvasRenderingContext2D,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	transform: PixelTransform
+): CanvasRenderingContext2D {
+	const image = ctx.getImageData(x, y, width, height);
+	for (let offset = 0; offset < image.data.length; offset += 4) {
+		transform(image.data, offset);
 	}
-	ctx.putImageData(data, x, y);
+	ctx.putImageData(image, x, y);
 	return ctx;
+}
+
+function brightnessOf(data: Uint8ClampedArray, offset: number): number {
+	return 0.34 * data[offset] + 0.5 * data[offset + 1] + 0.16 * data[offset + 2];
+}
+
+export function greyscale(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
+	return applyPixelFilter(ctx, x, y, width, height, (data, offset) => {
+		const brightness = brightnessOf(data, offset);
+		data[offset] = brightness;
+		data[offset + 1] = brightness;
+		data[offset + 2] = brightness;
+	});
 }
 
 export function invert(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
-	const data = ctx.getImageData(x, y, width, height);
-	for (let i = 0; i < data.data.length; i += 4) {
-		data.data[i] = 255 - data.data[i];
-		data.data[i + 1] = 255 - data.data[i + 1];
-		data.data[i + 2] = 255 - data.data[i + 2];
-	}
-	ctx.putImageData(data, x, y);
-	return ctx;
+	return applyPixelFilter(ctx, x, y, width, height, (data, offset) => {
+		data[offset] = 255 - data[offset];
+		data[offset + 1] = 255 - data[offset + 1];
+		data[offset + 2] = 255 - data[offset + 2];
+	});
 }
 
 export function silhouette(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
-	const data = ctx.getImageData(x, y, width, height);
-	for (let i = 0; i < data.data.length; i += 4) {
-		data.data[i] = 0;
-		data.data[i + 1] = 0;
-		data.data[i + 2] = 0;
-	}
-	ctx.putImageData(data, x, y);
-	return ctx;
+	return applyPixelFilter(ctx, x, y, width, height, (data, offset) => {
+		data[offset] = 0;
+		data[offset + 1] = 0;
+		data[offset + 2] = 0;
+	});
 }
 
 export function sepia(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
-	const data = ctx.getImageData(x, y, width, height);
-	for (let i = 0; i < data.data.length; i += 4) {
-		const brightness = 0.34 * data.data[i] + 0.5 * data.data[i + 1] + 0.16 * data.data[i + 2];
-		data.data[i] = brightness + 100;
-		data.data[i + 1] = brightness + 50;
-		data.data[i + 2] = brightness;
-	}
-	ctx.putImageData(data, x, y);
-	return ctx;
+	return applyPixelFilter(ctx, x, y, width, height, (data, offset) => {
+		const brightness = brightnessOf(data, offset);
+		data[offset] = brightness + 100;
+		data[offset + 1] = brightness + 50;
+		data[offset + 2] = brightness;
+	});
 }
 
 export function contrast(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number): CanvasRenderingContext2D {
-	const data = ctx.getImageData(x, y, width, height);
 	const factor = 259 / 100 + 1;
 	const intercept = 128 * (1 - factor);
-	for (let i = 0; i < data.data.length; i += 4) {
-		data.data[i] = data.data[i] * factor + intercept;
-		data.data[i + 1] = data.data[i + 1] * factor + intercept;
-		data.data[i + 2] = data.data[i + 2] * factor + intercept;
-	}
-	ctx.putImageData(data, x, y);
-	return ctx;
+	return applyPixelFilter(ctx, x, y, width, height, (data, offset) => {
+		data[offset] = data[offset] * factor + intercept;
+		data[offset + 1] = data[offset + 1] * factor + intercept;
+		data[offset + 2] = data[offset + 2] * factor + intercept;
+	});
 }
 
 export function desaturate(
@@ -135,18 +142,12 @@ export function desaturate(
 	width: number,
 	height: number
 ): CanvasRenderingContext2D {
-	const data = ctx.getImageData(x, y, width, height);
-	for (let i = 0; i < height; i++) {
-		for (let j = 0; j < width; j++) {
-			const dest = (i * width + j) * 4;
-			const grey = Number.parseInt(String(0.2125 * data.data[dest] + 0.7154 * data.data[dest + 1] + 0.0721 * data.data[dest + 2]), 10);
-			data.data[dest] += level * (grey - data.data[dest]);
-			data.data[dest + 1] += level * (grey - data.data[dest + 1]);
-			data.data[dest + 2] += level * (grey - data.data[dest + 2]);
-		}
-	}
-	ctx.putImageData(data, x, y);
-	return ctx;
+	return applyPixelFilter(ctx, x, y, width, height, (data, offset) => {
+		const grey = Math.trunc(0.2125 * data[offset] + 0.7154 * data[offset + 1] + 0.0721 * data[offset + 2]);
+		data[offset] += level * (grey - data[offset]);
+		data[offset + 1] += level * (grey - data[offset + 1]);
+		data[offset + 2] += level * (grey - data[offset + 2]);
+	});
 }
 
 export function distort(

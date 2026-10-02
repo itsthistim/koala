@@ -1,10 +1,8 @@
+import { availability } from '#lib/constants';
 import { ApplyOptions, RegisterChatInputCommand } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum } from '@sapphire/framework';
 import { reply } from '@sapphire/plugin-editable-commands';
-import { ApplicationIntegrationType, InteractionContextType, type Message } from 'discord.js';
-
-const integrationTypes: ApplicationIntegrationType[] = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
-const contexts: InteractionContextType[] = [InteractionContextType.BotDM, InteractionContextType.Guild, InteractionContextType.PrivateChannel];
+import { type Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
 	aliases: ['gh'],
@@ -15,8 +13,8 @@ const contexts: InteractionContextType[] = [InteractionContextType.BotDM, Intera
 	builder
 		.setName(command.name)
 		.setDescription(command.description)
-		.setContexts(...contexts)
-		.setIntegrationTypes(...integrationTypes)
+		.setContexts(...availability.anywhere.contexts)
+		.setIntegrationTypes(...availability.anywhere.integrationTypes)
 )
 export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
