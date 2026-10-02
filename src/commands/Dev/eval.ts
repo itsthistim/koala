@@ -48,13 +48,7 @@ export class UserCommand extends Command {
 		return send(msg, `${output}\n${time}`);
 	}
 
-	private async eval(
-		code: string,
-		_context: Message | Command.ChatInputCommandInteraction,
-		isAsync: boolean,
-		depth: number = 0,
-		showHidden: boolean = false
-	) {
+	private async eval(code: string, _context: Message | Command.ChatInputCommandInteraction, isAsync: boolean, depth: number = 0, showHidden: boolean = false) {
 		let success = true;
 		let syncTime = '';
 		let asyncTime = '';
@@ -68,7 +62,6 @@ export class UserCommand extends Command {
 		// @ts-expect-error value is never read, this is for aliases inside of the command
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const db = database;
-		
 
 		const stopwatch = new Stopwatch();
 		try {
