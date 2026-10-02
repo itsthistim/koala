@@ -6,7 +6,7 @@ import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 @ApplyOptions<ScheduledTask.Options>({
 	pattern: '0 14 * * 5', // every friday at 2:00 PM
 	name: 'dagiReset',
-	enabled: false
+	enabled: true
 })
 export class DagiResetTask extends ScheduledTask {
 	public async run() {
