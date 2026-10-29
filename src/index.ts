@@ -3,8 +3,11 @@ import '#lib/setup';
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { GatewayIntentBits, Partials } from 'discord.js';
 
+const prod_prefixes = ['-', '--'];
+const dev_prefixes = ['+'];
+
 const client = new SapphireClient({
-	defaultPrefix: process.env.NODE_ENV === 'PRODUCTION' ? '-' : '+',
+	defaultPrefix: process.env.NODE_ENV === 'production' ? prod_prefixes : dev_prefixes,
 	regexPrefix: /^(hey +)?bot[,! ]/i,
 	caseInsensitivePrefixes: true,
 	caseInsensitiveCommands: true,
