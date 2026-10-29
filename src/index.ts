@@ -7,7 +7,7 @@ const prod_prefixes = ['-', '--'];
 const dev_prefixes = ['+'];
 
 const client = new SapphireClient({
-	defaultPrefix: process.env.NODE_ENV === 'production' ? prod_prefixes : dev_prefixes,
+	defaultPrefix: process.env.NODE_ENV === 'PRODUCTION' ? prod_prefixes : dev_prefixes,
 	regexPrefix: /^(hey +)?bot[,! ]/i,
 	caseInsensitivePrefixes: true,
 	caseInsensitiveCommands: true,
