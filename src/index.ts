@@ -3,7 +3,7 @@ import '#lib/setup';
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { GatewayIntentBits, Partials } from 'discord.js';
 
-const prod_prefixes = ['-', '--'];
+const prod_prefixes = ['-'];
 const dev_prefixes = ['+'];
 
 const client = new SapphireClient({
