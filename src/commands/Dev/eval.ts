@@ -71,18 +71,18 @@ export class UserCommand extends Command {
 		const container = this.container;
 		const { client, logger } = container;
 		const { guild, channel, author, member } = _context;
-		void [msg, message, db, discord, client, container, logger, guild, channel, author, member];
+		void [msg, message, db, discord, client, container, logger, guild, channel, author, member]; // NOSONAR
 
 		const stopwatch = new Stopwatch();
 		try {
 			// eslint-disable-next-line no-eval
-			result = eval(this.wrap(code));
+			result = eval(this.wrap(code)); // NOSONAR
 			syncTime = stopwatch.toString();
 
 			if (isThenable(result)) {
 				thenable = true;
 				stopwatch.restart();
-				result = await result;
+				result = await result; // NOSONAR
 				asyncTime = stopwatch.toString();
 			}
 
@@ -102,8 +102,7 @@ export class UserCommand extends Command {
 		return {
 			success,
 			time: this.formatTime(syncTime, asyncTime),
-			result,
-			thenable
+			result
 		};
 	}
 
