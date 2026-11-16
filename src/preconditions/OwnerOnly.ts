@@ -8,6 +8,7 @@ export class UserPrecondition extends AllFlowsPrecondition {
 	readonly #message =
 		'This command can only be used by the owner.\n' +
 		'This might be because the command is still in development or because it is used for testing purposes.';
+	readonly #silent = false;
 
 	public override chatInputRun(interaction: CommandInteraction) {
 		return this.doOwnerCheck(interaction.user.id);
@@ -22,7 +23,7 @@ export class UserPrecondition extends AllFlowsPrecondition {
 	}
 
 	private doOwnerCheck(userId: Snowflake) {
-		return OWNERS.includes(userId) ? this.ok() : this.error({ message: this.#message });
+		return OWNERS.includes(userId) ? this.ok() : this.error({ message: this.#message, context: { silent: this.#silent } });
 	}
 }
 
